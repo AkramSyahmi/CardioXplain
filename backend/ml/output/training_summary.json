@@ -1,0 +1,14 @@
+{
+  "method": "RandomizedSearchCV, 40 combinations x 5-fold CV",
+  "scoring": "roc_auc",
+  "best_params": {
+    "colsample_bytree": 0.6746,
+    "learning_rate": 0.0218,
+    "max_depth": 6,
+    "n_estimators": 351,
+    "subsample": 0.871
+  },
+  "best_cv_auc_mean": 0.7978,
+  "best_cv_auc_std": 0.0018,
+  "training_time_seconds": 78.1
+}

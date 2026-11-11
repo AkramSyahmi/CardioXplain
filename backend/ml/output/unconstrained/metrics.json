@@ -1,0 +1,28 @@
+{
+  "test_rows": 13720,
+  "accuracy": 0.7339,
+  "precision": 0.7582,
+  "recall": 0.6786,
+  "f1_score": 0.7162,
+  "auc": 0.8048,
+  "confusion_matrix": {
+    "true_negative": 5462,
+    "false_positive": 1469,
+    "false_negative": 2182,
+    "true_positive": 4607
+  },
+  "risk_categories": {
+    "Low": {
+      "people": 6181,
+      "actual_cvd_percent": 24.3
+    },
+    "Moderate": {
+      "people": 3349,
+      "actual_cvd_percent": 53.6
+    },
+    "High": {
+      "people": 4190,
+      "actual_cvd_percent": 83.3
+    }
+  }
+}

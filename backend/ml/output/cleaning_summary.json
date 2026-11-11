@@ -1,0 +1,25 @@
+{
+  "rows_before": 70000,
+  "removed": {
+    "duplicate rows": 24,
+    "age outside 30-65": 3,
+    "height outside 120-250": 52,
+    "weight outside 20-300": 2,
+    "ap_hi outside 60-300": 226,
+    "ap_lo outside 40-200": 995,
+    "diastolic higher than systolic (ap_lo > ap_hi)": 101
+  },
+  "rows_after": 68597,
+  "rows_removed_total": 1403,
+  "percent_removed": 2.0,
+  "target_balance": {
+    "no_cvd (0)": 34655,
+    "cvd (1)": 33942
+  },
+  "split": {
+    "train_rows": 54877,
+    "test_rows": 13720,
+    "train_cvd_percent": 49.48,
+    "test_cvd_percent": 49.48
+  }
+}

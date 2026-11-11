@@ -1,0 +1,41 @@
+{
+  "explained_rows": 1000,
+  "baseline_probability": 0.4678,
+  "additivity_max_error": 2.8821380815280406e-07,
+  "mean_abs_shap": {
+    "ap_hi": 0.1523,
+    "age": 0.0608,
+    "cholesterol": 0.0379,
+    "ap_lo": 0.0341,
+    "bmi": 0.0227,
+    "active": 0.0166,
+    "height": 0.008,
+    "weight": 0.0063,
+    "gender": 0.006,
+    "gluc": 0.0016,
+    "smoke": 0.0007,
+    "alco": 0.0001
+  },
+  "lifestyle_checks": {
+    "stop smoking": {
+      "people": 91,
+      "mean_risk_change_percent_points": -0.18,
+      "people_whose_risk_went_up": 0
+    },
+    "stop alcohol": {
+      "people": 58,
+      "mean_risk_change_percent_points": -0.17,
+      "people_whose_risk_went_up": 0
+    },
+    "become physically active": {
+      "people": 178,
+      "mean_risk_change_percent_points": -4.63,
+      "people_whose_risk_went_up": 0
+    },
+    "glucose to normal": {
+      "people": 68,
+      "mean_risk_change_percent_points": -0.56,
+      "people_whose_risk_went_up": 0
+    }
+  }
+}
