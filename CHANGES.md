@@ -10,3 +10,4 @@ Used to update Chapter 3 and explain changes in Chapter 4.
 | 3 | 2026-11-11 | React frontend built with Vite instead of Create React App. | Create React App is deprecated; Vite is the current standard and still React. | 3.8.3, Figure 3.24 |
 | 4 | 2026-11-11 | No `utils` folder; BMI calculation placed where it is used. | BMI is a one-line formula; a separate folder is unnecessary. | 3.8.2, Figure 3.23 |
 | 5 | 2026-11-11 | `requirements.txt` lists only direct dependencies. | Easier to read and install; sub-dependencies install automatically. | 3.8.1 |
+| 6 | 2026-11-11 | LLM provider set through `.env` (`LLM_BASE_URL`, `LLM_MODEL`). Using the asai server (OpenAI-compatible) with `claude-haiku-5.5`, called through the `openai` Python library. | The proposal did not name a provider. Settings in `.env` let the provider change without code changes. Claude Haiku is fast, low cost, and follows safety instructions well (NFR09). | 1.4.3, 3.2.8.2, CL03 |
