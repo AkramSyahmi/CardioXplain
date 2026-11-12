@@ -120,3 +120,10 @@ def fake_llm(monkeypatch):
     fake = FakeLLM()
     monkeypatch.setattr(llm_service, "chat", fake)
     return fake
+
+
+@pytest.fixture
+def valid_input():
+    """A valid risk assessment form (11 inputs; BMI is calculated by the backend)."""
+    return {"age": 50, "gender": "male", "height": 170, "weight": 80, "ap_hi": 140, "ap_lo": 90,
+            "cholesterol": 2, "gluc": 1, "smoke": 0, "alco": 0, "active": 1}

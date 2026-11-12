@@ -18,27 +18,12 @@ from sklearn.metrics import (ConfusionMatrixDisplay, RocCurveDisplay, accuracy_s
 from sklearn.model_selection import RandomizedSearchCV, StratifiedKFold, train_test_split
 from xgboost import XGBClassifier
 
+from features import FEATURES, TARGET, VALID_RANGES, risk_category
+
 ML_DIR = Path(__file__).resolve().parent
 DATA_FILE = ML_DIR / "data" / "cardio_train.csv"
 OUTPUT_DIR = ML_DIR / "output"
 
-# Dataset codes gender as 1/2. Mean height is 161 cm for 1 and 170 cm for 2, so 1 = female.
-GENDER_CODES = {"female": 1, "male": 2}
-
-# Valid input ranges. Used for cleaning here and for form validation in the backend,
-# so the model only predicts inside the ranges it was trained on (CHANGES.md #11).
-VALID_RANGES = {
-    "age": (30, 65),        # dataset only covers ages 30 to 65
-    "height": (120, 250),   # under 120 cm is almost always a typing error in this dataset
-    "weight": (20, 300),
-    "ap_hi": (60, 300),
-    "ap_lo": (40, 200),
-}
-
-# Model input features (Table 3.35), in the order the model expects them.
-FEATURES = ["age", "gender", "height", "weight", "bmi", "ap_hi", "ap_lo",
-            "cholesterol", "gluc", "smoke", "alco", "active"]
-TARGET = "cardio"
 RANDOM_STATE = 42  # fixed so every run gives the same split and results
 
 # Hyperparameter ranges from Table 3.4a.
@@ -61,15 +46,6 @@ SEARCH_ITERATIONS = 40
 CV_FOLDS = 5
 SHAP_BACKGROUND_ROWS = 100   # reference people for probability-mode SHAP (CHANGES.md #13)
 SHAP_EXPLAIN_ROWS = 1000     # test rows used for the global SHAP charts
-
-
-def risk_category(score):
-    """Risk category thresholds from Table 3.36."""
-    if score < 0.40:
-        return "Low"
-    if score < 0.70:
-        return "Moderate"
-    return "High"
 
 
 def load_and_clean():

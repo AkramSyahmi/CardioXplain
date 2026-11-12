@@ -22,6 +22,8 @@ Used to update Chapter 3 and explain changes in Chapter 4.
 | 15 | 2026-11-12 | Login uses signed tokens from `itsdangerous` (included with Flask), sent as `Authorization: Bearer <token>`, valid for 8 hours. The user is re-checked on every request. | Meets NFR04 (token-based authentication) without adding a new library. A deactivated account stops working immediately. | NFR04, UC-100 |
 | 16 | 2026-11-12 | CORS limited to the frontend address (`FRONTEND_ORIGIN`, default `http://localhost:5173`) instead of allowing any website. | Other websites cannot call the API from a user's browser. | NFR04 |
 | 17 | 2026-11-12 | Forgot Password (UC-100 alternative flow A1) postponed. If a user forgets their password, an administrator sets a temporary password through User Management. | Sending reset links needs an email service, which is outside the project scope (1.4.3). | UC-100 A1, UC-800 |
+| 18 | 2026-11-12 | When the LLM is unavailable, too slow or returns unsafe text, the pre-written template narrative (section 3.2.8.2 step 6) is shown and saved, instead of UC-400 E1's "Explanation is currently unavailable" message. | The proposal contradicts itself (3.2.8.2 vs UC-400 E1). The fallback still gives the user an explanation of their result. | 3.2.8.2, UC-400 E1 |
+| 19 | 2026-11-12 | LLM calls have a hard 10-second total deadline, no automatic retries, and a 400-token reply limit. | Measured with the real asai server: replies took 4-20 s, and the client's timeout only limits the gap between data, not the total. Without this, users could wait up to ~30 s (NFR02). | NFR02, 3.2.8.2 |
 
 ## Report fixes to do
 
@@ -38,6 +40,8 @@ Changes needed in the report only (no code change).
 - [ ] Section 3.2.6: describe the monotonic constraints and why they were needed (before/after results in `ml/output/unconstrained/`).
 - [ ] Ch4 limitation: model predicts CVD presence (not 10-year risk); smoking effect is small because the dataset's smoking data is self-reported and rare.
 - [ ] UC-100 (Table 3.17): remove or mark alternative flow A1 Forgot Password as future work; mention admin password reset in UC-800.
+- [ ] UC-400 E1 (Table 3.20): describe the fallback narrative instead of the 'Explanation is currently unavailable' message.
+- [ ] Ch4 NFR results: prediction + SHAP 0.02 s (NFR01 met); LLM narrative 4-8 s normally, fallback after 10 s (NFR02 met by the deadline). In 6 live calls on 2026-11-12, 2 hit the deadline (asai server slow).
 
 ## Weaknesses to address
 
@@ -47,5 +51,5 @@ Found in the project review (2026-11-12). Owner = who does it.
 - [ ] **Weak FYP1 survey results** (owner: student runs, Claude prepares and analyses) — only 36 respondents; "explanation of factors" rated 2.72/5. Use UAT and usability results in Ch4 to show users find the features useful after using them. Phase 6 / Ch4.
 - [ ] **Users may not know their health numbers** (owner: Claude) — add help text to the risk assessment form (e.g. "If unsure, choose Normal and check at a clinic"). Phase 5.
 - [ ] **What the model really predicts** (owner: Claude drafts, student checks) — state clearly in Ch4: CVD presence (not 10-year risk), ages 30-65, self-reported lifestyle data, no clinical validation. Report writing.
-- [ ] **Third-party LLM server** (owner: student decides) — asai is a reseller; users' health inputs pass through it. State as a limitation, or switch to an official API (Anthropic / OpenAI) before UAT by changing `LLM_API_KEY`, `LLM_BASE_URL`, `LLM_MODEL` in `.env`. Before UAT.
+- [ ] **Third-party LLM server** (owner: student decides) — measured 2026-11-12: 2 of 6 calls took over 10 s and used the fallback. asai is a reseller; users' health inputs pass through it. State as a limitation, or switch to an official API (Anthropic / OpenAI) before UAT by changing `LLM_API_KEY`, `LLM_BASE_URL`, `LLM_MODEL` in `.env`. Before UAT.
 - [ ] **Report inconsistencies** (owner: Claude drafts, student updates Word report) — objectives differ between abstract and Ch1; testing types differ between Ch1/3.12 and 3.9; duplicate UAT test case IDs (TC-01 x4, etc.); use case diagram fixes listed above. Report update.
