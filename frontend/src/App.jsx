@@ -1,5 +1,7 @@
 import { BrowserRouter, Navigate, Route, Routes } from "react-router";
 import { AuthProvider, ProtectedRoute, homeFor, useAuth } from "./auth.jsx";
+import AdminDashboardPage from "./pages/AdminDashboardPage.jsx";
+import AdminUsersPage from "./pages/AdminUsersPage.jsx";
 import AssessmentPage from "./pages/AssessmentPage.jsx";
 import DashboardPage from "./pages/DashboardPage.jsx";
 import HistoryPage from "./pages/HistoryPage.jsx";
@@ -9,11 +11,6 @@ import NotFoundPage from "./pages/NotFoundPage.jsx";
 import PlanPage from "./pages/PlanPage.jsx";
 import ResultPage from "./pages/ResultPage.jsx";
 import SimulatorPage from "./pages/SimulatorPage.jsx";
-
-// Placeholder for pages built in later tasks (replaced task by task).
-function ComingSoon({ title }) {
-  return <h1>{title}</h1>;
-}
 
 function Home() {
   const { user, loading } = useAuth();
@@ -31,8 +28,8 @@ const USER_PAGES = [
   ["/navigator", <NavigatorPage />],
 ];
 const ADMIN_PAGES = [
-  ["/admin", <ComingSoon title="Model Performance" />],
-  ["/admin/users", <ComingSoon title="User Management" />],
+  ["/admin", <AdminDashboardPage />],
+  ["/admin/users", <AdminUsersPage />],
 ];
 
 export function AppRoutes() {

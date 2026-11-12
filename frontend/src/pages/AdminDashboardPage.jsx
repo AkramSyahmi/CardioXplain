@@ -1,0 +1,124 @@
+// UC-900 Monitor Model Performance (Figure 3.34).
+import { useEffect, useState } from "react";
+import { apiRequest } from "../api.js";
+import { formatDateTime } from "../format.js";
+
+const percent = (value) => `${(value * 100).toFixed(1)}%`;
+
+/** Loads one admin endpoint; each section shows its own error. */
+function useAdminData(path) {
+  const [data, setData] = useState(null);
+  const [error, setError] = useState("");
+  useEffect(() => {
+    apiRequest(path).then(setData).catch((err) => setError(err.message));
+  }, [path]);
+  return [data, error];
+}
+
+function Metrics({ metrics, training }) {
+  const cm = metrics.confusion_matrix;
+  return (
+    <>
+      <p>Results on {metrics.test_rows} unseen test records.</p>
+      <ul>
+        <li>Accuracy: {percent(metrics.accuracy)}</li>
+        <li>Precision: {percent(metrics.precision)}</li>
+        <li>Recall: {percent(metrics.recall)}</li>
+        <li>F1-score: {percent(metrics.f1_score)}</li>
+        <li>AUC: {metrics.auc}</li>
+      </ul>
+
+      <h3>Confusion matrix</h3>
+      <table aria-label="Confusion matrix">
+        <thead>
+          <tr><th></th><th>Predicted: No CVD</th><th>Predicted: CVD</th></tr>
+        </thead>
+        <tbody>
+          <tr><th>Actual: No CVD</th><td>{cm.true_negative}</td><td>{cm.false_positive}</td></tr>
+          <tr><th>Actual: CVD</th><td>{cm.false_negative}</td><td>{cm.true_positive}</td></tr>
+        </tbody>
+      </table>
+
+      {metrics.risk_categories && (
+        <>
+          <h3>Risk category check (test set)</h3>
+          <table aria-label="Risk category check">
+            <thead>
+              <tr><th>Category</th><th>People</th><th>Actually have CVD</th></tr>
+            </thead>
+            <tbody>
+              {Object.entries(metrics.risk_categories).map(([name, row]) => (
+                <tr key={name}><td>{name}</td><td>{row.people}</td><td>{row.actual_cvd_percent}%</td></tr>
+              ))}
+            </tbody>
+          </table>
+        </>
+      )}
+
+      <h3>Training</h3>
+      <p>{training.method}. Cross-validation AUC: {training.best_cv_auc_mean}.</p>
+      <ul>
+        {Object.entries(training.best_params).map(([name, value]) => (
+          <li key={name}>{name}: {value}</li>
+        ))}
+      </ul>
+    </>
+  );
+}
+
+export default function AdminDashboardPage() {
+  const [model, modelError] = useAdminData("/admin/metrics");
+  const [stats, statsError] = useAdminData("/admin/stats");
+  const [logs, logsError] = useAdminData("/admin/logs?limit=50");
+
+  return (
+    <>
+      <h1>Model Performance</h1>
+
+      <section>
+        <h2>Model evaluation</h2>
+        {modelError && <p role="alert">{modelError}</p>}
+        {!model && !modelError && <p>Loading...</p>}
+        {model && <Metrics metrics={model.metrics} training={model.training} />}
+      </section>
+
+      <section>
+        <h2>System usage</h2>
+        {statsError && <p role="alert">{statsError}</p>}
+        {stats && (
+          <ul>
+            <li>Total users: {stats.total_users}</li>
+            <li>Total assessments: {stats.total_assessments}</li>
+            {Object.entries(stats.risk_distribution).map(([name, count]) => (
+              <li key={name}>{name}: {count}</li>
+            ))}
+            <li>LLM calls: {stats.llm_calls.success} successful, {stats.llm_calls.failed} failed</li>
+          </ul>
+        )}
+      </section>
+
+      <section>
+        <h2>Recent activity</h2>
+        {logsError && <p role="alert">{logsError}</p>}
+        {logs && logs.logs.length === 0 && <p>No activity yet.</p>}
+        {logs && logs.logs.length > 0 && (
+          <table aria-label="Activity log">
+            <thead>
+              <tr><th>Time</th><th>Action</th><th>User ID</th><th>Description</th></tr>
+            </thead>
+            <tbody>
+              {logs.logs.map((log) => (
+                <tr key={log.log_id}>
+                  <td>{formatDateTime(log.timestamp)}</td>
+                  <td>{log.action}</td>
+                  <td>{log.user_id ?? "-"}</td>
+                  <td>{log.description}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        )}
+      </section>
+    </>
+  );
+}
