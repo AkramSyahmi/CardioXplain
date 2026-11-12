@@ -30,6 +30,9 @@ def create_app(overrides=None):
         return jsonify(error="Something went wrong. Please try again later."), 500
 
     from app import models  # noqa: F401  (registers the tables with SQLAlchemy)
+    from app.routes.auth import auth_bp
+
+    app.register_blueprint(auth_bp, url_prefix="/api/auth")
 
     @app.cli.command("init-db")
     def init_db():

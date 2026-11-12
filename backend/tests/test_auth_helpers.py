@@ -18,7 +18,10 @@ def test_missing_token_is_401(client):
 
 def test_tampered_token_is_rejected(client, user_headers):
     token = user_headers["Authorization"]
-    tampered = token[:-1] + ("A" if token[-1] != "A" else "B")
+    # Change a character in the middle of the signature. (The last character also holds
+    # unused padding bits, so changing it does not always change the signature.)
+    i = len(token) - 10
+    tampered = token[:i] + ("A" if token[i] != "A" else "B") + token[i + 1:]
     response = client.get("/api/_test/user", headers={"Authorization": tampered})
     assert response.status_code == 401
 

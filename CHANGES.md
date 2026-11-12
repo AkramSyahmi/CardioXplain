@@ -21,6 +21,7 @@ Used to update Chapter 3 and explain changes in Chapter 4.
 | 14 | 2026-11-11 | XGBoost trained with monotonic constraints: age, ap_hi, ap_lo, cholesterol, gluc, smoke, alco and bmi can only raise risk; active can only lower risk. | Without constraints the model learned from this dataset that smoking, alcohol and high glucose lower risk (stopping smoking raised risk by 2.83%). AUC cost only 0.003 (0.8048 to 0.8015). | 3.2.6.1, 3.2.6.2 |
 | 15 | 2026-11-12 | Login uses signed tokens from `itsdangerous` (included with Flask), sent as `Authorization: Bearer <token>`, valid for 8 hours. The user is re-checked on every request. | Meets NFR04 (token-based authentication) without adding a new library. A deactivated account stops working immediately. | NFR04, UC-100 |
 | 16 | 2026-11-12 | CORS limited to the frontend address (`FRONTEND_ORIGIN`, default `http://localhost:5173`) instead of allowing any website. | Other websites cannot call the API from a user's browser. | NFR04 |
+| 17 | 2026-11-12 | Forgot Password (UC-100 alternative flow A1) postponed. If a user forgets their password, an administrator sets a temporary password through User Management. | Sending reset links needs an email service, which is outside the project scope (1.4.3). | UC-100 A1, UC-800 |
 
 ## Report fixes to do
 
@@ -36,6 +37,7 @@ Changes needed in the report only (no code change).
 - [ ] Section 3.2.7.1 step 5: state that SHAP runs in probability mode, so baseline + SHAP = predicted probability.
 - [ ] Section 3.2.6: describe the monotonic constraints and why they were needed (before/after results in `ml/output/unconstrained/`).
 - [ ] Ch4 limitation: model predicts CVD presence (not 10-year risk); smoking effect is small because the dataset's smoking data is self-reported and rare.
+- [ ] UC-100 (Table 3.17): remove or mark alternative flow A1 Forgot Password as future work; mention admin password reset in UC-800.
 
 ## Weaknesses to address
 
