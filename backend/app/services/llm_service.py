@@ -260,7 +260,9 @@ def health_week(category, risk_score, top, lifestyle, week, total_weeks, days_in
           "hydration and sleep tasks (and habit tasks for smoking or alcohol if relevant). Every task must be "
           "concrete with exact amounts, durations or times (e.g. '250 ml water', '15-minute brisk walk', "
           "'in bed by 22:30'), and its steps are a checklist the user can follow without guessing. "
-          "Use foods commonly eaten in Malaysia, with healthier options. Focus on the factors above.\n"
+          "Use foods commonly eaten in Malaysia, with healthier options. Focus on the factors above. "
+          "Do not write amounts in mg; use grams, teaspoons, glasses or plain words "
+          "(e.g. 'less than 1 teaspoon of salt a day'). Give at least one task in every block.\n"
         + WEEK_FORMAT
     )
     text = chat(system, [{"role": "user", "content": prompt}],

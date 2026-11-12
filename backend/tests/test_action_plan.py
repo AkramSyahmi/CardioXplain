@@ -185,3 +185,11 @@ def test_old_text_plan_still_shows(client, user_headers, assessed):
 
 def test_plan_admin_is_forbidden(client, admin_headers):
     assert make_plan(client, admin_headers).status_code == 403
+
+
+def test_plan_prompt_avoids_mg_and_empty_blocks(client, user_headers, assessed, fake_llm):
+    """Phase 5 review #3: 'sodium under 1500 mg' would be blocked as a dose, and an empty block fails the check."""
+    make_plan(client, user_headers)
+    prompt = fake_llm.calls[-1]["messages"][-1]["content"]
+    assert "Do not write amounts in mg" in prompt
+    assert "at least one task in every block" in prompt

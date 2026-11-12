@@ -18,6 +18,20 @@ python run.py
 
 Open http://localhost:5000 — it should show "CardioXplain backend is running".
 
+## Upgrading an existing database
+
+`flask --app run init-db` only creates missing tables; it does not add new columns to tables that
+already exist. If your database was created before 12 Nov 2026, run these once in MySQL Workbench
+(or simply drop `cardioxplain_db` and run `init-db` again):
+
+```sql
+USE cardioxplain_db;
+ALTER TABLE predictions ADD COLUMN estimated_fields JSON NULL;          -- CHANGES.md #23
+ALTER TABLE prediction_inputs ADD COLUMN cigarettes_per_day INT NULL;   -- CHANGES.md #24
+ALTER TABLE prediction_inputs ADD COLUMN drinks_per_week INT NULL;
+ALTER TABLE prediction_inputs ADD COLUMN activity_minutes INT NULL;
+```
+
 ## Frontend setup
 
 Needs Node.js 24. Start the backend first (it serves the API on port 5000).

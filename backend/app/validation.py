@@ -105,6 +105,8 @@ def assessment_problems(data):
         raw = data.get(name)
         values[name] = None
         if raw is None or raw == "":
+            if data.get(flag) is None or data.get(flag) == "":
+                fields[name] = REQUIRED  # neither the amount nor Yes/No: ask for the amount the user can see
             continue
         number = _number(raw)
         if number is None:

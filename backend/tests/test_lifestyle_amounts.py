@@ -67,3 +67,14 @@ def test_health_plan_uses_amounts(client, user_headers, fake_llm, valid_input):
     assert client.post("/api/action-plan", json={}, headers=user_headers).status_code == 201
     prompt = fake_llm.calls[-1]["messages"][-1]["content"]
     assert "20 cigarettes per day" in prompt and "120 minutes" in prompt
+
+
+def test_blank_amount_with_no_yes_no_is_required_on_the_amount_field(valid_input):
+    """Phase 5 review #1: the error must be on the field the user can see."""
+    _, fields = assessment_problems({**without_flags(valid_input), "drinks_per_week": 0, "activity_minutes": 60})
+    assert fields == {"cigarettes_per_day": "This field is required."}
+
+
+def test_blank_amount_with_a_yes_no_value_is_fine(valid_input):
+    values, fields = assessment_problems({**valid_input, "cigarettes_per_day": ""})
+    assert fields == {} and values["smoke"] == valid_input["smoke"]
