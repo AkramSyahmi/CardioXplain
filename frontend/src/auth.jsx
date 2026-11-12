@@ -20,7 +20,10 @@ export function AuthProvider({ children }) {
     if (getToken()) {
       apiRequest("/auth/me")
         .then((data) => setUser(data.user))
-        .catch(() => clearToken())
+        // api.js already forgets the token on a 401; any other failure (server down) keeps the login
+        .catch((err) => {
+          if (err.status !== 401) setNotice(err.message);
+        })
         .finally(() => setLoading(false));
     }
     // api.js fires this on any 401 (expired, invalid or deactivated login).

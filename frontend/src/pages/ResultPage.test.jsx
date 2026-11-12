@@ -69,3 +69,9 @@ test("result shows lifestyle amounts and the Yes/No note", async () => {
   expect(screen.getByText(/60 minutes of exercise per week/)).toBeInTheDocument();
   expect(screen.getByText(/The risk model uses Yes\/No for lifestyle/)).toBeInTheDocument();
 });
+
+test("saved result without SHAP explains why the chart is missing", async () => {
+  mockApi({ "GET /auth/me": [200, { user: USER }], "GET /history/7": [200, { ...RESULT, shap: null }] });
+  renderApp("/result/7");
+  expect(await screen.findByText("No explanation was saved for this result.")).toBeInTheDocument();
+});

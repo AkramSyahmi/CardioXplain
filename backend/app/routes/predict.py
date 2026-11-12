@@ -7,7 +7,7 @@ from app.models import LlmNarrative, Prediction, PredictionInput, ShapExplanatio
 from app.services.llm_service import DISCLAIMER, risk_narrative
 from app.services.ml_service import predict_probability
 from app.services.shap_service import explain
-from app.validation import assessment_problems, fill_unknown, read_json
+from app.validation import assessment_problems, fill_unknown, lifestyle_conflicts, read_json
 from ml.features import risk_category
 
 predict_bp = Blueprint("predict", __name__)
@@ -20,6 +20,7 @@ SHAP_ERROR = "The explanation could not be generated. Please try the assessment 
 def create_prediction():
     data, estimated = fill_unknown(read_json() or {})
     values, fields = assessment_problems(data)
+    fields.update(lifestyle_conflicts(data))
     if fields:
         return jsonify(error="Please correct the highlighted fields.", fields=fields), 400
 

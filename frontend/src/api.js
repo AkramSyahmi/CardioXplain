@@ -41,13 +41,18 @@ export async function apiRequest(path, { method = "GET", body } = {}) {
     throw new ApiError(0, SERVER_DOWN);
   }
 
-  const data = await response.json().catch(() => ({}));
-  if (response.ok) return data;
+  const data = await response.json().catch(() => null);
+  if (response.ok) return data ?? {};
 
-  if (response.status === 401) {
+  if (response.status === 401 && token) {
     // Expired, invalid or deactivated login: forget it and tell the app to go to the login page.
+    // (A 401 without a saved login is just a wrong password on the login page.)
     clearToken();
     window.dispatchEvent(new Event("auth:logout"));
   }
-  throw new ApiError(response.status, data.error || GENERIC_ERROR, data.fields || {}, data);
+  if (data === null && response.status >= 500) {
+    // No JSON from a server error: Flask is not running (e.g. the Vite proxy answers 500 with no body).
+    throw new ApiError(response.status, SERVER_DOWN);
+  }
+  throw new ApiError(response.status, data?.error || GENERIC_ERROR, data?.fields || {}, data ?? {});
 }

@@ -128,3 +128,16 @@ test("old text plan still shows", async () => {
   expect(await screen.findByRole("heading", { name: "Week 1" })).toBeInTheDocument();
   expect(within(screen.getByRole("article")).getByRole("listitem")).toHaveTextContent("Walk 20 minutes a day");
 });
+
+test("a newly generated plan starts with nothing ticked", async () => {
+  const newer = plan(7, [week(1, 16)]);
+  newer.plan.generated_at = "2026-11-17T10:00:00";
+  mockApi({ "GET /auth/me": [200, { user: USER }], "GET /action-plan": [200, plan(7, [week(1, 16)])],
+    "POST /action-plan": [201, newer] });
+  renderApp("/plan");
+  await userEvent.click(await screen.findByRole("checkbox", { name: "Workout: Walk day 1" }));
+  await userEvent.click(screen.getByRole("button", { name: "Generate a new plan" }));
+  await screen.findByText(/Generated: 17 Nov 2026/);
+  expect(screen.getByRole("checkbox", { name: "Workout: Walk day 1" })).not.toBeChecked();
+  localStorage.removeItem("cardioxplain_plan_7_2026-11-17T10:00:00");
+});

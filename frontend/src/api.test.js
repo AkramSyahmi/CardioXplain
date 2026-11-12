@@ -63,11 +63,28 @@ test("network error gives server message", async () => {
   expect(error.message).toBe("Cannot reach the server. Please check that the backend is running.");
 });
 
-test("non-JSON error reply still gives a message", async () => {
-  fetch.mockReturnValue(Promise.resolve({ ok: false, status: 502, json: () => Promise.reject(new SyntaxError("bad")) }));
+test("server error without a JSON reply means the backend is unreachable", async () => {
+  // e.g. the Vite proxy answers 500 with an empty body when Flask is not running
+  fetch.mockReturnValue(Promise.resolve({ ok: false, status: 500, json: () => Promise.reject(new SyntaxError("bad")) }));
   const error = await apiRequest("/history").catch((e) => e);
-  expect(error.status).toBe(502);
+  expect(error.status).toBe(500);
+  expect(error.message).toBe("Cannot reach the server. Please check that the backend is running.");
+});
+
+test("server error with a JSON reply shows the backend message", async () => {
+  fetch.mockReturnValue(reply(500, { error: "Something went wrong. Please try again later." }));
+  const error = await apiRequest("/history").catch((e) => e);
   expect(error.message).toBe("Something went wrong. Please try again later.");
+});
+
+test("401 without a saved login does not announce a logout", async () => {
+  const listener = vi.fn();
+  window.addEventListener("auth:logout", listener);
+  fetch.mockReturnValue(reply(401, { error: "Invalid email or password" }));
+  const error = await apiRequest("/auth/login", { method: "POST", body: {} }).catch((e) => e);
+  window.removeEventListener("auth:logout", listener);
+  expect(error.message).toBe("Invalid email or password");
+  expect(listener).not.toHaveBeenCalled();
 });
 
 test("ApiError keeps the whole error reply as data", async () => {

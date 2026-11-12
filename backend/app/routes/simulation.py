@@ -8,7 +8,7 @@ from app.routes.predict import SHAP_ERROR
 from app.services.llm_service import DISCLAIMER, simulation_narrative
 from app.services.ml_service import predict_probability
 from app.services.shap_service import explain
-from app.validation import assessment_problems, read_json
+from app.validation import amount_record_conflict, assessment_problems, read_json
 from ml.features import risk_category
 
 simulation_bp = Blueprint("simulation", __name__)
@@ -46,6 +46,8 @@ def simulate():
         return jsonify(error="Only physical activity, smoking, alcohol and weight can be changed in the simulator."), 400
 
     original_inputs = prediction.inputs.to_dict()
+    if conflict := amount_record_conflict(changes, original_inputs):
+        return jsonify(error=conflict), 400
     values, fields = assessment_problems({**original_inputs, **changes})
     if fields:
         return jsonify(error="Please correct the highlighted fields.", fields=fields), 400

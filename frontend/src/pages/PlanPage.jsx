@@ -109,7 +109,8 @@ export default function PlanPage() {
           {calendar ? (
             <>
               <p>Day {planned} of {calendar.length} planned.</p>
-              <PlanCalendar plan={plan} />
+              {/* key: a new plan starts fresh instead of keeping the old plan's ticks */}
+              <PlanCalendar key={plan.generated_at} plan={plan} />
               {nextWeek && (
                 <p>
                   <button type="button" disabled={Boolean(busy)}

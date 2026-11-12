@@ -19,7 +19,7 @@ from app.auth import login_required
 from app.models import HealthPlan, latest_prediction, log_event
 from app.routes.simulation import CHANGEABLE, NO_ASSESSMENT
 from app.services.llm_service import DISCLAIMER, LLMUnavailable, health_week
-from app.validation import assessment_problems, read_json
+from app.validation import amount_record_conflict, assessment_problems, read_json
 
 action_plan_bp = Blueprint("action_plan", __name__)
 
@@ -91,6 +91,8 @@ def create_plan():
     changes = data.get("lifestyle") or {}
     if not isinstance(changes, dict) or set(changes) - set(CHANGEABLE):
         return jsonify(error="Only physical activity, smoking, alcohol and weight can be changed in the simulator."), 400
+    if conflict := amount_record_conflict(changes, prediction.inputs.to_dict()):
+        return jsonify(error=conflict), 400
     values, fields = assessment_problems({**prediction.inputs.to_dict(), **changes})
     if fields:
         return jsonify(error="Please correct the highlighted fields.", fields=fields), 400
@@ -141,10 +143,18 @@ def next_week():
     if sum(len(week["days"]) for week in calendar["weeks"]) >= calendar["length"]:
         return jsonify(error="Your 30-day plan is complete."), 400
 
+    original_text = plan.plan_text
     try:
         _add_week(prediction, calendar)
     except LLMUnavailable:
         return _unavailable(prediction)
+    # Another tab may have replaced or extended the plan during the LLM wait: read it again with a
+    # row lock and only save if it is unchanged, so neither request's work is silently overwritten.
+    plan = (HealthPlan.query.filter_by(plan_id=plan.plan_id)
+            .with_for_update().populate_existing().one())
+    if plan.plan_text != original_text:
+        db.session.rollback()
+        return jsonify(error="Your plan was changed in another tab. Please reload the page."), 409
     plan.plan_text = json.dumps(calendar)
     log_event("HEALTH_PLAN", f"prediction_id={prediction.prediction_id} week={len(calendar['weeks'])}",
               user_id=g.user.user_id)

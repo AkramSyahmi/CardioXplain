@@ -28,31 +28,35 @@ UNSAFE_PATTERNS = [
 ]
 
 
-# Note: 4 worker threads, so at most 4 LLM calls run at once. Increase if many users test together.
+# Note: 4 worker threads, so at most 4 short LLM calls run at once. Increase if many users test together.
 _executor = ThreadPoolExecutor(max_workers=4)
+# Calendar plans are long and slow (up to 45 s), so they get their own threads and cannot block
+# risk narratives and the navigator.
+_plan_executor = ThreadPoolExecutor(max_workers=2)
 
 
 class LLMUnavailable(Exception):
     """The LLM could not give a usable reply (network error, timeout, empty reply)."""
 
 
-def chat(system, messages, max_tokens=400, deadline=None):
+def chat(system, messages, long_reply=False):
     """Send one conversation to the LLM and return the reply text.
 
     NFR02: the reply must come within LLM_TIMEOUT_SECONDS (10 s) in total. The client's own
     timeout only limits the wait between pieces of data, so the call runs in a worker thread
     with an overall deadline. One attempt only: retries could keep the user waiting ~30 s.
-    Longer replies (the calendar plan) pass a bigger max_tokens and deadline.
+    long_reply=True (the calendar plan) allows 6000 tokens, a 45 s deadline and uses the plan threads.
     """
     config = current_app.config
-    deadline = deadline or config["LLM_TIMEOUT_SECONDS"]
+    deadline = config["LLM_PLAN_TIMEOUT_SECONDS"] if long_reply else config["LLM_TIMEOUT_SECONDS"]
+    max_tokens = 6000 if long_reply else 400  # 400 keeps normal replies short and fast
     try:
         client = OpenAI(api_key=config["LLM_API_KEY"], base_url=config["LLM_BASE_URL"],
                         timeout=deadline, max_retries=0)
-        future = _executor.submit(
+        future = (_plan_executor if long_reply else _executor).submit(
             client.chat.completions.create,
             model=config["LLM_MODEL"],
-            max_tokens=max_tokens,  # 400 by default: keeps replies short and fast
+            max_tokens=max_tokens,
             messages=[{"role": "system", "content": system}, *messages],
         )
         response = future.result(timeout=deadline)
@@ -266,7 +270,7 @@ def health_week(category, risk_score, top, lifestyle, week, total_weeks, days_in
         + WEEK_FORMAT
     )
     text = chat(system, [{"role": "user", "content": prompt}],
-                max_tokens=6000, deadline=current_app.config["LLM_PLAN_TIMEOUT_SECONDS"])
+                long_reply=True)
     week_data = parse_week(text, days_in_week)
     if not is_safe(json.dumps(week_data)):
         log_event("LLM_UNSAFE", "health plan rejected")

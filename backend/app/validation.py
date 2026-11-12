@@ -145,3 +145,24 @@ def fill_unknown(data):
     """Replace "unknown" health measurements with typical values. Returns (data, estimated_fields)."""
     estimated = [name for name in TYPICAL_VALUES if data.get(name) == "unknown"]
     return {**data, **{name: TYPICAL_VALUES[name] for name in estimated}}, estimated
+
+
+FLAG_LABELS = {"smoke": "Smoking", "alco": "Alcohol intake", "active": "Physical activity"}
+
+
+def lifestyle_conflicts(data):
+    """Yes/No values sent together with an amount that says the opposite (e.g. smoke 0 with 20 a day)."""
+    fields = {}
+    for name, (low, high, label, flag, is_yes) in LIFESTYLE_AMOUNTS.items():
+        amount, answer = _number(data.get(name)), _number(data.get(flag))
+        if amount is not None and answer in (0, 1) and low <= amount <= high and int(is_yes(amount)) != answer:
+            fields[flag] = f"{FLAG_LABELS[flag]} does not match {label}."
+    return fields
+
+
+def amount_record_conflict(changes, stored):
+    """A Yes/No change on a record saved with amounts would be overridden; ask for the amount instead."""
+    for name, (*_, label, flag, _) in LIFESTYLE_AMOUNTS.items():
+        if flag in changes and name not in changes and stored.get(name) is not None:
+            return f"This assessment uses amounts. Change {label} instead."
+    return None

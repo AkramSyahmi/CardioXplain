@@ -104,3 +104,19 @@ test("sign out returns to login and forgets the token", async () => {
   expect(await screen.findByRole("heading", { name: "Welcome back" })).toBeInTheDocument();
   expect(localStorage.getItem("cardioxplain_token")).toBeNull();
 });
+
+test("wrong password does not also say please log in again", async () => {
+  mockApi({ "POST /auth/login": [401, { error: "Invalid email or password" }] });
+  renderApp("/login");
+  await signIn("ali@mail.com", "wrong");
+  await screen.findByText("Invalid email or password");
+  expect(screen.queryByText("Please log in again.")).not.toBeInTheDocument();
+});
+
+test("refresh while the backend is down keeps the saved login and says why", async () => {
+  setToken("t1");
+  globalThis.fetch = vi.fn(() => Promise.resolve({ ok: false, status: 500, json: () => Promise.reject(new SyntaxError()) }));
+  renderApp("/dashboard");
+  expect(await screen.findByText("Cannot reach the server. Please check that the backend is running.")).toBeInTheDocument();
+  expect(localStorage.getItem("cardioxplain_token")).toBe("t1");
+});

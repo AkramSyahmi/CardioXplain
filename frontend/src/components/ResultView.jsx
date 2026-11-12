@@ -132,7 +132,7 @@ export default function ResultView({ result }) {
             <ShapTable shap={result.shap} estimated={result.estimated_fields ?? []} />
           </>
         ) : (
-          <p role="alert">{result.shap_error}</p>
+          <p role="alert">{result.shap_error ?? "No explanation was saved for this result."}</p>
         )}
       </section>
 
