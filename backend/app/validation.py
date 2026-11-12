@@ -102,3 +102,14 @@ def assessment_problems(data):
     if "height" in values and "weight" in values:
         values["bmi"] = round(values["weight"] / (values["height"] / 100) ** 2, 2)
     return values, fields
+
+
+# "I don't know" (CHANGES.md #23): typical values from the cleaned dataset
+# (median blood pressure 120/80; "Normal" for 75% of cholesterol and 85% of glucose values).
+TYPICAL_VALUES = {"ap_hi": 120, "ap_lo": 80, "cholesterol": 1, "gluc": 1}
+
+
+def fill_unknown(data):
+    """Replace "unknown" health measurements with typical values. Returns (data, estimated_fields)."""
+    estimated = [name for name in TYPICAL_VALUES if data.get(name) == "unknown"]
+    return {**data, **{name: TYPICAL_VALUES[name] for name in estimated}}, estimated

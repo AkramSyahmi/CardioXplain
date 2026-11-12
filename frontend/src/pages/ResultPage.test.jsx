@@ -40,3 +40,22 @@ test("result page shows not found message", async () => {
   renderApp("/result/99");
   expect(await screen.findByText("Prediction not found.")).toBeInTheDocument();
 });
+
+test("estimated result shows a warning and marks estimated factors", async () => {
+  const estimated = { ...RESULT, estimated_fields: ["ap_hi", "ap_lo"], inputs: { ...RESULT.inputs, ap_hi: 120, ap_lo: 80 },
+    shap: [{ feature: "ap_hi", label: "Systolic blood pressure", value: 120, shap: 0.05 }, ...RESULT.shap.slice(1)] };
+  mockApi({ "GET /auth/me": [200, { user: USER }], "GET /history/7": [200, estimated] });
+  renderApp("/result/7");
+  const warning = (await screen.findByText(/Estimated result/)).closest("p");
+  expect(warning).toHaveTextContent("systolic blood pressure, diastolic blood pressure");
+  expect(warning).toHaveTextContent("120/80 mmHg");
+  const row = within(screen.getByRole("table", { name: "Factor contributions" })).getAllByRole("row")[1];
+  expect(within(row).getByText("120 (estimated)")).toBeInTheDocument();
+});
+
+test("result without estimated fields shows no warning", async () => {
+  mockApi({ "GET /auth/me": [200, { user: USER }], "GET /history/7": [200, { ...RESULT, estimated_fields: [] }] });
+  renderApp("/result/7");
+  await screen.findByText("41%");
+  expect(screen.queryByText(/Estimated result/)).not.toBeInTheDocument();
+});

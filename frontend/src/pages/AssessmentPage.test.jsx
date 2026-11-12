@@ -30,7 +30,7 @@ test("assessment shows BMI from height and weight", async () => {
 test("assessment shows help text for unsure users", async () => {
   mockApi({ "GET /auth/me": [200, { user: USER }] });
   renderApp("/assessment");
-  expect((await screen.findAllByText("If you are unsure, choose Normal and ask for a check at a clinic.")).length).toBe(2);
+  expect((await screen.findAllByText("If you are unsure, choose \"I don't know\" and ask for a check at a clinic.")).length).toBe(2);
   expect(screen.getByText(/systolic is the first, diastolic the second/)).toBeInTheDocument();
 });
 
@@ -72,4 +72,19 @@ test("assessment button disabled while waiting", async () => {
   expect(button).toBeDisabled();
   await userEvent.click(button);
   expect(api.mock.calls.filter(([url]) => url === "/api/predict")).toHaveLength(1);
+});
+
+test("unknown blood pressure and cholesterol are sent as unknown", async () => {
+  const api = mockApi({ "GET /auth/me": [200, { user: USER }], "POST /predict": [201, RESULT] });
+  renderApp("/assessment");
+  await screen.findByLabelText("Age (years)");
+  await fillForm();
+  await userEvent.click(screen.getByLabelText("I don't know my blood pressure"));
+  expect(screen.getByLabelText("Systolic blood pressure (mmHg)")).toBeDisabled();
+  expect(screen.getByLabelText("Diastolic blood pressure (mmHg)")).toBeDisabled();
+  await userEvent.selectOptions(screen.getByLabelText("Cholesterol level"), "unknown");
+  await userEvent.click(screen.getByRole("button", { name: "Predict Risk" }));
+  await screen.findByRole("heading", { name: "Risk Assessment Results" });
+  const body = JSON.parse(api.mock.calls.find(([url]) => url === "/api/predict")[1].body);
+  expect(body).toMatchObject({ ap_hi: "unknown", ap_lo: "unknown", cholesterol: "unknown", gluc: 1, age: 50 });
 });

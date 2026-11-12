@@ -19,8 +19,31 @@ function effect(shap) {
   return shap > 0 ? `+${points}%` : `${points}%`;
 }
 
+// Typical values the backend uses for "I don't know" (CHANGES.md #23).
+const ESTIMATE_NAMES = { ap_hi: "systolic blood pressure", ap_lo: "diastolic blood pressure",
+  cholesterol: "cholesterol level", gluc: "glucose level" };
+
+function typicalValues(estimated) {
+  const parts = [];
+  if (estimated.includes("ap_hi") || estimated.includes("ap_lo")) parts.push("blood pressure 120/80 mmHg");
+  if (estimated.includes("cholesterol")) parts.push("cholesterol Normal");
+  if (estimated.includes("gluc")) parts.push("glucose Normal");
+  return parts.join(", ");
+}
+
+function EstimateWarning({ estimated }) {
+  return (
+    <p role="alert">
+      <strong>Estimated result.</strong> You did not know your{" "}
+      {estimated.map((name) => ESTIMATE_NAMES[name]).join(", ")}, so typical values were used (
+      {typicalValues(estimated)}). Your real risk may be higher or lower. Get these checked at a clinic or
+      pharmacy, then do a new assessment.
+    </p>
+  );
+}
+
 /** Table of every factor's SHAP contribution (also used by the What-If simulator). */
-export function ShapTable({ shap }) {
+export function ShapTable({ shap, estimated = [] }) {
   return (
     <table aria-label="Factor contributions">
       <thead>
@@ -35,7 +58,10 @@ export function ShapTable({ shap }) {
         {shap.map((item) => (
           <tr key={item.feature}>
             <td>{item.label}</td>
-            <td>{displayValue(item.feature, item.value)}</td>
+            <td>
+              {displayValue(item.feature, item.value)}
+              {estimated.includes(item.feature) && " (estimated)"}
+            </td>
             <td>{effect(item.shap)}</td>
             <td>{item.shap > 0 ? "Raises risk" : item.shap < 0 ? "Lowers risk" : "No effect"}</td>
           </tr>
@@ -68,6 +94,7 @@ export default function ResultView({ result }) {
     <>
       <section>
         <h2>Risk Score</h2>
+        {result.estimated_fields?.length > 0 && <EstimateWarning estimated={result.estimated_fields} />}
         <p>
           <strong>{result.risk_percent}%</strong>
         </p>
@@ -85,7 +112,7 @@ export default function ResultView({ result }) {
         {result.shap ? (
           <>
             <ShapChart shap={result.shap} />
-            <ShapTable shap={result.shap} />
+            <ShapTable shap={result.shap} estimated={result.estimated_fields ?? []} />
           </>
         ) : (
           <p role="alert">{result.shap_error}</p>

@@ -32,6 +32,8 @@ class Prediction(db.Model):
     risk_category = db.Column(db.Enum("Low", "Moderate", "High", name="risk_category"),
                               nullable=False)
     prediction_date = db.Column(db.DateTime, server_default=func.now())
+    # Added in FYP2 (CHANGES.md #23): inputs the user did not know, filled with typical values.
+    estimated_fields = db.Column(db.JSON, nullable=True)
 
     user = db.relationship("User", back_populates="predictions")
     inputs = db.relationship("PredictionInput", uselist=False, back_populates="prediction")

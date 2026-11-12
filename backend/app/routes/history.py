@@ -18,6 +18,7 @@ def prediction_to_dict(p):
     """Full stored result, in the same shape as the POST /api/predict response."""
     return {**_summary(p),
             "inputs": p.inputs.to_dict(),
+            "estimated_fields": p.estimated_fields or [],
             "shap": p.shap.all_shap_values if p.shap else None,
             "narrative": {"text": p.narrative.narrative_text} if p.narrative else None,
             "disclaimer": DISCLAIMER}

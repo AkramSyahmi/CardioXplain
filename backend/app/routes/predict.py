@@ -7,7 +7,7 @@ from app.models import LlmNarrative, Prediction, PredictionInput, ShapExplanatio
 from app.services.llm_service import DISCLAIMER, risk_narrative
 from app.services.ml_service import predict_probability
 from app.services.shap_service import explain
-from app.validation import assessment_problems, read_json
+from app.validation import assessment_problems, fill_unknown, read_json
 from ml.features import risk_category
 
 predict_bp = Blueprint("predict", __name__)
@@ -18,7 +18,8 @@ SHAP_ERROR = "The explanation could not be generated. Please try the assessment 
 @predict_bp.post("")
 @login_required("general_user")
 def create_prediction():
-    values, fields = assessment_problems(read_json() or {})
+    data, estimated = fill_unknown(read_json() or {})
+    values, fields = assessment_problems(data)
     if fields:
         return jsonify(error="Please correct the highlighted fields.", fields=fields), 400
 
@@ -31,9 +32,10 @@ def create_prediction():
         current_app.logger.exception("SHAP calculation failed")
         shap_items = None
     top = (shap_items or [])[:3]
-    narrative, source = risk_narrative(risk_score, category, top)
+    narrative, source = risk_narrative(risk_score, category, top, estimated)
 
-    prediction = Prediction(user_id=g.user.user_id, risk_score=risk_score, risk_category=category)
+    prediction = Prediction(user_id=g.user.user_id, risk_score=risk_score, risk_category=category,
+                            estimated_fields=estimated)
     db.session.add(prediction)
     db.session.flush()
     db.session.add(PredictionInput(prediction_id=prediction.prediction_id, **values))
@@ -55,6 +57,7 @@ def create_prediction():
         "risk_percent": round(risk_score * 100),
         "risk_category": category,
         "inputs": values,
+        "estimated_fields": estimated,
         "shap": shap_items,
         "narrative": {"text": narrative, "source": source},
         "disclaimer": DISCLAIMER,

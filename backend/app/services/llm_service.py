@@ -85,16 +85,24 @@ def _factor_lines(top):
     )
 
 
-def _fallback_narrative(risk_score, category, top):
+def _estimated_labels(estimated):
+    from ml.features import FEATURE_LABELS
+    return ", ".join(FEATURE_LABELS[name].lower() for name in estimated)
+
+
+def _fallback_narrative(risk_score, category, top, estimated=()):
     """Pre-written explanation used when the LLM is unavailable or unsafe (3.2.8.2 step 6)."""
     text = f"Your predicted cardiovascular risk is {category} ({_percent(risk_score)}%). "
     if top:
         direction = "increased" if top[0]["shap"] > 0 else "lowered"
         text += f"The factor that most affected this result is {top[0]['label']}, which {direction} your risk. "
+    if estimated:
+        text += (f"This result is estimated because typical values were used for: {_estimated_labels(estimated)}. "
+                 "Getting these measured would make it more accurate. ")
     return text + DISCLAIMER + " Please consult a healthcare professional."
 
 
-def risk_narrative(risk_score, category, top):
+def risk_narrative(risk_score, category, top, estimated=()):
     """Plain-language explanation of a risk result (UC-400). Returns (text, source)."""
     system = ("You are a health assistant that explains cardiovascular disease risk results "
               "to a general audience with no medical training. " + SAFETY_RULES)
@@ -102,6 +110,8 @@ def risk_narrative(risk_score, category, top):
         f"Predicted risk category: {category}\n"
         f"Predicted probability: {_percent(risk_score)}%\n"
         + (f"Top contributing factors (from SHAP):\n{_factor_lines(top)}\n" if top else "")
+        + (f"The user did not know these values, so typical values were used: {_estimated_labels(estimated)}. "
+           "Mention that the result is an estimate and suggest getting them measured.\n" if estimated else "")
         + "Write one short paragraph (about 80-120 words) in simple, non-technical language that "
           "explains what this result means and which factors affected it most. "
           "End by recommending the user consult a healthcare professional."
@@ -109,10 +119,10 @@ def risk_narrative(risk_score, category, top):
     try:
         text = chat(system, [{"role": "user", "content": prompt}])
     except LLMUnavailable:
-        return _fallback_narrative(risk_score, category, top), "fallback"
+        return _fallback_narrative(risk_score, category, top, estimated), "fallback"
     if not is_safe(text):
         log_event("LLM_UNSAFE", "risk narrative replaced by fallback")
-        return _fallback_narrative(risk_score, category, top), "fallback"
+        return _fallback_narrative(risk_score, category, top, estimated), "fallback"
     return text, "llm"
 
 

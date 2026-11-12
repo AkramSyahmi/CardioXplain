@@ -6,14 +6,16 @@ import FieldError from "../components/FieldError.jsx";
 import YesNoField from "../components/YesNoField.jsx";
 
 const NUMBER_FIELDS = ["age", "height", "weight", "ap_hi", "ap_lo", "cholesterol", "gluc", "smoke", "alco", "active"];
-const UNSURE = "If you are unsure, choose Normal and ask for a check at a clinic.";
+const UNSURE = `If you are unsure, choose "I don't know" and ask for a check at a clinic.`;
 const EMPTY = { age: "", gender: "", height: "", weight: "", ap_hi: "", ap_lo: "",
   cholesterol: "", gluc: "", smoke: "", alco: "", active: "" };
 
 /** Form values as the API expects them; empty fields stay "" so the API names them. */
 function toBody(form) {
   const body = { ...form };
-  for (const name of NUMBER_FIELDS) if (form[name] !== "") body[name] = Number(form[name]);
+  for (const name of NUMBER_FIELDS) {
+    if (form[name] !== "" && form[name] !== "unknown") body[name] = Number(form[name]);
+  }
   return body;
 }
 
@@ -23,12 +25,13 @@ function bmiOf(form) {
   return height > 0 && weight > 0 ? (weight / (height * height)).toFixed(2) : null;
 }
 
-function NumberField({ name, label, help, form, fields, onChange }) {
+function NumberField({ name, label, help, form, fields, onChange, disabled = false }) {
   return (
     <p>
       <label htmlFor={name}>{label}</label>
       <br />
-      <input id={name} name={name} type="number" inputMode="decimal" value={form[name]} onChange={onChange} />
+      <input id={name} name={name} type="number" inputMode="decimal" disabled={disabled}
+        value={form[name] === "unknown" ? "" : form[name]} onChange={onChange} />
       {help && <><br /><small>{help}</small></>}
       <FieldError fields={fields} name={name} />
     </p>
@@ -45,6 +48,7 @@ function LevelField({ name, label, form, fields, onChange }) {
         <option value="1">Normal</option>
         <option value="2">Above normal</option>
         <option value="3">Well above normal</option>
+        <option value="unknown">I don't know</option>
       </select>
       <br />
       <small>{UNSURE}</small>
@@ -62,6 +66,13 @@ export default function AssessmentPage() {
 
   function change(event) {
     setForm({ ...form, [event.target.name]: event.target.value });
+  }
+
+  // "I don't know" (CHANGES.md #23): the backend uses typical values and marks the result as estimated.
+  const bpUnknown = form.ap_hi === "unknown";
+  function toggleBpUnknown(event) {
+    const value = event.target.checked ? "unknown" : "";
+    setForm({ ...form, ap_hi: value, ap_lo: value });
   }
 
   async function submit(event) {
@@ -107,10 +118,17 @@ export default function AssessmentPage() {
         {bmi && <p>Your BMI: {bmi}</p>}
 
         <h2>Health measurements</h2>
-        <NumberField name="ap_hi" label="Systolic blood pressure (mmHg)"
+        <NumberField name="ap_hi" label="Systolic blood pressure (mmHg)" disabled={bpUnknown}
           help="The two numbers from a blood pressure reading, e.g. 120/80: systolic is the first, diastolic the second."
           {...shared} />
-        <NumberField name="ap_lo" label="Diastolic blood pressure (mmHg)" {...shared} />
+        <NumberField name="ap_lo" label="Diastolic blood pressure (mmHg)" disabled={bpUnknown} {...shared} />
+        <p>
+          <label>
+            <input type="checkbox" checked={bpUnknown} onChange={toggleBpUnknown} /> I don't know my blood pressure
+          </label>
+          <br />
+          <small>A typical value (120/80) will be used and your result will be marked as estimated.</small>
+        </p>
         <LevelField name="cholesterol" label="Cholesterol level" {...shared} />
         <LevelField name="gluc" label="Glucose level" {...shared} />
 
