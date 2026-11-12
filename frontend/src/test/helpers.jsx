@@ -31,3 +31,20 @@ export function renderApp(path = "/") {
     </MemoryRouter>,
   );
 }
+
+/** A POST /api/predict style result (also the GET /api/history/:id shape). */
+export const RESULT = {
+  prediction_id: 7,
+  risk_score: 0.4123,
+  risk_percent: 41,
+  risk_category: "Moderate",
+  inputs: { age: 50, gender: "male", height: 170, weight: 80, bmi: 27.68, ap_hi: 140, ap_lo: 90,
+    cholesterol: 2, gluc: 1, smoke: 0, alco: 0, active: 1 },
+  shap: [
+    { feature: "ap_hi", label: "Systolic blood pressure", value: 140, shap: 0.152 },
+    { feature: "active", label: "Physical activity", value: 1, shap: -0.031 },
+    { feature: "age", label: "Age", value: 50, shap: 0.02 },
+  ],
+  narrative: { text: "Your risk is moderate, mainly because of your blood pressure.", source: "llm" },
+  disclaimer: "This result is for educational purposes only and does not replace professional medical advice.",
+};

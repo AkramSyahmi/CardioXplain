@@ -1,8 +1,10 @@
 import { BrowserRouter, Navigate, Route, Routes } from "react-router";
 import { AuthProvider, ProtectedRoute, homeFor, useAuth } from "./auth.jsx";
+import AssessmentPage from "./pages/AssessmentPage.jsx";
 import DashboardPage from "./pages/DashboardPage.jsx";
 import LoginPage from "./pages/LoginPage.jsx";
 import NotFoundPage from "./pages/NotFoundPage.jsx";
+import ResultPage from "./pages/ResultPage.jsx";
 
 // Placeholder for pages built in later tasks (replaced task by task).
 function ComingSoon({ title }) {
@@ -17,8 +19,8 @@ function Home() {
 
 const USER_PAGES = [
   ["/dashboard", <DashboardPage />],
-  ["/assessment", <ComingSoon title="New Risk Assessment" />],
-  ["/result/:id", <ComingSoon title="Risk Assessment Results" />],
+  ["/assessment", <AssessmentPage />],
+  ["/result/:id", <ResultPage />],
   ["/simulator", <ComingSoon title="What-If Simulator" />],
   ["/history", <ComingSoon title="Prediction History" />],
   ["/plan", <ComingSoon title="Health Action Plan" />],
