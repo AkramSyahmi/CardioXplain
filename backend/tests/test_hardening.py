@@ -14,16 +14,18 @@ def test_1_plan_double_submit_does_not_crash(client, user_headers, fake_llm, val
     db.session.commit()
 
     def plan_saved_by_other_request(*args):
+        import json
+        from conftest import calendar_week
         with db.engine.begin() as other:
             other.execute(text("INSERT INTO health_plans (prediction_id, plan_text) VALUES (:p, 'first')"),
                           {"p": prediction_id})
-        return "second plan. Please consult a healthcare professional."
-    monkeypatch.setattr(action_plan, "health_plan", plan_saved_by_other_request)
+        return json.loads(calendar_week("second plan"))
+    monkeypatch.setattr(action_plan, "health_week", plan_saved_by_other_request)
     response = client.post("/api/action-plan", json={}, headers=user_headers)
     assert response.status_code == 201
     db.session.expire_all()
     assert HealthPlan.query.count() == 1
-    assert HealthPlan.query.one().plan_text.startswith("second plan")
+    assert "second plan" in HealthPlan.query.one().plan_text
 
 
 def test_2_huge_number_is_a_field_error(client, user_headers, valid_input):

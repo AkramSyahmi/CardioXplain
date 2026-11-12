@@ -11,3 +11,11 @@ export function formatDateTime(iso) {
 export function formatDate(iso) {
   return new Date(iso).toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" });
 }
+
+/** "2026-11-16" (a calendar date, no time) -> "Mon 16 Nov 2026" */
+export function formatDay(isoDate) {
+  const [year, month, day] = isoDate.split("-").map(Number);
+  return new Date(year, month - 1, day).toLocaleDateString("en-GB", {
+    weekday: "short", day: "numeric", month: "short", year: "numeric",
+  }).replace(",", "");
+}

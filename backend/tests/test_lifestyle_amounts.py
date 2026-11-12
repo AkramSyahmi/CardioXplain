@@ -62,7 +62,8 @@ def test_simulation_with_more_exercise(client, user_headers, fake_llm, valid_inp
 
 def test_health_plan_uses_amounts(client, user_headers, fake_llm, valid_input):
     client.post("/api/predict", json={**without_flags(valid_input), **AMOUNTS}, headers=user_headers)
-    fake_llm.reply = "## Week 1\n- Walk more.\nPlease consult a healthcare professional."
+    from conftest import calendar_week
+    fake_llm.reply = calendar_week()
     assert client.post("/api/action-plan", json={}, headers=user_headers).status_code == 201
     prompt = fake_llm.calls[-1]["messages"][-1]["content"]
     assert "20 cigarettes per day" in prompt and "120 minutes" in prompt

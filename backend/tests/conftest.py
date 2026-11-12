@@ -105,7 +105,7 @@ class FakeLLM:
         self.fail = False
         self.calls = []
 
-    def __call__(self, system, messages):
+    def __call__(self, system, messages, **options):
         from app.services.llm_service import LLMUnavailable
         self.calls.append({"system": system, "messages": messages})
         if self.fail:
@@ -127,3 +127,15 @@ def valid_input():
     """A valid risk assessment form (11 inputs; BMI is calculated by the backend)."""
     return {"age": 50, "gender": "male", "height": 170, "weight": 80, "ap_hi": 140, "ap_lo": 90,
             "cholesterol": 2, "gluc": 1, "smoke": 0, "alco": 0, "active": 1}
+
+
+def calendar_week(theme="Start gently", step_text="Drink 1 glass (250 ml) of water after waking", days=7):
+    """A valid LLM reply for one week of the calendar health plan (CHANGES.md #25)."""
+    import json
+    task = lambda kind, text: {"type": kind, "task": text, "steps": [step_text, "Tick this when done"]}
+    day = lambda n: {"day": n, "title": f"Day {n} focus", "blocks": {
+        "morning": [task("hydration", "Morning water"), task("meal", "Oats with banana")],
+        "afternoon": [task("workout", "15-minute brisk walk")],
+        "evening": [task("meal", "Grilled fish and vegetables"), task("sleep", "In bed by 22:30")],
+    }}
+    return json.dumps({"theme": theme, "days": [day(n) for n in range(1, days + 1)]})
