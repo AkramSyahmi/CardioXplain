@@ -2,6 +2,7 @@ import { BrowserRouter, Navigate, Route, Routes } from "react-router";
 import { AuthProvider, ProtectedRoute, homeFor, useAuth } from "./auth.jsx";
 import AssessmentPage from "./pages/AssessmentPage.jsx";
 import DashboardPage from "./pages/DashboardPage.jsx";
+import HistoryPage from "./pages/HistoryPage.jsx";
 import LoginPage from "./pages/LoginPage.jsx";
 import NotFoundPage from "./pages/NotFoundPage.jsx";
 import ResultPage from "./pages/ResultPage.jsx";
@@ -23,7 +24,7 @@ const USER_PAGES = [
   ["/assessment", <AssessmentPage />],
   ["/result/:id", <ResultPage />],
   ["/simulator", <SimulatorPage />],
-  ["/history", <ComingSoon title="Prediction History" />],
+  ["/history", <HistoryPage />],
   ["/plan", <ComingSoon title="Health Action Plan" />],
   ["/navigator", <ComingSoon title="Virtual Care Navigator" />],
 ];

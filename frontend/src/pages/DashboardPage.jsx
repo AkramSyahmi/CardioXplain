@@ -3,7 +3,8 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router";
 import { apiRequest } from "../api.js";
 import { useAuth } from "../auth.jsx";
-import { formatDate, formatDateTime } from "../format.js";
+import HistoryTable from "../components/HistoryTable.jsx";
+import { formatDate } from "../format.js";
 
 export default function DashboardPage() {
   const { user } = useAuth();
@@ -41,30 +42,7 @@ export default function DashboardPage() {
       {history && predictions.length === 0 && <p>{history.message}</p>}
       {predictions.length > 0 && (
         <>
-          <table>
-            <thead>
-              <tr>
-                <th>#</th>
-                <th>Date</th>
-                <th>Risk Score</th>
-                <th>Category</th>
-                <th>Details</th>
-              </tr>
-            </thead>
-            <tbody>
-              {predictions.slice(0, 5).map((p) => (
-                <tr key={p.prediction_id}>
-                  <td>{p.prediction_id}</td>
-                  <td>{formatDateTime(p.prediction_date)}</td>
-                  <td>{p.risk_percent}%</td>
-                  <td>{p.risk_category}</td>
-                  <td>
-                    <Link to={`/result/${p.prediction_id}`}>View</Link>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+          <HistoryTable predictions={predictions.slice(0, 5)} />
           <p>
             <Link to="/history">View all</Link>
           </p>
