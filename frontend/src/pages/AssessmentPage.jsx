@@ -3,6 +3,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router";
 import { apiRequest } from "../api.js";
 import FieldError from "../components/FieldError.jsx";
+import YesNoField from "../components/YesNoField.jsx";
 
 const NUMBER_FIELDS = ["age", "height", "weight", "ap_hi", "ap_lo", "cholesterol", "gluc", "smoke", "alco", "active"];
 const UNSURE = "If you are unsure, choose Normal and ask for a check at a clinic.";
@@ -49,22 +50,6 @@ function LevelField({ name, label, form, fields, onChange }) {
       <small>{UNSURE}</small>
       <FieldError fields={fields} name={name} />
     </p>
-  );
-}
-
-function YesNoField({ name, label, form, fields, onChange }) {
-  return (
-    <fieldset>
-      <legend>{label}</legend>
-      {[["1", "Yes"], ["0", "No"]].map(([value, text]) => (
-        <label key={value}>
-          <input type="radio" name={name} value={value} checked={form[name] === value} onChange={onChange}
-            aria-label={`${label}: ${text}`} />
-          {text}{" "}
-        </label>
-      ))}
-      <FieldError fields={fields} name={name} />
-    </fieldset>
   );
 }
 

@@ -5,6 +5,7 @@ import DashboardPage from "./pages/DashboardPage.jsx";
 import LoginPage from "./pages/LoginPage.jsx";
 import NotFoundPage from "./pages/NotFoundPage.jsx";
 import ResultPage from "./pages/ResultPage.jsx";
+import SimulatorPage from "./pages/SimulatorPage.jsx";
 
 // Placeholder for pages built in later tasks (replaced task by task).
 function ComingSoon({ title }) {
@@ -21,7 +22,7 @@ const USER_PAGES = [
   ["/dashboard", <DashboardPage />],
   ["/assessment", <AssessmentPage />],
   ["/result/:id", <ResultPage />],
-  ["/simulator", <ComingSoon title="What-If Simulator" />],
+  ["/simulator", <SimulatorPage />],
   ["/history", <ComingSoon title="Prediction History" />],
   ["/plan", <ComingSoon title="Health Action Plan" />],
   ["/navigator", <ComingSoon title="Virtual Care Navigator" />],
