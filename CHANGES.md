@@ -24,6 +24,7 @@ Used to update Chapter 3 and explain changes in Chapter 4.
 | 17 | 2026-11-12 | Forgot Password (UC-100 alternative flow A1) postponed. If a user forgets their password, an administrator sets a temporary password through User Management. | Sending reset links needs an email service, which is outside the project scope (1.4.3). | UC-100 A1, UC-800 |
 | 18 | 2026-11-12 | When the LLM is unavailable, too slow or returns unsafe text, the pre-written template narrative (section 3.2.8.2 step 6) is shown and saved, instead of UC-400 E1's "Explanation is currently unavailable" message. | The proposal contradicts itself (3.2.8.2 vs UC-400 E1). The fallback still gives the user an explanation of their result. | 3.2.8.2, UC-400 E1 |
 | 19 | 2026-11-12 | LLM calls have a hard 10-second total deadline, no automatic retries, and a 400-token reply limit. | Measured with the real asai server: replies took 4-20 s, and the client's timeout only limits the gap between data, not the total. Without this, users could wait up to ~30 s (NFR02). | NFR02, 3.2.8.2 |
+| 20 | 2026-11-12 | Admin model metrics are read from `ml/output/metrics.json` (results on the unseen test set). UC-900 alternative flow A1 "Insufficient data" is not needed. | The metrics come from the test set (UC-900 step 3), not from users' predictions, so they are always available. | UC-900 A1, FR09 |
 
 ## Report fixes to do
 
@@ -42,6 +43,7 @@ Changes needed in the report only (no code change).
 - [ ] UC-100 (Table 3.17): remove or mark alternative flow A1 Forgot Password as future work; mention admin password reset in UC-800.
 - [ ] UC-400 E1 (Table 3.20): describe the fallback narrative instead of the 'Explanation is currently unavailable' message.
 - [ ] Ch4 NFR results: prediction + SHAP 0.02 s (NFR01 met); LLM narrative 4-8 s normally, fallback after 10 s (NFR02 met by the deadline). In 6 live calls on 2026-11-12, 2 hit the deadline (asai server slow).
+- [ ] UC-900 (Table 3.25): remove alternative flow A1 Insufficient data; metrics come from the test set.
 
 ## Weaknesses to address
 
