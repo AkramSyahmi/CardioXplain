@@ -13,4 +13,5 @@ class Config:
     LLM_MODEL = os.getenv("LLM_MODEL")
     LLM_TIMEOUT_SECONDS = 10  # NFR02
     TOKEN_MAX_AGE_SECONDS = 8 * 3600  # login lasts 8 hours
+    MAX_CONTENT_LENGTH = 64 * 1024  # largest request body accepted (64 KB)
     FRONTEND_ORIGIN = os.getenv("FRONTEND_ORIGIN", "http://localhost:5173")

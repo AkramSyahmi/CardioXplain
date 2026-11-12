@@ -3,6 +3,7 @@ import json
 
 from flask import Blueprint, g, jsonify, request
 from sqlalchemy import func
+from sqlalchemy.exc import IntegrityError
 from werkzeug.security import generate_password_hash
 
 from app import db
@@ -19,8 +20,11 @@ admin_bp = Blueprint("admin", __name__)
 @login_required("admin")
 def metrics():
     """Model results on the unseen test set (UC-900 step 3). Read-only."""
-    return jsonify(metrics=json.loads((MODEL_DIR / "metrics.json").read_text()),
-                   training=json.loads((MODEL_DIR / "training_summary.json").read_text()))
+    try:
+        return jsonify(metrics=json.loads((MODEL_DIR / "metrics.json").read_text()),
+                       training=json.loads((MODEL_DIR / "training_summary.json").read_text()))
+    except FileNotFoundError:  # model not trained yet (run ml/train_model.py)
+        return jsonify(error="Model metrics are not available yet."), 503
 
 
 @admin_bp.get("/stats")
@@ -99,7 +103,11 @@ def create_user():
     user = User(full_name=values["full_name"], email=values["email"], role=role, status="active",
                 password_hash=generate_password_hash(values["password"]))
     db.session.add(user)
-    db.session.flush()
+    try:
+        db.session.flush()
+    except IntegrityError:  # same email saved at the same moment
+        db.session.rollback()
+        return jsonify(error="This email is already registered."), 409
     log_event("CREATE_USER", f"user_id={user.user_id} role={role}", user_id=g.user.user_id)
     db.session.commit()
     return jsonify(user=admin_user_dict(user)), 201

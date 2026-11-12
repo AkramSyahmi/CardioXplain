@@ -17,7 +17,7 @@ def _clean_history(history):
     """Keep only user/assistant text messages (a 'system' message could override the safety rules)."""
     if not isinstance(history, list):
         return []
-    cleaned = [{"role": m["role"], "content": m["content"]} for m in history
+    cleaned = [{"role": m["role"], "content": m["content"][:MAX_QUESTION]} for m in history
                if isinstance(m, dict) and m.get("role") in ("user", "assistant")
                and isinstance(m.get("content"), str) and m["content"].strip()]
     return cleaned[-MAX_HISTORY:]

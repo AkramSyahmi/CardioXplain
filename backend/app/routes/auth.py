@@ -13,6 +13,8 @@ from app.validation import password_problem, read_json
 auth_bp = Blueprint("auth", __name__)
 
 EMAIL_PATTERN = re.compile(r"^[^@\s]+@[^@\s]+\.[^@\s]+$")
+# Checked when the email is unknown, so login takes the same time either way (no email guessing).
+DUMMY_HASH = generate_password_hash("not-a-real-password")
 
 
 def user_to_dict(user):
@@ -74,7 +76,8 @@ def login():
     password = data.get("password") if isinstance(data.get("password"), str) else ""
 
     user = User.query.filter_by(email=email).first() if email else None
-    if user is None or not check_password_hash(user.password_hash, password):
+    password_ok = check_password_hash(user.password_hash if user else DUMMY_HASH, password)
+    if user is None or not password_ok:
         # Same message for wrong email and wrong password, so emails cannot be guessed (UC-100 E2).
         log_event("LOGIN_FAILED", "Invalid email or password")
         db.session.commit()

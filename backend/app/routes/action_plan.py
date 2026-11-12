@@ -1,6 +1,7 @@
 """UC-1000 View Personalised Health Action Plan (Table 3.26)."""
 from flask import Blueprint, g, jsonify
 from sqlalchemy import func
+from sqlalchemy.exc import IntegrityError
 
 from app import db
 from app.auth import login_required
@@ -63,6 +64,14 @@ def create_plan():
         plan.plan_text = text
         plan.generated_at = func.now()
     log_event("HEALTH_PLAN", f"prediction_id={prediction.prediction_id}", user_id=g.user.user_id)
-    db.session.commit()
+    try:
+        db.session.commit()
+    except IntegrityError:  # another request saved a plan at the same moment: replace it instead
+        db.session.rollback()
+        plan = HealthPlan.query.filter_by(prediction_id=prediction.prediction_id).one()
+        plan.plan_text = text
+        plan.generated_at = func.now()
+        log_event("HEALTH_PLAN", f"prediction_id={prediction.prediction_id}", user_id=g.user.user_id)
+        db.session.commit()
     db.session.refresh(plan)
     return jsonify(plan=_plan_dict(plan), disclaimer=DISCLAIMER), 201

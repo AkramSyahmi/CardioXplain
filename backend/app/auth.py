@@ -1,4 +1,5 @@
 """Token login (NFR04): signed tokens sent as `Authorization: Bearer <token>` (CHANGES.md #15)."""
+import hashlib
 from functools import wraps
 
 from flask import current_app, g, jsonify, request
@@ -12,8 +13,13 @@ def _serializer():
     return URLSafeTimedSerializer(current_app.config["SECRET_KEY"], salt="auth-token")
 
 
+def _password_fingerprint(user):
+    """Short value that changes when the password changes, so a reset ends old sessions."""
+    return hashlib.sha256(user.password_hash.encode()).hexdigest()[:16]
+
+
 def make_token(user):
-    return _serializer().dumps({"user_id": user.user_id})
+    return _serializer().dumps({"user_id": user.user_id, "pw": _password_fingerprint(user)})
 
 
 def login_required(role=None):
@@ -32,7 +38,8 @@ def login_required(role=None):
                 return jsonify(error="Please log in again."), 401
 
             user = db.session.get(User, data.get("user_id"))
-            if user is None or user.status != "active":
+            if (user is None or user.status != "active"
+                    or data.get("pw") != _password_fingerprint(user)):
                 return jsonify(error="Please log in again."), 401
             if role and user.role != role:
                 return jsonify(error="You do not have permission to access this page."), 403

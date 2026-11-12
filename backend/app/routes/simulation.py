@@ -1,9 +1,10 @@
 """UC-500 Simulate Lifestyle Changes (What-If simulator, Table 3.21)."""
-from flask import Blueprint, g, jsonify
+from flask import Blueprint, current_app, g, jsonify
 
 from app import db
 from app.auth import login_required
 from app.models import latest_prediction, log_event
+from app.routes.predict import SHAP_ERROR
 from app.services.llm_service import DISCLAIMER, simulation_narrative
 from app.services.ml_service import predict_probability
 from app.services.shap_service import explain
@@ -51,7 +52,12 @@ def simulate():
 
     simulated_score = round(predict_probability(values), 4)
     original = _score(prediction.risk_score)
-    simulated = {**_score(simulated_score), "inputs": values, "shap": explain(values)}
+    simulated = {**_score(simulated_score), "inputs": values}
+    try:
+        simulated["shap"] = explain(values)
+    except Exception:  # same as UC-300 E1: still show the simulated score
+        current_app.logger.exception("SHAP calculation failed")
+        simulated["shap"], simulated["shap_error"] = None, SHAP_ERROR
     changed = {name: (original_inputs[name], values[name])
                for name in CHANGEABLE if values[name] != original_inputs[name]}
     narrative, source = simulation_narrative(original, simulated, changed)

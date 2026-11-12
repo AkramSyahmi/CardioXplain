@@ -25,6 +25,10 @@ def create_app(overrides=None):
     def method_not_allowed(_error):
         return jsonify(error="Method not allowed."), 405
 
+    @app.errorhandler(413)
+    def too_large(_error):
+        return jsonify(error="The request is too large."), 413
+
     @app.errorhandler(500)
     def server_error(_error):
         return jsonify(error="Something went wrong. Please try again later."), 500

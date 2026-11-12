@@ -56,6 +56,7 @@ def chat(system, messages):
         response = future.result(timeout=deadline)
         text = (response.choices[0].message.content or "").strip()
     except FutureTimeout as error:
+        future.cancel()  # drops it if still waiting for a free thread (a running call cannot be stopped)
         log_event("LLM_CALL", f"failed: no reply within {deadline} s")
         raise LLMUnavailable("timeout") from error
     except Exception as error:  # any failure (network, bad reply shape) means "unavailable", never a crash
