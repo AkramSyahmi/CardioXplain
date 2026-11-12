@@ -19,6 +19,8 @@ Used to update Chapter 3 and explain changes in Chapter 4.
 | 12 | 2026-11-11 | Number of trees (`n_estimators`) chosen by 5-fold cross-validation instead of early stopping. Randomized search (40 combinations) used instead of full grid search. | Cross-validation does the same job as early stopping (prevents overfitting) but is tested 5 times instead of once. Random search finds equally good settings in minutes instead of hours. | 3.2.6.2 step 4, 3.2.6.3 |
 | 13 | 2026-11-11 | SHAP TreeExplainer runs in probability mode (`model_output="probability"`) with 100 background rows. | Default SHAP gives log-odds values, which users cannot understand. Probability mode makes each value a change in risk (e.g. +4.4%) and makes "baseline + SHAP = predicted probability" true. | 3.2.7.1 step 5, 3.2.7.2 |
 | 14 | 2026-11-11 | XGBoost trained with monotonic constraints: age, ap_hi, ap_lo, cholesterol, gluc, smoke, alco and bmi can only raise risk; active can only lower risk. | Without constraints the model learned from this dataset that smoking, alcohol and high glucose lower risk (stopping smoking raised risk by 2.83%). AUC cost only 0.003 (0.8048 to 0.8015). | 3.2.6.1, 3.2.6.2 |
+| 15 | 2026-11-12 | Login uses signed tokens from `itsdangerous` (included with Flask), sent as `Authorization: Bearer <token>`, valid for 8 hours. The user is re-checked on every request. | Meets NFR04 (token-based authentication) without adding a new library. A deactivated account stops working immediately. | NFR04, UC-100 |
+| 16 | 2026-11-12 | CORS limited to the frontend address (`FRONTEND_ORIGIN`, default `http://localhost:5173`) instead of allowing any website. | Other websites cannot call the API from a user's browser. | NFR04 |
 
 ## Report fixes to do
 
@@ -34,3 +36,14 @@ Changes needed in the report only (no code change).
 - [ ] Section 3.2.7.1 step 5: state that SHAP runs in probability mode, so baseline + SHAP = predicted probability.
 - [ ] Section 3.2.6: describe the monotonic constraints and why they were needed (before/after results in `ml/output/unconstrained/`).
 - [ ] Ch4 limitation: model predicts CVD presence (not 10-year risk); smoking effect is small because the dataset's smoking data is self-reported and rare.
+
+## Weaknesses to address
+
+Found in the project review (2026-11-12). Owner = who does it.
+
+- [ ] **Novelty question** (owner: student, Claude helps practise) — prepare a clear answer: medically consistent model (monotonic constraints) + SHAP in probability terms + LLM narratives + What-If, in one public tool. Before EV1 / viva.
+- [ ] **Weak FYP1 survey results** (owner: student runs, Claude prepares and analyses) — only 36 respondents; "explanation of factors" rated 2.72/5. Use UAT and usability results in Ch4 to show users find the features useful after using them. Phase 6 / Ch4.
+- [ ] **Users may not know their health numbers** (owner: Claude) — add help text to the risk assessment form (e.g. "If unsure, choose Normal and check at a clinic"). Phase 5.
+- [ ] **What the model really predicts** (owner: Claude drafts, student checks) — state clearly in Ch4: CVD presence (not 10-year risk), ages 30-65, self-reported lifestyle data, no clinical validation. Report writing.
+- [ ] **Third-party LLM server** (owner: student decides) — asai is a reseller; users' health inputs pass through it. State as a limitation, or switch to an official API (Anthropic / OpenAI) before UAT by changing `LLM_API_KEY`, `LLM_BASE_URL`, `LLM_MODEL` in `.env`. Before UAT.
+- [ ] **Report inconsistencies** (owner: Claude drafts, student updates Word report) — objectives differ between abstract and Ch1; testing types differ between Ch1/3.12 and 3.9; duplicate UAT test case IDs (TC-01 x4, etc.); use case diagram fixes listed above. Report update.

@@ -125,3 +125,8 @@ class SystemLog(db.Model):
     action = db.Column(db.String(100), nullable=False)
     description = db.Column(db.Text, nullable=True)
     timestamp = db.Column(db.DateTime, nullable=False, server_default=func.now())
+
+
+def log_event(action, description=None, user_id=None):
+    """Add one activity log row (Table 3.33). The caller commits the session."""
+    db.session.add(SystemLog(action=action, description=description, user_id=user_id))

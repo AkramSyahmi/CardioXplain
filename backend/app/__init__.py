@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask, jsonify
 from flask_cors import CORS
 from flask_sqlalchemy import SQLAlchemy
 from config import Config
@@ -6,14 +6,28 @@ from config import Config
 db = SQLAlchemy()
 
 
-def create_app():
+def create_app(overrides=None):
     app = Flask(__name__)
     app.config.from_object(Config)
+    app.config.update(overrides or {})  # tests use this to point at the test database
     if not app.config["SECRET_KEY"]:
         raise RuntimeError("SECRET_KEY is not set. Copy .env.example to .env and fill it in.")
 
-    CORS(app)
+    # Only the React frontend may call the API from a browser (CHANGES.md #16).
+    CORS(app, resources={r"/api/*": {"origins": app.config["FRONTEND_ORIGIN"]}})
     db.init_app(app)
+
+    @app.errorhandler(404)
+    def not_found(_error):
+        return jsonify(error="Not found."), 404
+
+    @app.errorhandler(405)
+    def method_not_allowed(_error):
+        return jsonify(error="Method not allowed."), 405
+
+    @app.errorhandler(500)
+    def server_error(_error):
+        return jsonify(error="Something went wrong. Please try again later."), 500
 
     from app import models  # noqa: F401  (registers the tables with SQLAlchemy)
 
