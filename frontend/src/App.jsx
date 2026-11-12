@@ -1,5 +1,6 @@
 import { BrowserRouter, Navigate, Route, Routes } from "react-router";
 import { AuthProvider, ProtectedRoute, homeFor, useAuth } from "./auth.jsx";
+import DashboardPage from "./pages/DashboardPage.jsx";
 import LoginPage from "./pages/LoginPage.jsx";
 import NotFoundPage from "./pages/NotFoundPage.jsx";
 
@@ -15,7 +16,7 @@ function Home() {
 }
 
 const USER_PAGES = [
-  ["/dashboard", <ComingSoon title="Dashboard" />],
+  ["/dashboard", <DashboardPage />],
   ["/assessment", <ComingSoon title="New Risk Assessment" />],
   ["/result/:id", <ComingSoon title="Risk Assessment Results" />],
   ["/simulator", <ComingSoon title="What-If Simulator" />],
