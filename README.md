@@ -18,6 +18,17 @@ python run.py
 
 Open http://localhost:5000 — it should show "CardioXplain backend is running".
 
+## Frontend setup
+
+Needs Node.js 24. Start the backend first (it serves the API on port 5000).
+
+```bash
+cd frontend
+npm install
+npm run dev      # http://localhost:5173
+npm test         # run the frontend tests
+```
+
 ## Dataset
 
 Download `cardio_train.csv` from

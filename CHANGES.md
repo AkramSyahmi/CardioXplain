@@ -26,6 +26,7 @@ Used to update Chapter 3 and explain changes in Chapter 4.
 | 19 | 2026-11-12 | LLM calls have a hard 10-second total deadline, no automatic retries, and a 400-token reply limit. | Measured with the real asai server: replies took 4-20 s, and the client's timeout only limits the gap between data, not the total. Without this, users could wait up to ~30 s (NFR02). | NFR02, 3.2.8.2 |
 | 20 | 2026-11-12 | Admin model metrics are read from `ml/output/metrics.json` (results on the unseen test set). UC-900 alternative flow A1 "Insufficient data" is not needed. | The metrics come from the test set (UC-900 step 3), not from users' predictions, so they are always available. | UC-900 A1, FR09 |
 | 21 | 2026-11-12 | Security hardening after the Phase 4 code review: a password reset ends the user's existing logins; requests larger than 64 KB are refused; login takes the same time for unknown emails; double submits and simultaneous inserts no longer cause errors. | Found by an independent code review; each fix has its own test (`tests/test_hardening.py`). | NFR04, UC-100, UC-800, UC-1000 |
+| 22 | 2026-11-12 | Frontend built in two stages: first every screen as plain unstyled HTML that works with the real API, then styling to match the FYP1 mockups. During development the Vite server forwards `/api` calls to Flask (port 5000). | Student's decision: confirm every feature works before spending time on looks. The proxy avoids cross-origin problems during development. | 3.8.3, Figures 3.25-3.35 |
 
 ## Report fixes to do
 
