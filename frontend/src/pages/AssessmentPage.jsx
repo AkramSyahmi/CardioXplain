@@ -3,12 +3,12 @@ import { useState } from "react";
 import { useNavigate } from "react-router";
 import { apiRequest } from "../api.js";
 import FieldError from "../components/FieldError.jsx";
-import YesNoField from "../components/YesNoField.jsx";
 
-const NUMBER_FIELDS = ["age", "height", "weight", "ap_hi", "ap_lo", "cholesterol", "gluc", "smoke", "alco", "active"];
+const NUMBER_FIELDS = ["age", "height", "weight", "ap_hi", "ap_lo", "cholesterol", "gluc",
+  "cigarettes_per_day", "drinks_per_week", "activity_minutes"];
 const UNSURE = `If you are unsure, choose "I don't know" and ask for a check at a clinic.`;
 const EMPTY = { age: "", gender: "", height: "", weight: "", ap_hi: "", ap_lo: "",
-  cholesterol: "", gluc: "", smoke: "", alco: "", active: "" };
+  cholesterol: "", gluc: "", cigarettes_per_day: "", drinks_per_week: "", activity_minutes: "" };
 
 /** Form values as the API expects them; empty fields stay "" so the API names them. */
 function toBody(form) {
@@ -133,9 +133,15 @@ export default function AssessmentPage() {
         <LevelField name="gluc" label="Glucose level" {...shared} />
 
         <h2>Lifestyle</h2>
-        <YesNoField name="smoke" label="Smoking" {...shared} />
-        <YesNoField name="alco" label="Alcohol intake" {...shared} />
-        <YesNoField name="active" label="Physical activity" {...shared} />
+        <NumberField name="cigarettes_per_day" label="Cigarettes per day" help="Enter 0 if you do not smoke." {...shared} />
+        <NumberField name="drinks_per_week" label="Alcoholic drinks per week"
+          help="One drink = a can of beer, a glass of wine or a shot. Enter 0 if you do not drink." {...shared} />
+        <NumberField name="activity_minutes" label="Moderate exercise (minutes per week)"
+          help="Activities like brisk walking or cycling. 150 minutes or more a week counts as active (WHO guideline)."
+          {...shared} />
+        <p>
+          <small>The risk model uses Yes/No for lifestyle; your amounts are used to personalise your advice.</small>
+        </p>
 
         <p>
           <button type="submit" disabled={busy}>{busy ? "Analysing... (this can take up to 10 seconds)" : "Predict Risk"}</button>

@@ -32,7 +32,7 @@ def create_prediction():
         current_app.logger.exception("SHAP calculation failed")
         shap_items = None
     top = (shap_items or [])[:3]
-    narrative, source = risk_narrative(risk_score, category, top, estimated)
+    narrative, source = risk_narrative(risk_score, category, top, estimated, values)
 
     prediction = Prediction(user_id=g.user.user_id, risk_score=risk_score, risk_category=category,
                             estimated_fields=estimated)

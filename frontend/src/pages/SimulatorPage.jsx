@@ -6,10 +6,18 @@ import FieldError from "../components/FieldError.jsx";
 import { ShapTable, displayValue } from "../components/ResultView.jsx";
 import YesNoField from "../components/YesNoField.jsx";
 
-const CHANGEABLE = ["smoke", "alco", "active", "weight"];
+const CHANGEABLE = ["smoke", "alco", "active", "weight", "cigarettes_per_day", "drinks_per_week", "activity_minutes"];
+
+// Each lifestyle item: an amount box (CHANGES.md #24), or Yes/No for an old assessment saved without amounts.
+const LIFESTYLE = [
+  { amount: "cigarettes_per_day", flag: "smoke", label: "Smoking", amountLabel: "Cigarettes per day" },
+  { amount: "drinks_per_week", flag: "alco", label: "Alcohol intake", amountLabel: "Alcoholic drinks per week" },
+  { amount: "activity_minutes", flag: "active", label: "Physical activity",
+    amountLabel: "Moderate exercise (minutes per week)" },
+];
 
 function formFrom(inputs) {
-  return Object.fromEntries(CHANGEABLE.map((name) => [name, String(inputs[name])]));
+  return Object.fromEntries(CHANGEABLE.map((name) => [name, inputs[name] == null ? "" : String(inputs[name])]));
 }
 
 /** Only the values the user changed, as numbers. */
@@ -97,9 +105,18 @@ export default function SimulatorPage() {
           </ul>
 
           <h2>Lifestyle changes to try</h2>
-          <YesNoField name="smoke" label="Smoking" form={form} fields={fields} onChange={change} />
-          <YesNoField name="alco" label="Alcohol intake" form={form} fields={fields} onChange={change} />
-          <YesNoField name="active" label="Physical activity" form={form} fields={fields} onChange={change} />
+          {LIFESTYLE.map((item) => (inputs[item.amount] == null ? (
+            <YesNoField key={item.flag} name={item.flag} label={item.label} form={form} fields={fields} onChange={change} />
+          ) : (
+            <p key={item.amount}>
+              <label htmlFor={item.amount}>{item.amountLabel}</label>
+              <br />
+              <input id={item.amount} name={item.amount} type="number" inputMode="numeric" value={form[item.amount]}
+                onChange={change} />
+              <FieldError fields={fields} name={item.amount} />
+            </p>
+          )))}
+          <p><small>150 minutes or more of moderate exercise a week counts as active (WHO guideline).</small></p>
           <p>
             <label htmlFor="weight">Weight (kg)</label>
             <br />

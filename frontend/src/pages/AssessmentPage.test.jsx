@@ -14,9 +14,9 @@ async function fillForm() {
   await userEvent.type(screen.getByLabelText("Diastolic blood pressure (mmHg)"), "90");
   await userEvent.selectOptions(screen.getByLabelText("Cholesterol level"), "2");
   await userEvent.selectOptions(screen.getByLabelText("Glucose level"), "1");
-  await userEvent.click(screen.getByRole("radio", { name: "Smoking: No" }));
-  await userEvent.click(screen.getByRole("radio", { name: "Alcohol intake: No" }));
-  await userEvent.click(screen.getByRole("radio", { name: "Physical activity: Yes" }));
+  await userEvent.type(screen.getByLabelText("Cigarettes per day"), "0");
+  await userEvent.type(screen.getByLabelText("Alcoholic drinks per week"), "0");
+  await userEvent.type(screen.getByLabelText("Moderate exercise (minutes per week)"), "200");
 }
 
 test("assessment shows BMI from height and weight", async () => {
@@ -43,7 +43,7 @@ test("assessment sends the form and goes to the result page", async () => {
   expect(await screen.findByRole("heading", { name: "Risk Assessment Results" })).toBeInTheDocument();
   const body = JSON.parse(api.mock.calls.find(([url]) => url === "/api/predict")[1].body);
   expect(body).toEqual({ age: 50, gender: "male", height: 170, weight: 80, ap_hi: 140, ap_lo: 90,
-    cholesterol: 2, gluc: 1, smoke: 0, alco: 0, active: 1 });
+    cholesterol: 2, gluc: 1, cigarettes_per_day: 0, drinks_per_week: 0, activity_minutes: 200 });
 });
 
 test("assessment shows field errors from the API", async () => {
@@ -87,4 +87,12 @@ test("unknown blood pressure and cholesterol are sent as unknown", async () => {
   await screen.findByRole("heading", { name: "Risk Assessment Results" });
   const body = JSON.parse(api.mock.calls.find(([url]) => url === "/api/predict")[1].body);
   expect(body).toMatchObject({ ap_hi: "unknown", ap_lo: "unknown", cholesterol: "unknown", gluc: 1, age: 50 });
+});
+
+test("lifestyle questions explain what to enter", async () => {
+  mockApi({ "GET /auth/me": [200, { user: USER }] });
+  renderApp("/assessment");
+  expect(await screen.findByText("Enter 0 if you do not smoke.")).toBeInTheDocument();
+  expect(screen.getByText(/150 minutes or more a week counts as active/)).toBeInTheDocument();
+  expect(screen.getByText(/One drink = a can of beer, a glass of wine or a shot/)).toBeInTheDocument();
 });

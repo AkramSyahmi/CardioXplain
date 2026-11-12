@@ -85,6 +85,23 @@ def _factor_lines(top):
     )
 
 
+YES_NO = {0: "No", 1: "Yes"}
+AMOUNT_LABELS = {"cigarettes_per_day": "Cigarettes per day", "drinks_per_week": "Alcoholic drinks per week",
+                 "activity_minutes": "Exercise minutes per week"}
+
+
+def _lifestyle_lines(v):
+    """Lifestyle in words, using the amounts when known (CHANGES.md #24), else Yes/No."""
+    smoking = (f"{v['cigarettes_per_day']} cigarettes per day" if v.get("cigarettes_per_day") is not None
+               else YES_NO[v["smoke"]])
+    alcohol = (f"{v['drinks_per_week']} drinks per week" if v.get("drinks_per_week") is not None
+               else YES_NO[v["alco"]])
+    activity = (f"{v['activity_minutes']} minutes of moderate exercise per week "
+                f"({'meets' if v['active'] else 'below'} the 150-minute WHO guideline)"
+                if v.get("activity_minutes") is not None else YES_NO[v["active"]])
+    return [f"- Smoking: {smoking}", f"- Alcohol intake: {alcohol}", f"- Physical activity: {activity}"]
+
+
 def _estimated_labels(estimated):
     from ml.features import FEATURE_LABELS
     return ", ".join(FEATURE_LABELS[name].lower() for name in estimated)
@@ -102,7 +119,7 @@ def _fallback_narrative(risk_score, category, top, estimated=()):
     return text + DISCLAIMER + " Please consult a healthcare professional."
 
 
-def risk_narrative(risk_score, category, top, estimated=()):
+def risk_narrative(risk_score, category, top, estimated=(), values=None):
     """Plain-language explanation of a risk result (UC-400). Returns (text, source)."""
     system = ("You are a health assistant that explains cardiovascular disease risk results "
               "to a general audience with no medical training. " + SAFETY_RULES)
@@ -110,6 +127,8 @@ def risk_narrative(risk_score, category, top, estimated=()):
         f"Predicted risk category: {category}\n"
         f"Predicted probability: {_percent(risk_score)}%\n"
         + (f"Top contributing factors (from SHAP):\n{_factor_lines(top)}\n" if top else "")
+        + ("Lifestyle (the model itself only uses Yes/No for these):\n"
+           + "\n".join(_lifestyle_lines(values)) + "\n" if values else "")
         + (f"The user did not know these values, so typical values were used: {_estimated_labels(estimated)}. "
            "Mention that the result is an estimate and suggest getting them measured.\n" if estimated else "")
         + "Write one short paragraph (about 80-120 words) in simple, non-technical language that "
@@ -126,18 +145,16 @@ def risk_narrative(risk_score, category, top, estimated=()):
     return text, "llm"
 
 
-YES_NO = {0: "No", 1: "Yes"}
-
-
 def _describe_changes(changes):
     from ml.features import FEATURE_LABELS
     lines = []
     for name, (before, after) in changes.items():
         if name in ("smoke", "alco", "active"):
             before, after = YES_NO[before], YES_NO[after]
-        else:  # show 92.0 as 92
-            before, after = (int(v) if float(v).is_integer() else v for v in (before, after))
-        lines.append(f"- {FEATURE_LABELS[name]}: {before} -> {after}")
+        else:  # show 92.0 as 92; an amount missing in an old record shows as "not recorded"
+            before, after = ("not recorded" if v is None else int(v) if float(v).is_integer() else v
+                             for v in (before, after))
+        lines.append(f"- {AMOUNT_LABELS.get(name) or FEATURE_LABELS[name]}: {before} -> {after}")
     return "\n".join(lines)
 
 
@@ -174,17 +191,13 @@ def simulation_narrative(original, simulated, changes):
 def health_plan(category, risk_score, top, lifestyle):
     """Personalised 4-week health action plan in Markdown (UC-1000 steps 3-5).
 
-    lifestyle: smoke, alco, active, weight, bmi. Raises LLMUnavailable if the LLM fails or the
+    lifestyle: smoke, alco, active, weight, bmi and the amounts (may be None). Raises LLMUnavailable if the LLM fails or the
     plan is unsafe; there is no fallback plan (UC-1000 E1 shows a message instead).
     """
     system = ("You are a health coach who writes practical, encouraging lifestyle plans for "
               "people with no medical training. " + SAFETY_RULES)
-    profile = "\n".join([
-        f"- Smoking: {YES_NO[lifestyle['smoke']]}",
-        f"- Alcohol intake: {YES_NO[lifestyle['alco']]}",
-        f"- Physical activity: {YES_NO[lifestyle['active']]}",
-        f"- Weight: {lifestyle['weight']} kg, BMI: {lifestyle['bmi']}",
-    ])
+    profile = "\n".join([*_lifestyle_lines(lifestyle),
+                         f"- Weight: {lifestyle['weight']} kg, BMI: {lifestyle['bmi']}"])
     prompt = (
         f"Predicted cardiovascular risk: {category} ({_percent(risk_score)}%)\n"
         + (f"Top contributing factors (from SHAP):\n{_factor_lines(top)}\n" if top else "")

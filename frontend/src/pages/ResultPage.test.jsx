@@ -59,3 +59,13 @@ test("result without estimated fields shows no warning", async () => {
   await screen.findByText("41%");
   expect(screen.queryByText(/Estimated result/)).not.toBeInTheDocument();
 });
+
+test("result shows lifestyle amounts and the Yes/No note", async () => {
+  const withAmounts = { ...RESULT, inputs: { ...RESULT.inputs, cigarettes_per_day: 20, drinks_per_week: 3, activity_minutes: 60 } };
+  mockApi({ "GET /auth/me": [200, { user: USER }], "GET /history/7": [200, withAmounts] });
+  renderApp("/result/7");
+  expect(await screen.findByText(/20 cigarettes per day/)).toBeInTheDocument();
+  expect(screen.getByText(/3 drinks per week/)).toBeInTheDocument();
+  expect(screen.getByText(/60 minutes of exercise per week/)).toBeInTheDocument();
+  expect(screen.getByText(/The risk model uses Yes\/No for lifestyle/)).toBeInTheDocument();
+});

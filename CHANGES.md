@@ -28,6 +28,7 @@ Used to update Chapter 3 and explain changes in Chapter 4.
 | 21 | 2026-11-12 | Security hardening after the Phase 4 code review: a password reset ends the user's existing logins; requests larger than 64 KB are refused; login takes the same time for unknown emails; double submits and simultaneous inserts no longer cause errors. | Found by an independent code review; each fix has its own test (`tests/test_hardening.py`). | NFR04, UC-100, UC-800, UC-1000 |
 | 22 | 2026-11-12 | Frontend built in two stages: first every screen as plain unstyled HTML that works with the real API, then styling to match the FYP1 mockups. During development the Vite server forwards `/api` calls to Flask (port 5000). | Student's decision: confirm every feature works before spending time on looks. The proxy avoids cross-origin problems during development. | 3.8.3, Figures 3.25-3.35 |
 | 23 | 2026-11-12 | "I don't know" option for blood pressure, cholesterol and glucose. The backend fills typical values from the dataset (BP 120/80 = median; Normal = 75% of cholesterol and 85% of glucose values), saves which values were estimated (new `predictions.estimated_fields` JSON column), and the result page, narrative and History show an "Estimated result" warning. | Many users do not know their measurements (survey, 3.3.1). Blocking them stops them using the tool; silently guessing hides that blood pressure is the strongest factor. | Table 3.29, Table 3.30, UC-200, Figure 3.28 |
+| 24 | 2026-11-12 | Lifestyle asked as amounts: cigarettes per day, alcoholic drinks per week, minutes of moderate exercise per week (new nullable columns in `prediction_inputs`). The backend turns them into the model's Yes/No values (smoking or drinking if more than 0; active if 150 minutes or more, WHO guideline) and gives the amounts to the LLM narrative, health plan and What-If simulator. Old Yes/No records still work. | The dataset (and so the model) only has Yes/No for lifestyle, so amounts cannot change the risk score; they make the advice personal and the simulator more realistic. The page says so to the user. | Table 3.30, Table 3.35, UC-200, UC-500, UC-1000 |
 
 ## Report fixes to do
 
@@ -48,6 +49,7 @@ Changes needed in the report only (no code change).
 - [ ] Ch4 NFR results: prediction + SHAP 0.02 s (NFR01 met); LLM narrative 4-8 s normally, fallback after 10 s (NFR02 met by the deadline). In 6 live calls on 2026-11-12, 2 hit the deadline (asai server slow).
 - [ ] UC-900 (Table 3.25): remove alternative flow A1 Insufficient data; metrics come from the test set.
 - [ ] Data dictionary (Table 3.29): add `estimated_fields` (JSON, nullable) to predictions; UC-200 and Table 3.30: describe the "I don't know" option and the estimated-result warning.
+- [ ] Data dictionary (Table 3.30) and input data (Table 3.35): add `cigarettes_per_day`, `drinks_per_week`, `activity_minutes`; explain the Yes/No conversion rules (more than 0; 150 minutes WHO guideline). Ch4 limitation: the model cannot tell light from heavy smoking or drinking.
 
 ## Weaknesses to address
 

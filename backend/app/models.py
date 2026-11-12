@@ -72,6 +72,10 @@ class PredictionInput(db.Model):
     smoke = db.Column(db.Boolean, nullable=False)
     alco = db.Column(db.Boolean, nullable=False)
     active = db.Column(db.Boolean, nullable=False)
+    # Added in FYP2 (CHANGES.md #24): lifestyle amounts behind the Yes/No values (empty for old records).
+    cigarettes_per_day = db.Column(db.Integer, nullable=True)
+    drinks_per_week = db.Column(db.Integer, nullable=True)
+    activity_minutes = db.Column(db.Integer, nullable=True)
 
     prediction = db.relationship("Prediction", back_populates="inputs")
 
@@ -80,7 +84,9 @@ class PredictionInput(db.Model):
         return {"age": self.age, "gender": self.gender, "height": self.height, "weight": self.weight,
                 "bmi": self.bmi, "ap_hi": self.ap_hi, "ap_lo": self.ap_lo,
                 "cholesterol": self.cholesterol, "gluc": self.gluc,
-                "smoke": int(self.smoke), "alco": int(self.alco), "active": int(self.active)}
+                "smoke": int(self.smoke), "alco": int(self.alco), "active": int(self.active),
+                "cigarettes_per_day": self.cigarettes_per_day, "drinks_per_week": self.drinks_per_week,
+                "activity_minutes": self.activity_minutes}
 
 
 class ShapExplanation(db.Model):

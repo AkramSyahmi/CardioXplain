@@ -15,7 +15,7 @@ simulation_bp = Blueprint("simulation", __name__)
 
 NO_ASSESSMENT = "Please complete a Risk Assessment first."
 # UC-500 rule: only lifestyle values change; BMI changes through weight. Clinical values stay fixed.
-CHANGEABLE = ("smoke", "alco", "active", "weight")
+CHANGEABLE = ("smoke", "alco", "active", "weight", "cigarettes_per_day", "drinks_per_week", "activity_minutes")
 
 
 def _score(risk_score):

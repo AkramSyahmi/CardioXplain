@@ -42,6 +42,22 @@ function EstimateWarning({ estimated }) {
   );
 }
 
+/** Lifestyle amounts (CHANGES.md #24); old results saved without amounts show nothing here. */
+function LifestyleSummary({ inputs }) {
+  const parts = [];
+  if (inputs.cigarettes_per_day != null) parts.push(`${inputs.cigarettes_per_day} cigarettes per day`);
+  if (inputs.drinks_per_week != null) parts.push(`${inputs.drinks_per_week} drinks per week`);
+  if (inputs.activity_minutes != null) parts.push(`${inputs.activity_minutes} minutes of exercise per week`);
+  if (parts.length === 0) return null;
+  return (
+    <p>
+      Lifestyle: {parts.join(", ")}.
+      <br />
+      <small>The risk model uses Yes/No for lifestyle; your amounts are used to personalise your advice.</small>
+    </p>
+  );
+}
+
 /** Table of every factor's SHAP contribution (also used by the What-If simulator). */
 export function ShapTable({ shap, estimated = [] }) {
   return (
@@ -105,6 +121,7 @@ export default function ResultView({ result }) {
           Input summary: Age {result.inputs.age}, {displayValue("gender", result.inputs.gender)}, BMI{" "}
           {result.inputs.bmi}, BP {result.inputs.ap_hi}/{result.inputs.ap_lo}
         </p>
+        <LifestyleSummary inputs={result.inputs} />
       </section>
 
       <section>

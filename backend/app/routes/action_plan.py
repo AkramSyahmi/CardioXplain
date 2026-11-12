@@ -47,7 +47,8 @@ def create_plan():
         return jsonify(error="Please correct the highlighted fields.", fields=fields), 400
 
     top = (prediction.shap.all_shap_values if prediction.shap else [])[:3]
-    lifestyle = {name: values[name] for name in ("smoke", "alco", "active", "weight", "bmi")}
+    lifestyle = {name: values[name] for name in ("smoke", "alco", "active", "weight", "bmi",
+                                               "cigarettes_per_day", "drinks_per_week", "activity_minutes")}
     try:
         text = health_plan(prediction.risk_category, prediction.risk_score, top, lifestyle)
     except LLMUnavailable:

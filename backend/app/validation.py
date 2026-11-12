@@ -41,6 +41,14 @@ LEVEL_MESSAGES = {
 }
 YES_NO_FIELDS = ("smoke", "alco", "active")
 
+# amount field: (min, max, label for messages, Yes/No model field, rule for "Yes")
+LIFESTYLE_AMOUNTS = {
+    "cigarettes_per_day": (0, 100, "Cigarettes per day", "smoke", lambda n: n > 0),
+    "drinks_per_week": (0, 100, "Alcoholic drinks per week", "alco", lambda n: n > 0),
+    # WHO guideline: at least 150 minutes of moderate activity a week.
+    "activity_minutes": (0, 3000, "Exercise minutes per week", "active", lambda n: n >= 150),
+}
+
 
 def _number(value):
     """Return a float from a number or numeric string, or None. Booleans are not numbers here."""
@@ -90,8 +98,30 @@ def assessment_problems(data):
         else:
             fields[name] = message
 
+    # Lifestyle amounts (CHANGES.md #24). The model only knows Yes/No, so each amount is turned
+    # into the Yes/No value; the amount itself is kept to personalise the LLM advice.
+    data = {**data}
+    for name, (low, high, label, flag, is_yes) in LIFESTYLE_AMOUNTS.items():
+        raw = data.get(name)
+        values[name] = None
+        if raw is None or raw == "":
+            continue
+        number = _number(raw)
+        if number is None:
+            fields[name] = NOT_A_NUMBER
+        elif not number.is_integer():
+            fields[name] = NOT_WHOLE
+        elif not low <= number <= high:
+            fields[name] = f"{label} must be between {low} and {high}."
+        else:
+            values[name] = int(number)
+            data[flag] = int(is_yes(int(number)))
+
+    flags_with_bad_amount = {spec[3] for name, spec in LIFESTYLE_AMOUNTS.items() if name in fields}
     for name in YES_NO_FIELDS:
         raw = data.get(name)
+        if name in flags_with_bad_amount:
+            continue  # the amount for this field already has an error message
         if isinstance(raw, bool):
             values[name] = int(raw)
         elif _number(raw) in (0, 1):
