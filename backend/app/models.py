@@ -73,6 +73,13 @@ class PredictionInput(db.Model):
 
     prediction = db.relationship("Prediction", back_populates="inputs")
 
+    def to_dict(self):
+        """The 12 model inputs as plain values (yes/no fields as 0 or 1)."""
+        return {"age": self.age, "gender": self.gender, "height": self.height, "weight": self.weight,
+                "bmi": self.bmi, "ap_hi": self.ap_hi, "ap_lo": self.ap_lo,
+                "cholesterol": self.cholesterol, "gluc": self.gluc,
+                "smoke": int(self.smoke), "alco": int(self.alco), "active": int(self.active)}
+
 
 class ShapExplanation(db.Model):
     __tablename__ = "shap_explanations"
@@ -130,3 +137,9 @@ class SystemLog(db.Model):
 def log_event(action, description=None, user_id=None):
     """Add one activity log row (Table 3.33). The caller commits the session."""
     db.session.add(SystemLog(action=action, description=description, user_id=user_id))
+
+
+def latest_prediction(user_id):
+    """The user's most recent risk assessment, or None."""
+    return (Prediction.query.filter_by(user_id=user_id)
+            .order_by(Prediction.prediction_date.desc(), Prediction.prediction_id.desc()).first())

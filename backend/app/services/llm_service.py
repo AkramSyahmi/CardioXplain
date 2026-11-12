@@ -112,3 +112,48 @@ def risk_narrative(risk_score, category, top):
         log_event("LLM_UNSAFE", "risk narrative replaced by fallback")
         return _fallback_narrative(risk_score, category, top), "fallback"
     return text, "llm"
+
+
+YES_NO = {0: "No", 1: "Yes"}
+
+
+def _describe_changes(changes):
+    from ml.features import FEATURE_LABELS
+    lines = []
+    for name, (before, after) in changes.items():
+        if name in ("smoke", "alco", "active"):
+            before, after = YES_NO[before], YES_NO[after]
+        else:  # show 92.0 as 92
+            before, after = (int(v) if float(v).is_integer() else v for v in (before, after))
+        lines.append(f"- {FEATURE_LABELS[name]}: {before} -> {after}")
+    return "\n".join(lines)
+
+
+def simulation_narrative(original, simulated, changes):
+    """Explain how a What-If lifestyle change affects the predicted risk (UC-500 step 9).
+
+    original/simulated: {"risk_score", "risk_category"}; changes: {field: (before, after)}.
+    Returns (text, source).
+    """
+    before = f"{original['risk_category']} ({_percent(original['risk_score'])}%)"
+    after = f"{simulated['risk_category']} ({_percent(simulated['risk_score'])}%)"
+    system = ("You are a health assistant that explains how lifestyle changes may affect a "
+              "cardiovascular disease risk estimate, for a general audience. " + SAFETY_RULES)
+    prompt = (
+        f"Risk before the change: {before}\n"
+        f"Risk after the simulated change: {after}\n"
+        f"Lifestyle changes simulated:\n{_describe_changes(changes)}\n"
+        "Write one short paragraph (about 60-100 words) in simple language explaining how these "
+        "changes affect the estimated risk. Make clear this is a simulation, not a guarantee, "
+        "and recommend the user consult a healthcare professional."
+    )
+    fallback = (f"Your simulated risk is {after}, compared with {before} before the change. "
+                "This is a simulation only. " + DISCLAIMER)
+    try:
+        text = chat(system, [{"role": "user", "content": prompt}])
+    except LLMUnavailable:
+        return fallback, "fallback"
+    if not is_safe(text):
+        log_event("LLM_UNSAFE", "simulation narrative replaced by fallback")
+        return fallback, "fallback"
+    return text, "llm"
