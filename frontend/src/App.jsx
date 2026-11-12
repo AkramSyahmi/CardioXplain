@@ -5,6 +5,7 @@ import DashboardPage from "./pages/DashboardPage.jsx";
 import HistoryPage from "./pages/HistoryPage.jsx";
 import LoginPage from "./pages/LoginPage.jsx";
 import NotFoundPage from "./pages/NotFoundPage.jsx";
+import PlanPage from "./pages/PlanPage.jsx";
 import ResultPage from "./pages/ResultPage.jsx";
 import SimulatorPage from "./pages/SimulatorPage.jsx";
 
@@ -25,7 +26,7 @@ const USER_PAGES = [
   ["/result/:id", <ResultPage />],
   ["/simulator", <SimulatorPage />],
   ["/history", <HistoryPage />],
-  ["/plan", <ComingSoon title="Health Action Plan" />],
+  ["/plan", <PlanPage />],
   ["/navigator", <ComingSoon title="Virtual Care Navigator" />],
 ];
 const ADMIN_PAGES = [

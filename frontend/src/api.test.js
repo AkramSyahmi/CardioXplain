@@ -69,3 +69,9 @@ test("non-JSON error reply still gives a message", async () => {
   expect(error.status).toBe(502);
   expect(error.message).toBe("Something went wrong. Please try again later.");
 });
+
+test("ApiError keeps the whole error reply as data", async () => {
+  fetch.mockReturnValue(reply(503, { error: "Unavailable.", risk_category: "Moderate" }));
+  const error = await apiRequest("/action-plan", { method: "POST", body: {} }).catch((e) => e);
+  expect(error.data.risk_category).toBe("Moderate");
+});

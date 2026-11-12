@@ -5,10 +5,11 @@ const SERVER_DOWN = "Cannot reach the server. Please check that the backend is r
 const GENERIC_ERROR = "Something went wrong. Please try again later.";
 
 export class ApiError extends Error {
-  constructor(status, message, fields = {}) {
+  constructor(status, message, fields = {}, data = {}) {
     super(message);
     this.status = status;
     this.fields = fields;
+    this.data = data; // the whole error reply, e.g. risk_category on a 503
   }
 }
 
@@ -48,5 +49,5 @@ export async function apiRequest(path, { method = "GET", body } = {}) {
     clearToken();
     window.dispatchEvent(new Event("auth:logout"));
   }
-  throw new ApiError(response.status, data.error || GENERIC_ERROR, data.fields || {});
+  throw new ApiError(response.status, data.error || GENERIC_ERROR, data.fields || {}, data);
 }
