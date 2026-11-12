@@ -31,10 +31,12 @@ def create_app(overrides=None):
 
     from app import models  # noqa: F401  (registers the tables with SQLAlchemy)
     from app.routes.auth import auth_bp
+    from app.routes.history import history_bp
     from app.routes.predict import predict_bp
     from app.routes.simulation import simulation_bp
 
     app.register_blueprint(auth_bp, url_prefix="/api/auth")
+    app.register_blueprint(history_bp, url_prefix="/api/history")
     app.register_blueprint(predict_bp, url_prefix="/api/predict")
     app.register_blueprint(simulation_bp, url_prefix="/api/simulation")
 
