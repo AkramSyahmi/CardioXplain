@@ -4,6 +4,7 @@ import AssessmentPage from "./pages/AssessmentPage.jsx";
 import DashboardPage from "./pages/DashboardPage.jsx";
 import HistoryPage from "./pages/HistoryPage.jsx";
 import LoginPage from "./pages/LoginPage.jsx";
+import NavigatorPage from "./pages/NavigatorPage.jsx";
 import NotFoundPage from "./pages/NotFoundPage.jsx";
 import PlanPage from "./pages/PlanPage.jsx";
 import ResultPage from "./pages/ResultPage.jsx";
@@ -27,7 +28,7 @@ const USER_PAGES = [
   ["/simulator", <SimulatorPage />],
   ["/history", <HistoryPage />],
   ["/plan", <PlanPage />],
-  ["/navigator", <ComingSoon title="Virtual Care Navigator" />],
+  ["/navigator", <NavigatorPage />],
 ];
 const ADMIN_PAGES = [
   ["/admin", <ComingSoon title="Model Performance" />],
