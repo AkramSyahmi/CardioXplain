@@ -4,7 +4,7 @@ from concurrent.futures import ThreadPoolExecutor
 from concurrent.futures import TimeoutError as FutureTimeout
 
 from flask import current_app
-from openai import OpenAI, OpenAIError
+from openai import OpenAI
 
 from app.models import log_event
 
@@ -21,7 +21,8 @@ SAFETY_RULES = (
 UNSAFE_PATTERNS = [
     re.compile(pattern, re.IGNORECASE) for pattern in (
         r"you have been diagnosed", r"you have (a )?(heart|cardiovascular) disease",
-        r"\bprescrib", r"\bdosage\b", r"\b\d+(\.\d+)?\s?mg\b",
+        r"\b(i|we)\s+(will\s+|would\s+)?prescribe\b", r"\bdosage\b",
+        r"\b\d+(\.\d+)?\s?mg\b(?!\s?/)",  # a dose like "50 mg", but not a unit like "200 mg/dL"
     )
 ]
 
@@ -57,7 +58,7 @@ def chat(system, messages):
     except FutureTimeout as error:
         log_event("LLM_CALL", f"failed: no reply within {deadline} s")
         raise LLMUnavailable("timeout") from error
-    except (OpenAIError, IndexError, AttributeError) as error:
+    except Exception as error:  # any failure (network, bad reply shape) means "unavailable", never a crash
         log_event("LLM_CALL", f"failed: {type(error).__name__}")
         raise LLMUnavailable(str(error)) from error
     if not text:

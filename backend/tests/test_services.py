@@ -152,3 +152,33 @@ def test_chat_gives_up_at_total_deadline(app, monkeypatch):
     with pytest.raises(llm_service.LLMUnavailable):
         llm_service.chat("system", [{"role": "user", "content": "hi"}])
     assert clock.perf_counter() - start < 1
+
+
+def test_is_safe_allows_normal_health_answers():
+    """Final review #1: units and everyday phrases must not be blocked."""
+    from app.services.llm_service import is_safe
+    assert is_safe("A healthy total cholesterol is usually below 200 mg/dL.")
+    assert is_safe("Fasting glucose under 100 mg/dl is considered normal.")
+    assert is_safe("Keep taking any medicines as prescribed by your doctor.")
+    assert not is_safe("We would prescribe a statin for you.")
+    assert not is_safe("Take 81 mg of aspirin.")
+
+
+def test_chat_malformed_reply_becomes_llm_unavailable(app, monkeypatch):
+    """Final review #2: a 200 reply without "choices" (e.g. {"error": ...}) must not crash."""
+    from app.services import llm_service
+
+    class BrokenClient:
+        def __init__(self, **kwargs):
+            self.chat = self
+            self.completions = self
+
+        def create(self, **kwargs):
+            return type("R", (), {"choices": None})()
+
+    monkeypatch.setattr(llm_service, "OpenAI", BrokenClient)
+    with pytest.raises(llm_service.LLMUnavailable):
+        llm_service.chat("system", [{"role": "user", "content": "hi"}])
+    top = [{"feature": "age", "label": "Age", "value": 50, "shap": 0.05}]
+    text, source = llm_service.risk_narrative(0.5, "Moderate", top)
+    assert source == "fallback"
