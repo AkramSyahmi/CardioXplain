@@ -187,3 +187,26 @@ def health_plan(category, risk_score, top, lifestyle):
         log_event("LLM_UNSAFE", "health plan rejected")
         raise LLMUnavailable("unsafe plan")
     return text
+
+
+def navigator_reply(messages, category=None, top=None):
+    """Virtual Care Navigator answer (UC-700). messages: cleaned chat ending with the user's question.
+
+    The user's latest risk result is added to the system prompt so answers are personal.
+    Raises LLMUnavailable if the LLM fails or the reply is unsafe.
+    """
+    system = ("You are CardioXplain's Virtual Care Navigator. You answer questions about "
+              "cardiovascular health, risk factors, healthy lifestyle, and when to seek medical "
+              "help, in simple language for people with no medical training. Keep answers under "
+              "150 words. If a question is not about health, politely say you can only help with "
+              "heart health topics. If the user describes chest pain or other emergency symptoms, say this "
+              "tool cannot help with emergencies and tell them to call 999 immediately. " + SAFETY_RULES)
+    if category:
+        system += f"\nThe user's latest risk category is {category}."
+        if top:
+            system += f" Main factors in their result:\n{_factor_lines(top)}"
+    text = chat(system, messages)
+    if not is_safe(text):
+        log_event("LLM_UNSAFE", "navigator reply blocked")
+        raise LLMUnavailable("unsafe reply")
+    return text

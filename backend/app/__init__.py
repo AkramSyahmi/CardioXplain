@@ -34,6 +34,7 @@ def create_app(overrides=None):
     from app.routes.admin import admin_bp
     from app.routes.auth import auth_bp
     from app.routes.history import history_bp
+    from app.routes.navigator import navigator_bp
     from app.routes.predict import predict_bp
     from app.routes.simulation import simulation_bp
 
@@ -41,6 +42,7 @@ def create_app(overrides=None):
     app.register_blueprint(admin_bp, url_prefix="/api/admin")
     app.register_blueprint(auth_bp, url_prefix="/api/auth")
     app.register_blueprint(history_bp, url_prefix="/api/history")
+    app.register_blueprint(navigator_bp, url_prefix="/api/navigator")
     app.register_blueprint(predict_bp, url_prefix="/api/predict")
     app.register_blueprint(simulation_bp, url_prefix="/api/simulation")
 
