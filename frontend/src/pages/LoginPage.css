@@ -24,22 +24,12 @@
 .login-logo img { display: block; width: auto; height: 32px; padding: 10px 16px; box-sizing: content-box; background: #fff; border-radius: var(--pill); }
 .login-sub { color: #c9cfd6; font-size: 0.9rem; font-weight: 600; }
 .login-heart { position: relative; align-self: center; width: 220px; height: 220px; display: grid; place-items: center; }
+.login-heart picture { position: relative; width: 100%; height: 100%; }
 .login-heart img {
   position: relative;
   width: 100%;
   height: 100%;
   filter: drop-shadow(0 26px 30px rgba(0, 0, 0, 0.45));
-  transform-origin: 50% 60%;
-  animation: heartbeat 0.92s ease-in-out infinite; /* about 65 beats a minute */
-}
-/* Lub-dub: a strong beat, a short ease back, a smaller second beat, then rest. */
-@keyframes heartbeat {
-  0%   { transform: scale(1); }
-  12%  { transform: scale(1.09); }
-  22%  { transform: scale(0.98); }
-  32%  { transform: scale(1.05); }
-  48%  { transform: scale(1); }
-  100% { transform: scale(1); }
 }
 /* Soft rings that spread out with each beat. */
 .beat-ring {
@@ -48,9 +38,9 @@
   border-radius: 50%;
   border: 2px solid rgba(240, 100, 60, 0.7);
   opacity: 0;
-  animation: beat-ring 0.92s ease-out infinite;
+  animation: beat-ring 0.91s ease-out infinite; /* same length as the heart animation (13 frames x 70 ms) */
 }
-.beat-ring-late { animation-delay: 0.29s; border-color: rgba(240, 100, 60, 0.45); }
+.beat-ring-late { animation-delay: 0.3s; border-color: rgba(240, 100, 60, 0.45); }
 @keyframes beat-ring {
   0%   { transform: scale(0.85); opacity: 0; }
   10%  { opacity: 1; }
@@ -91,7 +81,7 @@
     justify-items: start;
     gap: 32px;
   }
-  .login-heart { justify-self: center; width: clamp(260px, 22vw, 380px); height: clamp(260px, 22vw, 380px); }
+  .login-heart { justify-self: center; width: clamp(240px, 18vw, 300px); height: clamp(240px, 18vw, 300px); } /* animation is 256 px; keep it sharp */
   .login-line { text-align: left; font-size: clamp(2rem, 2.8vw, 3rem); max-width: 16ch; text-wrap: balance; }
   .login-panel {
     border-radius: 0;

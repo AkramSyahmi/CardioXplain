@@ -2,6 +2,7 @@
 import { useState } from "react";
 import { Navigate, useNavigate } from "react-router";
 import { homeFor, useAuth } from "../auth.jsx";
+import heartBeating from "../assets/heart-beating.png";
 import heart from "../assets/heart-3d.png";
 import FieldError from "../components/FieldError.jsx";
 import logo from "../assets/logo-full.png";
@@ -66,7 +67,11 @@ export default function LoginPage() {
         <span className="login-heart" aria-hidden="true">
           <span className="beat-ring" />
           <span className="beat-ring beat-ring-late" />
-          <img src={heart} alt="" width="220" height="220" />
+          {/* Animated 3D heart (Microsoft Fluent Emoji, MIT); still image when the user asks for reduced motion. */}
+          <picture>
+            <source srcSet={heart} media="(prefers-reduced-motion: reduce)" />
+            <img src={heartBeating} alt="" width="256" height="256" />
+          </picture>
         </span>
         <p className="login-line">Understand your heart risk and what you can change.</p>
       </section>

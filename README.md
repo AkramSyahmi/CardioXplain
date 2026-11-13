@@ -54,4 +54,5 @@ and place it in `backend/ml/data/`.
 ## Credits
 
 - 3D heart image: Microsoft Fluent Emoji (MIT License), https://github.com/microsoft/fluentui-emoji
+- Animated 3D heart on the login page: Microsoft Fluent Emoji Animated (MIT License), https://github.com/microsoft/fluentui-emoji-animated (re-timed to about 65 beats a minute)
 - Font: Manrope (SIL Open Font License), installed with `@fontsource-variable/manrope`.
