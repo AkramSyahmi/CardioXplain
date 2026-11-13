@@ -80,3 +80,28 @@
   .login-sub { display: none; }
   .login-tabs button { padding: 0 8px; }
 }
+
+/* Desktop: split screen, dark story panel on the left, form on the right, both full height. */
+@media (min-width: 821px) {
+  .login { max-width: none; padding: 0; gap: 0; align-content: stretch; }
+  .login-art {
+    border-radius: 0;
+    min-height: 100vh;
+    padding: 48px clamp(40px, 5vw, 96px);
+    justify-items: start;
+    gap: 32px;
+  }
+  .login-heart { justify-self: center; width: clamp(260px, 22vw, 380px); height: clamp(260px, 22vw, 380px); }
+  .login-line { text-align: left; font-size: clamp(2rem, 2.8vw, 3rem); max-width: 16ch; text-wrap: balance; }
+  .login-panel {
+    border-radius: 0;
+    box-shadow: none;
+    min-height: 100vh;
+    display: grid;
+    align-content: center;
+    justify-items: center;
+    padding: 48px clamp(40px, 5vw, 96px);
+  }
+  .login-form { width: 100%; max-width: 440px; }
+}
+

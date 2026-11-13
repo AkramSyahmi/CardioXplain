@@ -72,53 +72,55 @@ export default function LoginPage() {
       </section>
 
       <section className="login-panel">
-        <h1>Welcome back</h1>
-        <p className="page-lead">Sign in to your CardioXplain account</p>
+        <div className="login-form">
+          <h1>Welcome back</h1>
+          <p className="page-lead">Sign in to your CardioXplain account</p>
 
-        <div role="tablist" className="login-tabs">
-          <button type="button" role="tab" aria-selected={tab === "signin"} onClick={() => switchTab("signin")}>
-            Sign In
-          </button>
-          <button type="button" role="tab" aria-selected={tab === "register"} onClick={() => switchTab("register")}>
-            Create Account
-          </button>
+          <div role="tablist" className="login-tabs">
+            <button type="button" role="tab" aria-selected={tab === "signin"} onClick={() => switchTab("signin")}>
+              Sign In
+            </button>
+            <button type="button" role="tab" aria-selected={tab === "register"} onClick={() => switchTab("register")}>
+              Create Account
+            </button>
+          </div>
+
+          {notice && <p role="status" className="login-status">{notice}</p>}
+          {success && <p role="status" className="login-status">{success}</p>}
+          {error && <p role="alert">{error}</p>}
+
+          <form onSubmit={submit}>
+            {tab === "register" && (
+              <div className="field">
+                <label htmlFor="full_name">Full Name</label>
+                <input id="full_name" name="full_name" value={form.full_name} onChange={change} required />
+                <FieldError fields={fields} name="full_name" />
+              </div>
+            )}
+            <div className="field">
+              <label htmlFor="email">Email Address</label>
+              <input id="email" name="email" type="email" value={form.email} onChange={change} required />
+              <FieldError fields={fields} name="email" />
+            </div>
+            <div className="field">
+              <label htmlFor="password">Password</label>
+              <input id="password" name="password" type="password" value={form.password} onChange={change} required />
+              <FieldError fields={fields} name="password" />
+            </div>
+            {tab === "register" && (
+              <div className="field">
+                <label htmlFor="confirm">Confirm Password</label>
+                <input id="confirm" name="confirm" type="password" value={form.confirm} onChange={change} required />
+                <FieldError fields={fields} name="confirm" />
+              </div>
+            )}
+            <button type="submit" className="login-submit" disabled={busy}>
+              {busy ? "Please wait..." : tab === "signin" ? "Sign In" : "Create my account"}
+            </button>
+          </form>
+
+          <p className="help login-note">This system is for educational purposes only and does not provide medical advice.</p>
         </div>
-
-        {notice && <p role="status" className="login-status">{notice}</p>}
-        {success && <p role="status" className="login-status">{success}</p>}
-        {error && <p role="alert">{error}</p>}
-
-        <form onSubmit={submit}>
-          {tab === "register" && (
-            <div className="field">
-              <label htmlFor="full_name">Full Name</label>
-              <input id="full_name" name="full_name" value={form.full_name} onChange={change} required />
-              <FieldError fields={fields} name="full_name" />
-            </div>
-          )}
-          <div className="field">
-            <label htmlFor="email">Email Address</label>
-            <input id="email" name="email" type="email" value={form.email} onChange={change} required />
-            <FieldError fields={fields} name="email" />
-          </div>
-          <div className="field">
-            <label htmlFor="password">Password</label>
-            <input id="password" name="password" type="password" value={form.password} onChange={change} required />
-            <FieldError fields={fields} name="password" />
-          </div>
-          {tab === "register" && (
-            <div className="field">
-              <label htmlFor="confirm">Confirm Password</label>
-              <input id="confirm" name="confirm" type="password" value={form.confirm} onChange={change} required />
-              <FieldError fields={fields} name="confirm" />
-            </div>
-          )}
-          <button type="submit" className="login-submit" disabled={busy}>
-            {busy ? "Please wait..." : tab === "signin" ? "Sign In" : "Create my account"}
-          </button>
-        </form>
-
-        <p className="help login-note">This system is for educational purposes only and does not provide medical advice.</p>
       </section>
     </main>
   );
