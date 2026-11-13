@@ -15,16 +15,16 @@ export default function HistoryPage() {
   return (
     <>
       <h1>Prediction History</h1>
-      <p>All your previous cardiovascular risk assessments, newest first.</p>
+      <p className="page-lead">All your previous cardiovascular risk assessments, newest first.</p>
       {error && <p role="alert">{error}</p>}
       {!history && !error && <p>Loading...</p>}
       {history && history.predictions.length === 0 && (
         <>
           <p>{history.message}</p>
-          <p><Link to="/assessment">Start Risk Assessment</Link></p>
+          <p><Link className="btn btn-primary" to="/assessment">Start Risk Assessment</Link></p>
         </>
       )}
-      {history && history.predictions.length > 0 && <HistoryTable predictions={history.predictions} />}
+      {history && history.predictions.length > 0 && <div className="card"><HistoryTable predictions={history.predictions} /></div>}
     </>
   );
 }

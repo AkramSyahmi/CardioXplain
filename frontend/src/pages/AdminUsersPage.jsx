@@ -2,6 +2,7 @@
 import { useEffect, useState } from "react";
 import { apiRequest } from "../api.js";
 import FieldError from "../components/FieldError.jsx";
+import "./AdminPages.css";
 import { formatDate } from "../format.js";
 
 const ROLE_NAMES = { admin: "Administrator", general_user: "General User" };
@@ -50,7 +51,7 @@ function UserRow({ user, onUpdated }) {
       <td>{user.status}</td>
       <td>{formatDate(user.created_at)}</td>
       <td>
-        <button type="button" disabled={busy}
+        <button type="button" className={user.status === "active" ? "danger" : ""} disabled={busy}
           onClick={() => update({ status: nextStatus }, nextStatus === "active" ? "Activated." : "Deactivated.")}>
           {user.status === "active" ? "Deactivate" : "Activate"}
         </button>
@@ -110,6 +111,7 @@ export default function AdminUsersPage() {
       {loadError && <p role="alert">{loadError}</p>}
       {!users && !loadError && <p>Loading...</p>}
       {users && (
+        <div className="card table-scroll users-card">
         <table aria-label="Users">
           <thead>
             <tr><th>Name</th><th>Email</th><th>Role</th><th>Status</th><th>Created</th><th>Actions</th></tr>
@@ -118,38 +120,43 @@ export default function AdminUsersPage() {
             {users.map((u) => <UserRow key={u.user_id} user={u} onUpdated={replaceUser} />)}
           </tbody>
         </table>
+        </div>
       )}
 
-      <h2>Create a user</h2>
-      <p>The new user signs in with the temporary password. Share it with them privately.</p>
+      <section className="card admin-create" aria-labelledby="create-heading">
+      <h2 id="create-heading">Create a user</h2>
+      <p className="help">The new user signs in with the temporary password. Share it with them privately.</p>
       {created && <p role="status">{created}</p>}
       {error && <p role="alert">{error}</p>}
       <form onSubmit={createUser} noValidate>
-        <p>
-          <label htmlFor="new_full_name">Full name</label><br />
+        <div className="field-grid">
+        <div className="field">
+          <label htmlFor="new_full_name">Full name</label>
           <input id="new_full_name" name="full_name" value={form.full_name} onChange={change} />
           <FieldError fields={fields} name="full_name" />
-        </p>
-        <p>
-          <label htmlFor="new_email">Email</label><br />
+        </div>
+        <div className="field">
+          <label htmlFor="new_email">Email</label>
           <input id="new_email" name="email" type="email" value={form.email} onChange={change} />
           <FieldError fields={fields} name="email" />
-        </p>
-        <p>
-          <label htmlFor="new_role">Role</label><br />
+        </div>
+        <div className="field">
+          <label htmlFor="new_role">Role</label>
           <select id="new_role" name="role" value={form.role} onChange={change}>
             <option value="general_user">{ROLE_NAMES.general_user}</option>
             <option value="admin">{ROLE_NAMES.admin}</option>
           </select>
           <FieldError fields={fields} name="role" />
-        </p>
-        <p>
-          <label htmlFor="new_password">Temporary password</label><br />
+        </div>
+        <div className="field">
+          <label htmlFor="new_password">Temporary password</label>
           <input id="new_password" name="password" type="password" value={form.password} onChange={change} />
           <FieldError fields={fields} name="password" />
-        </p>
+        </div>
+        </div>
         <button type="submit" disabled={busy}>{busy ? "Creating..." : "Create user"}</button>
       </form>
+      </section>
     </>
   );
 }

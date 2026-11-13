@@ -7,6 +7,7 @@ import { useAuth } from "../auth.jsx";
 import HistoryTable from "../components/HistoryTable.jsx";
 import Icon from "../components/Icon.jsx";
 import { categoryClass } from "../components/RiskGauge.jsx";
+import StatTile from "../components/StatTile.jsx";
 import { formatDate } from "../format.js";
 import "./DashboardPage.css";
 
@@ -16,17 +17,6 @@ const QUICK_ACTIONS = [
   ["/plan", "Health Action Plan", "calendar", "butter"],
   ["/navigator", "Care Navigator", "chat", "white"],
 ];
-
-/** A stat tile: screen readers get one plain sentence, sighted users a small label and a big value. */
-function Stat({ label, value, children, tone = "" }) {
-  return (
-    <li className={`stat ${tone}`}>
-      <span className="visually-hidden">{label}: {value}</span>
-      <span className="stat-label" aria-hidden="true">{label}</span>
-      <span className="stat-value" aria-hidden="true">{children ?? value}</span>
-    </li>
-  );
-}
 
 export default function DashboardPage() {
   const { user } = useAuth();
@@ -61,14 +51,14 @@ export default function DashboardPage() {
 
       {history && (
         <ul className="stats" aria-label="Summary">
-          <Stat label="Total Assessments" value={predictions.length} />
-          <Stat label="Latest Risk Score" value={latest ? `${latest.risk_percent}%` : "-"} tone="sky">
+          <StatTile label="Total Assessments" value={predictions.length} />
+          <StatTile label="Latest Risk Score" value={latest ? `${latest.risk_percent}%` : "-"} tone="sky">
             {latest ? <>{latest.risk_percent}<span className="unit">%</span></> : "-"}
-          </Stat>
-          <Stat label="Risk Category" value={latest ? latest.risk_category : "-"}>
+          </StatTile>
+          <StatTile label="Risk Category" value={latest ? latest.risk_category : "-"}>
             {latest ? <span className={`chip ${categoryClass(latest.risk_category)}`}>{latest.risk_category}</span> : "-"}
-          </Stat>
-          <Stat label="Last Assessment" value={latest ? formatDate(latest.prediction_date) : "-"} tone="sage" />
+          </StatTile>
+          <StatTile label="Last Assessment" value={latest ? formatDate(latest.prediction_date) : "-"} tone="sage" />
         </ul>
       )}
 

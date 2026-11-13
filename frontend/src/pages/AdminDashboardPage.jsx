@@ -1,7 +1,9 @@
 // UC-900 Monitor Model Performance (Figure 3.34).
 import { useEffect, useState } from "react";
 import { apiRequest } from "../api.js";
+import StatTile from "../components/StatTile.jsx";
 import { formatDateTime } from "../format.js";
+import "./AdminPages.css";
 
 const percent = (value) => `${(value * 100).toFixed(1)}%`;
 
@@ -19,16 +21,19 @@ function Metrics({ metrics, training }) {
   const cm = metrics.confusion_matrix;
   return (
     <>
-      <p>Results on {metrics.test_rows} unseen test records.</p>
-      <ul>
-        <li>Accuracy: {percent(metrics.accuracy)}</li>
-        <li>Precision: {percent(metrics.precision)}</li>
-        <li>Recall: {percent(metrics.recall)}</li>
-        <li>F1-score: {percent(metrics.f1_score)}</li>
-        <li>AUC: {metrics.auc}</li>
+      <p className="help">Results on {metrics.test_rows} unseen test records.</p>
+      <ul className="stats stats-5" aria-label="Model metrics">
+        <StatTile label="Accuracy" value={percent(metrics.accuracy)} tone="sky" />
+        <StatTile label="Precision" value={percent(metrics.precision)} />
+        <StatTile label="Recall" value={percent(metrics.recall)} />
+        <StatTile label="F1-score" value={percent(metrics.f1_score)} />
+        <StatTile label="AUC" value={metrics.auc} tone="sage" />
       </ul>
 
+      <div className="admin-tables">
+      <div className="card">
       <h3>Confusion matrix</h3>
+      <div className="table-scroll">
       <table aria-label="Confusion matrix">
         <thead>
           <tr><th></th><th>Predicted: No CVD</th><th>Predicted: CVD</th></tr>
@@ -38,10 +43,13 @@ function Metrics({ metrics, training }) {
           <tr><th>Actual: CVD</th><td>{cm.false_negative}</td><td>{cm.true_positive}</td></tr>
         </tbody>
       </table>
+      </div>
+      </div>
 
       {metrics.risk_categories && (
-        <>
+        <div className="card">
           <h3>Risk category check (test set)</h3>
+          <div className="table-scroll">
           <table aria-label="Risk category check">
             <thead>
               <tr><th>Category</th><th>People</th><th>Actually have CVD</th></tr>
@@ -52,16 +60,20 @@ function Metrics({ metrics, training }) {
               ))}
             </tbody>
           </table>
-        </>
+          </div>
+        </div>
       )}
+      </div>
 
-      <h3>Training</h3>
-      <p>{training.method}. Cross-validation AUC: {training.best_cv_auc_mean}.</p>
-      <ul>
-        {Object.entries(training.best_params).map(([name, value]) => (
-          <li key={name}>{name}: {value}</li>
-        ))}
-      </ul>
+      <div className="card training">
+        <h3>Training</h3>
+        <p>{training.method}. Cross-validation AUC: {training.best_cv_auc_mean}.</p>
+        <ul className="params">
+          {Object.entries(training.best_params).map(([name, value]) => (
+            <li key={name}>{name}: {value}</li>
+          ))}
+        </ul>
+      </div>
     </>
   );
 }
@@ -75,33 +87,37 @@ export default function AdminDashboardPage() {
     <>
       <h1>Model Performance</h1>
 
-      <section>
+      <section className="admin-section">
         <h2>Model evaluation</h2>
         {modelError && <p role="alert">{modelError}</p>}
         {!model && !modelError && <p>Loading...</p>}
         {model && <Metrics metrics={model.metrics} training={model.training} />}
       </section>
 
-      <section>
+      <section className="admin-section">
         <h2>System usage</h2>
         {statsError && <p role="alert">{statsError}</p>}
         {stats && (
-          <ul>
-            <li>Total users: {stats.total_users}</li>
-            <li>Total assessments: {stats.total_assessments}</li>
+          <ul className="stats" aria-label="System usage">
+            <StatTile label="Total users" value={stats.total_users} />
+            <StatTile label="Total assessments" value={stats.total_assessments} tone="sky" />
             {Object.entries(stats.risk_distribution).map(([name, count]) => (
-              <li key={name}>{name}: {count}</li>
+              <StatTile key={name} label={name} value={count} />
             ))}
-            <li>LLM calls: {stats.llm_calls.success} successful, {stats.llm_calls.failed} failed</li>
+            <StatTile label="LLM calls" value={`${stats.llm_calls.success} successful, ${stats.llm_calls.failed} failed`}
+              tone={stats.llm_calls.failed > 0 ? "butter" : "sage"}>
+              {stats.llm_calls.success}<span className="unit">ok</span> {stats.llm_calls.failed}<span className="unit">failed</span>
+            </StatTile>
           </ul>
         )}
       </section>
 
-      <section>
+      <section className="admin-section card">
         <h2>Recent activity</h2>
         {logsError && <p role="alert">{logsError}</p>}
         {logs && logs.logs.length === 0 && <p>No activity yet.</p>}
         {logs && logs.logs.length > 0 && (
+          <div className="table-scroll">
           <table aria-label="Activity log">
             <thead>
               <tr><th>Time</th><th>Action</th><th>User ID</th><th>Description</th></tr>
@@ -117,6 +133,7 @@ export default function AdminDashboardPage() {
               ))}
             </tbody>
           </table>
+          </div>
         )}
       </section>
     </>

@@ -45,7 +45,7 @@ export default function Layout({ children }) {
   return (
     <>
       <a className="skip-link" href="#main">Skip to content</a>
-      <header className="topbar">
+      <header className={links.length > 3 ? "topbar" : "topbar topbar-few"}>
         <p className="logo">
           <LogoMark />
           <strong>CardioXplain</strong>

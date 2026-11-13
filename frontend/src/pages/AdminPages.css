@@ -1,0 +1,26 @@
+.admin-section { margin-bottom: 20px; }
+.stats-5 { grid-template-columns: repeat(5, minmax(0, 1fr)); }
+.stat.butter { background: var(--butter); }
+
+.admin-tables { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; margin-bottom: 16px; }
+.admin-tables table, .admin-section.card table, .users-card table { box-shadow: none; border: 1px solid var(--line); margin: 0; }
+.training .params { display: flex; flex-wrap: wrap; gap: 8px; list-style: none; margin: 0; padding: 0; }
+.training .params li { padding: 6px 12px; border-radius: var(--pill); background: var(--panel); font-size: 0.9rem; font-weight: 600; }
+
+.users-card { margin-bottom: 20px; }
+.users-card table { min-width: 900px; }
+.users-card td { vertical-align: middle; }
+.users-card td select, .users-card td input { min-height: 40px; }
+.users-card td button { min-height: 40px; padding: 0 14px; margin: 2px 0; background: var(--panel); color: var(--ink); border: 1px solid var(--line); }
+.users-card td button:hover:not(:disabled) { background: var(--blue-soft); }
+.users-card td button.danger { color: var(--high-ink); }
+.admin-create { max-width: 920px; }
+
+.not-found { min-height: 100vh; display: grid; place-items: center; }
+.not-found .card { text-align: center; padding: 40px 48px; }
+.not-found img { filter: drop-shadow(0 18px 20px rgba(16, 19, 23, 0.18)); }
+
+@media (max-width: 1100px) {
+  .stats-5 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .admin-tables { grid-template-columns: minmax(0, 1fr); }
+}

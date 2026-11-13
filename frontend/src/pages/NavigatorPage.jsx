@@ -1,6 +1,7 @@
 // UC-700 Use Virtual Care Navigator (Figure 3.33). The chat lives only in this page; nothing is stored.
 import { useState } from "react";
 import { apiRequest } from "../api.js";
+import "./NavigatorPage.css";
 
 const GREETING =
   "Hello! I'm your CardioXplain Virtual Care Navigator. I can help you understand cardiovascular health, " +
@@ -50,39 +51,44 @@ export default function NavigatorPage() {
   return (
     <>
       <h1>Virtual Care Navigator</h1>
-      <p>Ask health-related questions and receive educational guidance.</p>
-      <p><strong>Educational only - not medical advice.</strong></p>
+      <p className="page-lead">Ask health-related questions and receive educational guidance.</p>
+      <p className="chip nav-note"><strong>Educational only - not medical advice.</strong></p>
 
-      <h2>Health Chat</h2>
-      <ol aria-label="Conversation">
-        <li>
-          <strong>Navigator:</strong> {GREETING}
-        </li>
-        {messages.map((m, i) => (
-          <li key={i}>
-            <strong>{SPEAKER[m.role]}:</strong>{" "}
-            {m.role === "error" ? <span role="alert">{m.content}</span> : m.content}
-          </li>
-        ))}
-        {busy && <li>Thinking...</li>}
-      </ol>
+      <div className="chat-layout">
+        <section className="card chat" aria-labelledby="chat-heading">
+          <h2 id="chat-heading">Health Chat</h2>
+          <ol className="messages" aria-label="Conversation">
+            <li className="msg msg-assistant">
+              <strong>Navigator:</strong> {GREETING}
+            </li>
+            {messages.map((m, i) => (
+              <li key={i} className={`msg msg-${m.role}`}>
+                <strong>{SPEAKER[m.role]}:</strong>{" "}
+                {m.role === "error" ? <span role="alert">{m.content}</span> : m.content}
+              </li>
+            ))}
+            {busy && <li className="msg msg-assistant msg-busy">Thinking...</li>}
+          </ol>
 
-      <form onSubmit={submit}>
-        <label htmlFor="question">Your question</label>
-        <br />
-        <input id="question" value={question} onChange={(e) => setQuestion(e.target.value)} maxLength={1000}
-          size={60} placeholder="Type your health question here..." />{" "}
-        <button type="submit" disabled={busy}>Send</button>
-      </form>
+          <form className="ask" onSubmit={submit}>
+            <label htmlFor="question" className="visually-hidden">Your question</label>
+            <input id="question" value={question} onChange={(e) => setQuestion(e.target.value)} maxLength={1000}
+              placeholder="Type your health question here..." />
+            <button type="submit" disabled={busy}>Send</button>
+          </form>
+        </section>
 
-      <h2>Suggested Questions</h2>
-      <ul aria-label="Suggested Questions">
-        {SUGGESTED.map((text) => (
-          <li key={text}>
-            <button type="button" onClick={() => send(text)} disabled={busy}>{text}</button>
-          </li>
-        ))}
-      </ul>
+        <section aria-labelledby="suggest-heading">
+          <h2 id="suggest-heading">Suggested Questions</h2>
+          <ul className="suggestions" aria-label="Suggested Questions">
+            {SUGGESTED.map((text) => (
+              <li key={text}>
+                <button type="button" onClick={() => send(text)} disabled={busy}>{text}</button>
+              </li>
+            ))}
+          </ul>
+        </section>
+      </div>
     </>
   );
 }

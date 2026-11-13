@@ -61,6 +61,8 @@
 @media (max-width: 1519px) {
   .topbar { flex-wrap: wrap; }
   .mainnav { order: 3; margin: 0 auto; }
+  .topbar-few { flex-wrap: nowrap; }
+  .topbar-few .mainnav { order: 0; margin: 0; }
 }
 
 /* Phones and tablets: the menu becomes a dark tab bar at the bottom, in thumb reach. */
