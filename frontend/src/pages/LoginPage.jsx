@@ -63,7 +63,11 @@ export default function LoginPage() {
     <main className="login">
       <section className="login-art" aria-label="About CardioXplain">
         <p className="logo"><LogoMark /><span><strong>CardioXplain</strong><span className="login-sub"> - XAI-Driven CVD Risk Assessment</span></span></p>
-        <img className="login-heart" src={heart} alt="" width="220" height="220" />
+        <span className="login-heart" aria-hidden="true">
+          <span className="beat-ring" />
+          <span className="beat-ring beat-ring-late" />
+          <img src={heart} alt="" width="220" height="220" />
+        </span>
         <p className="login-line">Understand your heart risk and what you can change.</p>
       </section>
 
