@@ -1,9 +1,12 @@
 import { Link } from "react-router";
 import { formatDateTime } from "../format.js";
+import { categoryClass } from "./RiskGauge.jsx";
 
 /** Past assessments with a View link each (dashboard and history page). Read-only (UC-600). */
 export default function HistoryTable({ predictions }) {
   return (
+    // Wide tables scroll inside their box on phones, never the whole page.
+    <div className="table-scroll">
     <table>
       <thead>
         <tr>
@@ -20,7 +23,7 @@ export default function HistoryTable({ predictions }) {
             <td>{p.prediction_id}</td>
             <td>{formatDateTime(p.prediction_date)}</td>
             <td>{p.risk_percent}%</td>
-            <td>{p.risk_category}</td>
+            <td><span className={`chip ${categoryClass(p.risk_category)}`}>{p.risk_category}</span></td>
             <td>
               <Link to={`/result/${p.prediction_id}`}>View</Link>
             </td>
@@ -28,5 +31,6 @@ export default function HistoryTable({ predictions }) {
         ))}
       </tbody>
     </table>
+    </div>
   );
 }

@@ -105,6 +105,8 @@ table {
 th, td { text-align: left; padding: 14px 16px; border-bottom: 1px solid var(--line); vertical-align: top; }
 th { background: var(--panel); font-size: 0.9rem; color: var(--ink-2); font-weight: 700; }
 tr:last-child td { border-bottom: 0; }
+.table-scroll { overflow-x: auto; max-width: 100%; }
+.table-scroll table { min-width: 520px; }
 
 [role="alert"] {
   background: #fbf3d6;
@@ -154,6 +156,8 @@ ul, ol { padding-left: 20px; }
 .btn-primary:hover { background: #1442cc; color: #fff; }
 .btn-light { background: var(--tile); color: var(--ink); box-shadow: var(--shadow); }
 .btn-light:hover { color: var(--ink); }
+/* Round arrow inside pill buttons and cards. */
+.go { width: 40px; height: 40px; border-radius: 50%; display: grid; place-items: center; background: var(--blue); color: #fff; flex: none; }
 
 .big-num { font-size: 2.2rem; font-weight: 800; letter-spacing: -0.04em; line-height: 1; font-variant-numeric: tabular-nums; }
 .unit { font-size: 0.38em; font-weight: 600; color: var(--ink-3); letter-spacing: 0; margin-left: 4px; }
