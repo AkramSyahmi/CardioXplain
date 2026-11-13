@@ -17,3 +17,5 @@ dist/
 .DS_Store
 Thumbs.db
 .vscode/
+frontend/public/__shot.html
+frontend/public/__frame.html

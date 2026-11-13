@@ -1,0 +1,14 @@
+import { screen, within } from "@testing-library/react";
+import { setToken } from "../api.js";
+import { USER, mockApi, renderApp } from "../test/helpers.jsx";
+
+beforeEach(() => setToken("t1"));
+
+test("current page link is marked and every link stays available", async () => {
+  mockApi({ "GET /auth/me": [200, { user: USER }], "GET /history": [200, { predictions: [], message: "No assessments yet." }] });
+  renderApp("/dashboard");
+  const nav = await screen.findByRole("navigation", { name: "Main" });
+  expect(within(nav).getByRole("link", { name: "Dashboard" })).toHaveAttribute("aria-current", "page");
+  expect(within(nav).getByRole("link", { name: "Care Navigator" })).not.toHaveAttribute("aria-current");
+  expect(screen.getByRole("button", { name: "Sign Out" })).toBeInTheDocument();
+});
