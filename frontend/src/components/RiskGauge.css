@@ -1,0 +1,27 @@
+.gauge { margin: 0; display: grid; justify-items: center; gap: 10px; }
+.gauge-dial { position: relative; width: 100%; max-width: 420px; }
+.gauge-dial svg { display: block; width: 100%; height: auto; }
+.gauge-read {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 2px;
+  margin: 0;
+  text-align: center;
+  font-size: 5rem;
+  font-weight: 800;
+  letter-spacing: -0.05em;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+}
+.gauge-read .unit { color: inherit; opacity: 0.65; }
+.gauge figcaption { display: grid; justify-items: center; gap: 10px; }
+.gauge-scale { font-size: 0.8rem; font-weight: 600; opacity: 0.75; }
+
+.gauge-small .gauge-dial { max-width: 220px; }
+.gauge-small .gauge-read { font-size: 2.6rem; }
+.gauge-small .gauge-scale { display: none; }
+
+@media (max-width: 720px) {
+  .gauge-large .gauge-read { font-size: 3.8rem; }
+}
