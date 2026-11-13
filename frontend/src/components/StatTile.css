@@ -4,6 +4,8 @@
 .stat.sage { background: var(--sage); }
 .stat-label { font-weight: 700; font-size: 0.95rem; }
 .stat-value { font-size: 2.2rem; font-weight: 800; letter-spacing: -0.04em; line-height: 1; font-variant-numeric: tabular-nums; overflow-wrap: anywhere; }
+.stat-value .unit { font-size: 0.5em; }
+.stat-value .stat-text { font-size: 0.72em; letter-spacing: -0.02em; }
 .stat-value .chip { font-size: 1rem; letter-spacing: 0; padding: 8px 16px; }
 .stat.sky .unit { color: #3f5664; }
 

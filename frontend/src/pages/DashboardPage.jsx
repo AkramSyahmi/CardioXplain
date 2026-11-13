@@ -58,7 +58,9 @@ export default function DashboardPage() {
           <StatTile label="Risk Category" value={latest ? latest.risk_category : "-"}>
             {latest ? <span className={`chip ${categoryClass(latest.risk_category)}`}>{latest.risk_category}</span> : "-"}
           </StatTile>
-          <StatTile label="Last Assessment" value={latest ? formatDate(latest.prediction_date) : "-"} tone="sage" />
+          <StatTile label="Last Assessment" value={latest ? formatDate(latest.prediction_date) : "-"} tone="sage">
+            <span className="stat-text">{latest ? formatDate(latest.prediction_date) : "-"}</span>
+          </StatTile>
         </ul>
       )}
 
@@ -72,7 +74,7 @@ export default function DashboardPage() {
           {predictions.length > 0 && <HistoryTable predictions={predictions.slice(0, 5)} />}
         </section>
 
-        <section aria-labelledby="actions-heading">
+        <section className="dash-actions" aria-labelledby="actions-heading">
           <h2 id="actions-heading">Quick Actions</h2>
           <ul className="actions">
             {QUICK_ACTIONS.map(([to, label, icon, tone]) => (

@@ -1,12 +1,15 @@
 .hero { position: relative; display: flex; align-items: flex-end; justify-content: space-between; gap: 20px; flex-wrap: wrap; margin: 18px 4px 22px; }
 .hero h1 { margin: 6px 0 0; }
 .hello { margin: 0; color: var(--ink-2); font-weight: 600; }
-.hero-heart { width: 190px; height: 190px; margin: -12px auto -28px; filter: drop-shadow(0 22px 24px rgba(16, 19, 23, 0.18)); flex: none; }
+.hero-heart { width: 120px; height: 120px; margin: 0 auto; align-self: center; filter: drop-shadow(0 22px 24px rgba(16, 19, 23, 0.18)); flex: none; }
 .hero-actions { display: flex; gap: 10px; flex-wrap: wrap; }
 .hero-actions .btn { padding-right: 8px; min-height: 52px; }
 .go.go-light { background: #fff; color: var(--blue); }
 
-.dash-grid { display: grid; grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); gap: 16px; align-items: start; }
+.dash-grid { display: grid; grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); gap: 16px; align-items: stretch; }
+.dash-actions { display: grid; grid-template-rows: auto 1fr; }
+.dash-actions .actions { grid-auto-rows: 1fr; }
+.dash-actions .actions li { display: grid; } /* each card fills its row, so both columns end together */
 
 
 
