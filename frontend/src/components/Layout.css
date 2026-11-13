@@ -20,8 +20,8 @@
   gap: 16px;
 }
 
-.logo { display: flex; align-items: center; gap: 10px; margin: 0; font-size: 1.2rem; font-weight: 800; letter-spacing: -0.02em; }
-.logo-mark { width: 40px; height: 40px; border-radius: 13px; background: var(--night); display: grid; place-items: center; flex: none; }
+.logo { display: flex; align-items: center; margin: 0; flex: none; }
+.logo img { display: block; width: auto; height: 36px; }
 
 .mainnav { display: flex; gap: 4px; background: var(--tile); padding: 5px; border-radius: var(--pill); box-shadow: var(--shadow); }
 .mainnav a {
@@ -69,6 +69,7 @@
 @media (max-width: 1100px) {
   .topbar { padding: 14px 16px 8px; flex-wrap: nowrap; }
   .signout { padding: 0 14px; }
+  .logo img { height: 30px; }
   .mainnav {
     position: fixed;
     left: 12px;

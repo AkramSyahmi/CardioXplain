@@ -4,7 +4,7 @@ import { Navigate, useNavigate } from "react-router";
 import { homeFor, useAuth } from "../auth.jsx";
 import heart from "../assets/heart-3d.png";
 import FieldError from "../components/FieldError.jsx";
-import { LogoMark } from "../components/Layout.jsx";
+import logo from "../assets/logo-full.png";
 import "./LoginPage.css";
 
 const EMPTY = { full_name: "", email: "", password: "", confirm: "" };
@@ -62,7 +62,7 @@ export default function LoginPage() {
   return (
     <main className="login">
       <section className="login-art" aria-label="About CardioXplain">
-        <p className="logo"><LogoMark /><span><strong>CardioXplain</strong><span className="login-sub"> - XAI-Driven CVD Risk Assessment</span></span></p>
+        <p className="login-logo"><img src={logo} alt="CardioXplain" width="170" height="32" /><span className="login-sub">XAI-Driven CVD Risk Assessment</span></p>
         <span className="login-heart" aria-hidden="true">
           <span className="beat-ring" />
           <span className="beat-ring beat-ring-late" />

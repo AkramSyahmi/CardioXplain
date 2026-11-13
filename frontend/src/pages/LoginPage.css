@@ -20,9 +20,9 @@
   gap: 16px;
   min-height: 560px;
 }
-.login-art .logo { justify-self: start; font-size: 1rem; font-weight: 500; }
-.login-art .logo strong { font-size: 1.2rem; font-weight: 800; }
-.login-art .logo-mark { background: var(--night-2); }
+.login-logo { justify-self: start; display: flex; align-items: center; flex-wrap: wrap; gap: 12px; margin: 0; }
+.login-logo img { display: block; width: auto; height: 32px; padding: 10px 16px; box-sizing: content-box; background: #fff; border-radius: var(--pill); }
+.login-sub { color: #c9cfd6; font-size: 0.9rem; font-weight: 600; }
 .login-heart { position: relative; align-self: center; width: 220px; height: 220px; display: grid; place-items: center; }
 .login-heart img {
   position: relative;
