@@ -57,7 +57,11 @@
 .segmented label:has(input:focus-visible) { outline: 3px solid var(--blue); outline-offset: 3px; }
 .segmented .field-error { width: 100%; }
 
-.assessment-form { max-width: 920px; }
+.assessment-form { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0 16px; align-items: stretch; }
+.assessment-form > :nth-child(n + 3) { grid-column: 1 / -1; }
+@media (max-width: 1100px) {
+  .assessment-form { grid-template-columns: minmax(0, 1fr); }
+}
 .form-section { margin-bottom: 16px; }
 .form-section h2 { display: flex; align-items: center; gap: 12px; margin-bottom: 18px; }
 .step-num {

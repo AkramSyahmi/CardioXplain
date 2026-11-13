@@ -98,7 +98,7 @@ export default function AdminDashboardPage() {
         <h2>System usage</h2>
         {statsError && <p role="alert">{statsError}</p>}
         {stats && (
-          <ul className="stats" aria-label="System usage">
+          <ul className="stats stats-6" aria-label="System usage">
             <StatTile label="Total users" value={stats.total_users} />
             <StatTile label="Total assessments" value={stats.total_assessments} tone="sky" />
             {Object.entries(stats.risk_distribution).map(([name, count]) => (

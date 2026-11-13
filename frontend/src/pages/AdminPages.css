@@ -1,5 +1,7 @@
 .admin-section { margin-bottom: 20px; }
 .stats-5 { grid-template-columns: repeat(5, minmax(0, 1fr)); }
+.stats-6 { grid-template-columns: repeat(6, minmax(0, 1fr)); }
+.stats-6 .stat-value { font-size: 2rem; }
 .stat.butter { background: var(--butter); }
 .stat.butter .unit { color: #5c4a12; }
 
@@ -22,6 +24,6 @@
 .not-found img { filter: drop-shadow(0 18px 20px rgba(16, 19, 23, 0.18)); }
 
 @media (max-width: 1100px) {
-  .stats-5 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .stats-5, .stats-6 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .admin-tables { grid-template-columns: minmax(0, 1fr); }
 }

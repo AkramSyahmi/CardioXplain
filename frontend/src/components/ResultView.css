@@ -1,5 +1,7 @@
 .result { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: 16px; align-items: start; }
 .result-col { display: grid; gap: 16px; min-width: 0; }
+/* The left column (gauge + inputs) is shorter, so it stays in view while the explanation scrolls. */
+.result-col:first-child { position: sticky; top: 16px; }
 
 .card-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; margin-bottom: 14px; }
 .card-head .card-title { margin: 0; }
@@ -59,6 +61,7 @@
 
 @media (max-width: 1100px) {
   .result { grid-template-columns: minmax(0, 1fr); }
+  .result-col:first-child { position: static; }
 }
 @media (max-width: 560px) {
   .explore { grid-template-columns: minmax(0, 1fr); }

@@ -148,6 +148,14 @@ export default function ResultView({ result }) {
           <InputTiles inputs={result.inputs} estimated={estimated} />
           <LifestyleSummary inputs={result.inputs} />
         </section>
+        <section aria-labelledby="explore-heading">
+          <h2 id="explore-heading" className="visually-hidden">Explore your results</h2>
+          <ul className="explore">
+            {EXPLORE.map(([to, label]) => (
+              <li key={to}><Link className="btn btn-light" to={to}>{label}<span className="go"><Icon name="arrow" /></span></Link></li>
+            ))}
+          </ul>
+        </section>
       </div>
 
       <div className="result-col">
@@ -180,14 +188,6 @@ export default function ResultView({ result }) {
           <p className="disclaimer"><em>{result.disclaimer}</em></p>
         </section>
 
-        <section aria-labelledby="explore-heading">
-          <h2 id="explore-heading" className="visually-hidden">Explore your results</h2>
-          <ul className="explore">
-            {EXPLORE.map(([to, label]) => (
-              <li key={to}><Link className="btn btn-light" to={to}>{label}<span className="go"><Icon name="arrow" /></span></Link></li>
-            ))}
-          </ul>
-        </section>
       </div>
     </div>
   );
