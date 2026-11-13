@@ -41,7 +41,8 @@ function axisTicks({ lo, hi }) {
   return ticks;
 }
 
-export default function ShapLedger({ shap, riskScore, estimated = [] }) {
+// riskPercent: the backend's whole percent (rounded down), so the total always matches the gauge.
+export default function ShapLedger({ shap, riskScore, riskPercent = percent(riskScore), estimated = [] }) {
   const { baseline, rows, scale } = ledgerRows(shap, riskScore);
   const pos = (x) => ((x - scale.lo) / (scale.hi - scale.lo)) * 100;
   const axis = axisTicks(scale);
@@ -51,7 +52,7 @@ export default function ShapLedger({ shap, riskScore, estimated = [] }) {
     <div className="ledger">
       <p className="ledger-intro">
         Everyone starts at the average risk in the data ({percent(baseline)}%). Each factor pushed you up or down
-        from there, and the pushes add up to your {percent(riskScore)}%.
+        from there, and the pushes add up to your {riskPercent}%.
       </p>
       <ol className="ledger-rows">
         {rows.map((row) => {
@@ -88,7 +89,7 @@ export default function ShapLedger({ shap, riskScore, estimated = [] }) {
             {average}
             <span className="ledger-you" style={{ left: `${pos(riskScore)}%` }} />
           </span>
-          <span className="ledger-effect">{percent(riskScore)}%</span>
+          <span className="ledger-effect">{riskPercent}%</span>
         </li>
       </ol>
       <div className="ledger-axis" aria-hidden="true">

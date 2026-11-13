@@ -8,6 +8,7 @@ from flask import current_app
 from openai import OpenAI
 
 from app.models import log_event
+from ml.features import risk_percent
 
 DISCLAIMER = "This result is for educational purposes only and does not replace professional medical advice."
 
@@ -80,7 +81,7 @@ def is_safe(text):
 
 
 def _percent(score):
-    return round(score * 100)
+    return risk_percent(score)
 
 
 def _factor_lines(top):

@@ -23,3 +23,9 @@ test("ledger says direction in words and marks estimated values", () => {
   expect(screen.getByText(/120 \(estimated\)/)).toBeInTheDocument();
   expect(screen.getByText(/Everyone starts at the average risk in the data \(47%\)/)).toBeInTheDocument();
 });
+
+test("total uses the backend's percent so it matches the gauge", () => {
+  render(<ShapLedger shap={SHAP} riskScore={0.3951} riskPercent={39} />);
+  expect(screen.getByText("39%")).toBeInTheDocument();
+  expect(screen.getByText(/add up to your 39%/)).toBeInTheDocument();
+});

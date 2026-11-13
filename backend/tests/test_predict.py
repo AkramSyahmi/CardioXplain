@@ -1,6 +1,7 @@
 """Task 3: UC-200/300/400 POST /api/predict."""
 import time
 
+from ml.features import risk_percent
 from app.models import LlmNarrative, Prediction, PredictionInput, ShapExplanation, SystemLog
 from ml.features import risk_category
 
@@ -16,7 +17,7 @@ def test_predict_returns_full_result(client, user_headers, fake_llm, valid_input
     assert response.status_code == 201
     body = response.get_json()
     assert 0 <= body["risk_score"] <= 1
-    assert body["risk_percent"] == round(body["risk_score"] * 100)
+    assert body["risk_percent"] == risk_percent(body["risk_score"])
     assert body["risk_category"] == risk_category(body["risk_score"])
     assert body["inputs"]["bmi"] == 27.68
     assert len(body["shap"]) == 12

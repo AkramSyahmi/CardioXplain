@@ -161,7 +161,8 @@ export default function SimulatorPage() {
             <h3 id="after-heading">Factors after the change</h3>
             {simulation.simulated.shap ? (
               <>
-                <ShapLedger shap={simulation.simulated.shap} riskScore={simulation.simulated.risk_score} />
+                <ShapLedger shap={simulation.simulated.shap} riskScore={simulation.simulated.risk_score}
+                  riskPercent={simulation.simulated.risk_percent} />
                 <details className="exact">
                   <summary>Show exact numbers</summary>
                   <ShapTable shap={simulation.simulated.shap} />

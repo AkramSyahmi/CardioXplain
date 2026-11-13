@@ -9,7 +9,7 @@ from app.services.llm_service import DISCLAIMER, simulation_narrative
 from app.services.ml_service import predict_probability
 from app.services.shap_service import explain
 from app.validation import amount_record_conflict, assessment_problems, read_json
-from ml.features import risk_category
+from ml.features import risk_category, risk_percent
 
 simulation_bp = Blueprint("simulation", __name__)
 
@@ -19,7 +19,7 @@ CHANGEABLE = ("smoke", "alco", "active", "weight", "cigarettes_per_day", "drinks
 
 
 def _score(risk_score):
-    return {"risk_score": risk_score, "risk_percent": round(risk_score * 100),
+    return {"risk_score": risk_score, "risk_percent": risk_percent(risk_score),
             "risk_category": risk_category(risk_score)}
 
 

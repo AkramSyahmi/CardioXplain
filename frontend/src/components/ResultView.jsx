@@ -158,7 +158,7 @@ export default function ResultView({ result }) {
           </div>
           {result.shap ? (
             <>
-              <ShapLedger shap={result.shap} riskScore={result.risk_score} estimated={estimated} />
+              <ShapLedger shap={result.shap} riskScore={result.risk_score} riskPercent={result.risk_percent} estimated={estimated} />
               <details className="exact">
                 <summary>Show exact numbers</summary>
                 <ShapTable shap={result.shap} estimated={estimated} />

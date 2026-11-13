@@ -8,7 +8,7 @@ from app.services.llm_service import DISCLAIMER, risk_narrative
 from app.services.ml_service import predict_probability
 from app.services.shap_service import explain
 from app.validation import assessment_problems, fill_unknown, lifestyle_conflicts, read_json
-from ml.features import risk_category
+from ml.features import risk_category, risk_percent
 
 predict_bp = Blueprint("predict", __name__)
 
@@ -55,7 +55,7 @@ def create_prediction():
     result = {
         "prediction_id": prediction.prediction_id,
         "risk_score": risk_score,
-        "risk_percent": round(risk_score * 100),
+        "risk_percent": risk_percent(risk_score),
         "risk_category": category,
         "inputs": values,
         "estimated_fields": estimated,

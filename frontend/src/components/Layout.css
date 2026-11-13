@@ -85,7 +85,7 @@
   .mainnav a { flex: 1; justify-content: center; min-height: 52px; padding: 0; color: #c9cfd6; }
   .mainnav a:hover { background: var(--night-2); color: #fff; }
   .mainnav a[aria-current="page"] { background: var(--sky); color: var(--ink); }
-  .mainnav a:focus-visible { outline-color: #fff; outline-offset: -3px; }
+  .mainnav a:focus-visible { outline-color: #fff; outline-offset: 2px; } /* ring sits on the dark bar, visible on the light current tab too */
   .mainnav .nav-label {
     position: absolute;
     width: 1px;

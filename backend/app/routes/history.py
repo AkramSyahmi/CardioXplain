@@ -4,13 +4,14 @@ from flask import Blueprint, g, jsonify
 from app.auth import login_required
 from app.models import Prediction
 from app.services.llm_service import DISCLAIMER
+from ml.features import risk_percent
 
 history_bp = Blueprint("history", __name__)
 
 
 def _summary(p):
     return {"prediction_id": p.prediction_id, "prediction_date": p.prediction_date.isoformat(),
-            "risk_score": p.risk_score, "risk_percent": round(p.risk_score * 100),
+            "risk_score": p.risk_score, "risk_percent": risk_percent(p.risk_score),
             "risk_category": p.risk_category}
 
 

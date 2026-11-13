@@ -2,6 +2,7 @@
 
 Keeping them in one place guarantees the form, the cleaning rules and the model use the same values.
 """
+import math
 
 # Model input features (Table 3.35), in the order the model expects them.
 FEATURES = ["age", "gender", "height", "weight", "bmi", "ap_hi", "ap_lo",
@@ -38,3 +39,9 @@ def risk_category(score):
     if score < 0.70:
         return "Moderate"
     return "High"
+
+
+def risk_percent(score):
+    """Whole percent shown to users, rounded down so it never crosses a category threshold
+    (0.3951 is 39% Low, not 40%). Rounding to 6 places first removes float noise (0.29 * 100)."""
+    return math.floor(round(score * 100, 6))
