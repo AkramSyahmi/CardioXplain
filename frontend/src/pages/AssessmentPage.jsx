@@ -27,22 +27,20 @@ function bmiOf(form) {
 
 function NumberField({ name, label, help, form, fields, onChange, disabled = false }) {
   return (
-    <p>
+    <div className="field">
       <label htmlFor={name}>{label}</label>
-      <br />
       <input id={name} name={name} type="number" inputMode="decimal" disabled={disabled}
         value={form[name] === "unknown" ? "" : form[name]} onChange={onChange} />
-      {help && <><br /><small>{help}</small></>}
+      {help && <small className="help">{help}</small>}
       <FieldError fields={fields} name={name} />
-    </p>
+    </div>
   );
 }
 
 function LevelField({ name, label, form, fields, onChange }) {
   return (
-    <p>
+    <div className="field">
       <label htmlFor={name}>{label}</label>
-      <br />
       <select id={name} name={name} value={form[name]} onChange={onChange}>
         <option value="">Choose...</option>
         <option value="1">Normal</option>
@@ -50,10 +48,9 @@ function LevelField({ name, label, form, fields, onChange }) {
         <option value="3">Well above normal</option>
         <option value="unknown">I don't know</option>
       </select>
-      <br />
-      <small>{UNSURE}</small>
+      <small className="help">{UNSURE}</small>
       <FieldError fields={fields} name={name} />
-    </p>
+    </div>
   );
 }
 
@@ -97,55 +94,65 @@ export default function AssessmentPage() {
   return (
     <>
       <h1>New Risk Assessment</h1>
-      <p>Enter your health and lifestyle information. Results are for educational purposes only.</p>
+      <p className="page-lead">Enter your health and lifestyle information. Results are for educational purposes only.</p>
       {error && <p role="alert">{error}</p>}
 
-      <form onSubmit={submit} noValidate>
-        <h2>About you</h2>
-        <NumberField name="age" label="Age (years)" help="This tool supports ages 30 to 65." {...shared} />
-        <p>
-          <label htmlFor="gender">Gender</label>
-          <br />
-          <select id="gender" name="gender" value={form.gender} onChange={change}>
-            <option value="">Choose...</option>
-            <option value="male">Male</option>
-            <option value="female">Female</option>
-          </select>
-          <FieldError fields={fields} name="gender" />
-        </p>
-        <NumberField name="height" label="Height (cm)" {...shared} />
-        <NumberField name="weight" label="Weight (kg)" {...shared} />
-        {bmi && <p>Your BMI: {bmi}</p>}
+      <form className="assessment-form" onSubmit={submit} noValidate>
+        <section className="card form-section" aria-labelledby="about-heading">
+          <h2 id="about-heading"><span className="step-num" aria-hidden="true">1</span>About you</h2>
+          <div className="field-grid">
+            <NumberField name="age" label="Age (years)" help="This tool supports ages 30 to 65." {...shared} />
+            <div className="field">
+              <label htmlFor="gender">Gender</label>
+              <select id="gender" name="gender" value={form.gender} onChange={change}>
+                <option value="">Choose...</option>
+                <option value="male">Male</option>
+                <option value="female">Female</option>
+              </select>
+              <FieldError fields={fields} name="gender" />
+            </div>
+            <NumberField name="height" label="Height (cm)" {...shared} />
+            <NumberField name="weight" label="Weight (kg)" {...shared} />
+          </div>
+          {bmi && <p className="bmi-note">Your BMI: {bmi}</p>}
+        </section>
 
-        <h2>Health measurements</h2>
-        <NumberField name="ap_hi" label="Systolic blood pressure (mmHg)" disabled={bpUnknown}
-          help="The two numbers from a blood pressure reading, e.g. 120/80: systolic is the first, diastolic the second."
-          {...shared} />
-        <NumberField name="ap_lo" label="Diastolic blood pressure (mmHg)" disabled={bpUnknown} {...shared} />
-        <p>
-          <label>
-            <input type="checkbox" checked={bpUnknown} onChange={toggleBpUnknown} /> I don't know my blood pressure
-          </label>
-          <br />
-          <small>A typical value (120/80) will be used and your result will be marked as estimated.</small>
-        </p>
-        <LevelField name="cholesterol" label="Cholesterol level" {...shared} />
-        <LevelField name="gluc" label="Glucose level" {...shared} />
+        <section className="card form-section" aria-labelledby="health-heading">
+          <h2 id="health-heading"><span className="step-num" aria-hidden="true">2</span>Health measurements</h2>
+          <div className="field-grid">
+            <NumberField name="ap_hi" label="Systolic blood pressure (mmHg)" disabled={bpUnknown}
+              help="The two numbers from a blood pressure reading, e.g. 120/80: systolic is the first, diastolic the second."
+              {...shared} />
+            <NumberField name="ap_lo" label="Diastolic blood pressure (mmHg)" disabled={bpUnknown} {...shared} />
+            <div className="field field-wide">
+              <label className="check-chip">
+                <input type="checkbox" checked={bpUnknown} onChange={toggleBpUnknown} /> I don't know my blood pressure
+              </label>
+              <small className="help">A typical value (120/80) will be used and your result will be marked as estimated.</small>
+            </div>
+            <LevelField name="cholesterol" label="Cholesterol level" {...shared} />
+            <LevelField name="gluc" label="Glucose level" {...shared} />
+          </div>
+        </section>
 
-        <h2>Lifestyle</h2>
-        <NumberField name="cigarettes_per_day" label="Cigarettes per day" help="Enter 0 if you do not smoke." {...shared} />
-        <NumberField name="drinks_per_week" label="Alcoholic drinks per week"
-          help="One drink = a can of beer, a glass of wine or a shot. Enter 0 if you do not drink." {...shared} />
-        <NumberField name="activity_minutes" label="Moderate exercise (minutes per week)"
-          help="Activities like brisk walking or cycling. 150 minutes or more a week counts as active (WHO guideline)."
-          {...shared} />
-        <p>
-          <small>The risk model uses Yes/No for lifestyle; your amounts are used to personalise your advice.</small>
-        </p>
+        <section className="card form-section" aria-labelledby="life-heading">
+          <h2 id="life-heading"><span className="step-num" aria-hidden="true">3</span>Lifestyle</h2>
+          <div className="field-grid">
+            <NumberField name="cigarettes_per_day" label="Cigarettes per day" help="Enter 0 if you do not smoke." {...shared} />
+            <NumberField name="drinks_per_week" label="Alcoholic drinks per week"
+              help="One drink = a can of beer, a glass of wine or a shot. Enter 0 if you do not drink." {...shared} />
+            <div className="field-wide">
+              <NumberField name="activity_minutes" label="Moderate exercise (minutes per week)"
+                help="Activities like brisk walking or cycling. 150 minutes or more a week counts as active (WHO guideline)."
+                {...shared} />
+            </div>
+          </div>
+          <p className="help">The risk model uses Yes/No for lifestyle; your amounts are used to personalise your advice.</p>
+        </section>
 
-        <p>
+        <div className="submit-row">
           <button type="submit" disabled={busy}>{busy ? "Analysing... (this can take up to 10 seconds)" : "Predict Risk"}</button>
-        </p>
+        </div>
       </form>
     </>
   );

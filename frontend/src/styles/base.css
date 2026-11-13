@@ -1,4 +1,5 @@
 /* Design tokens and base styles (direction A, docs/design/style-preview.html). */
+@import "./forms.css";
 :root {
   --ground: #e7eaee;
   --panel: #f5f6f8;
@@ -54,6 +55,7 @@ h3 { font-size: 1.1rem; font-weight: 700; }
 h4 { font-size: 1rem; font-weight: 700; }
 p { margin: 0 0 12px; }
 small { color: var(--ink-2); }
+.page-lead { color: var(--ink-2); font-weight: 600; max-width: 70ch; margin-bottom: 20px; }
 
 a { color: var(--blue); font-weight: 600; text-underline-offset: 3px; }
 a:hover { color: #1442cc; }

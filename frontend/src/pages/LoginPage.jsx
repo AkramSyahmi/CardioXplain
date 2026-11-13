@@ -2,7 +2,10 @@
 import { useState } from "react";
 import { Navigate, useNavigate } from "react-router";
 import { homeFor, useAuth } from "../auth.jsx";
+import heart from "../assets/heart-3d.png";
 import FieldError from "../components/FieldError.jsx";
+import { LogoMark } from "../components/Layout.jsx";
+import "./LoginPage.css";
 
 const EMPTY = { full_name: "", email: "", password: "", confirm: "" };
 
@@ -57,61 +60,62 @@ export default function LoginPage() {
   }
 
   return (
-    <main>
-      <p>
-        <strong>CardioXplain</strong> - XAI-Driven CVD Risk Assessment
-      </p>
-      <h1>Welcome back</h1>
-      <p>Sign in to your CardioXplain account</p>
+    <main className="login">
+      <section className="login-art" aria-label="About CardioXplain">
+        <p className="logo"><LogoMark /><span><strong>CardioXplain</strong><span className="login-sub"> - XAI-Driven CVD Risk Assessment</span></span></p>
+        <img className="login-heart" src={heart} alt="" width="220" height="220" />
+        <p className="login-line">Understand your heart risk and what you can change.</p>
+      </section>
 
-      <div role="tablist">
-        <button type="button" role="tab" aria-selected={tab === "signin"} onClick={() => switchTab("signin")}>
-          Sign In
-        </button>{" "}
-        <button type="button" role="tab" aria-selected={tab === "register"} onClick={() => switchTab("register")}>
-          Create Account
-        </button>
-      </div>
+      <section className="login-panel">
+        <h1>Welcome back</h1>
+        <p className="page-lead">Sign in to your CardioXplain account</p>
 
-      {notice && <p role="status">{notice}</p>}
-      {success && <p role="status">{success}</p>}
-      {error && <p role="alert">{error}</p>}
+        <div role="tablist" className="login-tabs">
+          <button type="button" role="tab" aria-selected={tab === "signin"} onClick={() => switchTab("signin")}>
+            Sign In
+          </button>
+          <button type="button" role="tab" aria-selected={tab === "register"} onClick={() => switchTab("register")}>
+            Create Account
+          </button>
+        </div>
 
-      <form onSubmit={submit}>
-        {tab === "register" && (
-          <p>
-            <label htmlFor="full_name">Full Name</label>
-            <br />
-            <input id="full_name" name="full_name" value={form.full_name} onChange={change} required />
-            <FieldError fields={fields} name="full_name" />
-          </p>
-        )}
-        <p>
-          <label htmlFor="email">Email Address</label>
-          <br />
-          <input id="email" name="email" type="email" value={form.email} onChange={change} required />
-          <FieldError fields={fields} name="email" />
-        </p>
-        <p>
-          <label htmlFor="password">Password</label>
-          <br />
-          <input id="password" name="password" type="password" value={form.password} onChange={change} required />
-          <FieldError fields={fields} name="password" />
-        </p>
-        {tab === "register" && (
-          <p>
-            <label htmlFor="confirm">Confirm Password</label>
-            <br />
-            <input id="confirm" name="confirm" type="password" value={form.confirm} onChange={change} required />
-            <FieldError fields={fields} name="confirm" />
-          </p>
-        )}
-        <button type="submit" disabled={busy}>
-          {busy ? "Please wait..." : tab === "signin" ? "Sign In" : "Create my account"}
-        </button>
-      </form>
+        {notice && <p role="status" className="login-status">{notice}</p>}
+        {success && <p role="status" className="login-status">{success}</p>}
+        {error && <p role="alert">{error}</p>}
 
-      <p>This system is for educational purposes only and does not provide medical advice.</p>
+        <form onSubmit={submit}>
+          {tab === "register" && (
+            <div className="field">
+              <label htmlFor="full_name">Full Name</label>
+              <input id="full_name" name="full_name" value={form.full_name} onChange={change} required />
+              <FieldError fields={fields} name="full_name" />
+            </div>
+          )}
+          <div className="field">
+            <label htmlFor="email">Email Address</label>
+            <input id="email" name="email" type="email" value={form.email} onChange={change} required />
+            <FieldError fields={fields} name="email" />
+          </div>
+          <div className="field">
+            <label htmlFor="password">Password</label>
+            <input id="password" name="password" type="password" value={form.password} onChange={change} required />
+            <FieldError fields={fields} name="password" />
+          </div>
+          {tab === "register" && (
+            <div className="field">
+              <label htmlFor="confirm">Confirm Password</label>
+              <input id="confirm" name="confirm" type="password" value={form.confirm} onChange={change} required />
+              <FieldError fields={fields} name="confirm" />
+            </div>
+          )}
+          <button type="submit" className="login-submit" disabled={busy}>
+            {busy ? "Please wait..." : tab === "signin" ? "Sign In" : "Create my account"}
+          </button>
+        </form>
+
+        <p className="help login-note">This system is for educational purposes only and does not provide medical advice.</p>
+      </section>
     </main>
   );
 }
