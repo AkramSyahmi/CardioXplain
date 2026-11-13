@@ -1,5 +1,5 @@
-import { NavLink, useNavigate } from "react-router";
-import { useAuth } from "../auth.jsx";
+import { Link, NavLink, useNavigate } from "react-router";
+import { homeFor, useAuth } from "../auth.jsx";
 import logo from "../assets/logo-full.png";
 import Icon from "./Icon.jsx";
 import "./Layout.css";
@@ -35,9 +35,9 @@ export default function Layout({ children }) {
     <>
       <a className="skip-link" href="#main">Skip to content</a>
       <header className={links.length > 3 ? "topbar" : "topbar topbar-few"}>
-        <p className="logo">
-          <img src={logo} alt="CardioXplain" width="190" height="36" />
-        </p>
+        <Link className="logo" to={homeFor(user)} aria-label="CardioXplain home">
+          <img src={logo} alt="" width="190" height="36" />
+        </Link>
         <nav className="mainnav" aria-label="Main">
           {links.map(([to, label, icon]) => (
             // end: "/admin" is not also active on "/admin/users".
