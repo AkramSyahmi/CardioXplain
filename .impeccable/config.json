@@ -1,0 +1,17 @@
+{
+  "detector": {
+    "ignoreRules": [],
+    "ignoreFiles": [],
+    "ignoreValues": [
+      {
+        "rule": "nested-cards",
+        "value": "*",
+        "files": [
+          "docs/design/style-preview.html"
+        ],
+        "createdAt": "2026-11-13T00:02:28.897Z",
+        "reason": "Claude: the only remaining nested cards are inside the 390px phone mock-up, an intentional device demo inside the style preview"
+      }
+    ]
+  }
+}

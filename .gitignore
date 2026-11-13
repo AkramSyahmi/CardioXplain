@@ -25,3 +25,8 @@ frontend/__plan.html
 frontend/public/__plan390.html
 frontend/public/__sim.html
 frontend/public/__shotadmin.html
+frontend/public/__shotlong.html
+frontend/public/__long390.html
+frontend/public/__chat.html
+.impeccable/review/
+.impeccable/hook.cache.json

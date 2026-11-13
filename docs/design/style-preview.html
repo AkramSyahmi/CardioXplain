@@ -1,0 +1,514 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CardioXplain style preview</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ground: #e7eaee;
+    --panel: #f5f6f8;          /* big rounded cards */
+    --tile: #ffffff;           /* tiles inside cards */
+    --ink: #101317;
+    --ink-2: #5b636e;          /* secondary text, 6:1 on white */
+    --ink-3: #646c78;          /* units, axis labels, 5:1 on white */
+    --line: #e2e6eb;
+    --blue: #2155f5;           /* the one accent: actions, active state */
+    --blue-soft: #e5ecff;
+    --sky: #cfe6f3;            /* pastel tile */
+    --sage: #dceccf;           /* pastel tile */
+    --butter: #f7e7a8;         /* pastel tile */
+    --night: #0f1216;          /* the AI insight card */
+    --night-2: #1b2027;
+    --raise: #f0643c;          /* raises risk */
+    --lower: #2fae6b;          /* lowers risk */
+    --low: #2fae6b; --mod: #e6a31e; --high: #e5484d;
+    --low-ink: #17703f; --mod-ink: #8a5a00; --high-ink: #b4232a;
+    --r-xl: 32px; --r-lg: 24px; --r-md: 18px; --pill: 999px;
+    --shadow: 0 1px 0 #fff inset, 0 18px 40px -24px rgba(16, 19, 23, .25);
+    --font: "Manrope", "Segoe UI", system-ui, sans-serif;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; font-family: var(--font); color: var(--ink); background: var(--ground); font-size: 16px; line-height: 1.5; -webkit-font-smoothing: antialiased; }
+  ::selection { background: var(--blue); color: #fff; }
+  :focus-visible { outline: 3px solid var(--blue); outline-offset: 3px; }
+  h1, h2, h3, p { margin: 0; }
+  h1, h2, h3 { letter-spacing: -0.02em; line-height: 1.1; text-wrap: balance; }
+  .num { font-variant-numeric: tabular-nums; }
+  .unit { font-size: .38em; font-weight: 600; color: var(--ink-3); letter-spacing: 0; margin-left: 4px; }
+  button { font: inherit; color: inherit; }
+  svg.i { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 1.75; stroke-linecap: round; stroke-linejoin: round; flex: none; }
+
+  .frame { max-width: 1400px; margin: 28px auto; background: var(--panel); border-radius: 40px; padding: 22px 26px 30px; box-shadow: 0 30px 80px -40px rgba(16,19,23,.35); }
+
+  /* ---------- Top bar ---------- */
+  .top { display: flex; align-items: center; justify-content: space-between; gap: 16px; }
+  .logo { display: flex; align-items: center; gap: 10px; font-weight: 800; font-size: 1.2rem; letter-spacing: -0.02em; }
+  .logo-mark { width: 40px; height: 40px; border-radius: 13px; background: var(--night); display: grid; place-items: center; }
+  .nav { display: flex; gap: 4px; background: var(--tile); padding: 5px; border-radius: var(--pill); box-shadow: var(--shadow); }
+  .nav a { display: flex; align-items: center; gap: 8px; padding: 10px 18px; border-radius: var(--pill); color: var(--ink-2); text-decoration: none; font-weight: 600; font-size: .95rem; white-space: nowrap; }
+  .nav a:hover { color: var(--ink); background: var(--panel); }
+  .nav a[aria-current="page"] { background: var(--night); color: #fff; }
+  .me { display: flex; align-items: center; gap: 10px; }
+  .circle { width: 46px; height: 46px; border-radius: 50%; display: grid; place-items: center; background: var(--tile); border: 0; box-shadow: var(--shadow); cursor: pointer; position: relative; }
+  .circle .dot { position: absolute; top: 11px; right: 12px; width: 8px; height: 8px; border-radius: 50%; background: var(--raise); border: 2px solid #fff; }
+  .circle-dark { width: 40px; height: 40px; background: var(--ink); color: #fff; box-shadow: none; }
+  .avatar { width: 46px; height: 46px; border-radius: 50%; background: linear-gradient(135deg, #2155f5, #0f2fa8); color: #fff; display: grid; place-items: center; font-weight: 800; }
+
+  /* ---------- Heading row ---------- */
+  .hello { display: flex; align-items: flex-end; justify-content: space-between; gap: 20px; flex-wrap: wrap; margin: 34px 4px 22px; }
+  .hello p { color: var(--ink-2); font-weight: 600; }
+  .hello h1 { font-size: clamp(2.4rem, 4.6vw, 4.25rem); font-weight: 800; letter-spacing: -0.045em; margin-top: 6px; }
+  .hero-heart { width: 190px; height: 190px; margin: -12px auto -28px; filter: drop-shadow(0 22px 24px rgba(16,19,23,.18)); flex: none; }
+  .phone .hero-heart { width: 92px; height: 92px; margin: 0; }
+  .p-hero { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+  .actions { display: flex; gap: 10px; align-items: center; }
+  .btn { display: inline-flex; align-items: center; gap: 12px; height: 52px; padding: 0 8px 0 22px; border-radius: var(--pill); border: 0; font-weight: 700; cursor: pointer; text-decoration: none; transition: transform .2s cubic-bezier(.2,.8,.2,1), background-color .2s; }
+  .btn:hover { transform: translateY(-1px); }
+  .btn .go { width: 38px; height: 38px; border-radius: 50%; display: grid; place-items: center; }
+  .btn-blue { background: var(--blue); color: #fff; }
+  .btn-blue .go { background: #fff; color: var(--blue); }
+  .btn-light { background: var(--tile); color: var(--ink); box-shadow: var(--shadow); }
+  .btn-light .go { background: var(--blue); color: #fff; }
+
+  /* ---------- Grid ---------- */
+  .grid { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 16px; }
+  .card { background: var(--tile); border-radius: var(--r-xl); padding: 24px; box-shadow: var(--shadow); min-width: 0; }
+  .card-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 18px; }
+  .card-head h2 { font-size: 1.2rem; font-weight: 700; }
+  .ic { width: 44px; height: 44px; border-radius: 50%; display: grid; place-items: center; background: var(--panel); flex: none; }
+  .titled { display: flex; align-items: center; gap: 12px; }
+  .chip { display: inline-flex; align-items: center; gap: 7px; padding: 6px 13px; border-radius: var(--pill); font-size: .85rem; font-weight: 700; background: var(--panel); }
+  .chip::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: currentColor; }
+  .chip.low { color: var(--low-ink); background: #e3f4ea; }
+  .chip.mod { color: var(--mod-ink); background: #fbefcf; }
+  .chip.high { color: var(--high-ink); background: #fde4e4; }
+  .chip.plain::before { display: none; }
+
+  .col { display: flex; flex-direction: column; gap: 16px; min-width: 0; }
+  .col-l { grid-column: span 5; } .col-r { grid-column: span 7; }
+
+  /* Dark risk card */
+  .risk { background: var(--night); color: #fff; box-shadow: 0 18px 40px -24px rgba(16, 19, 23, .25); position: relative; overflow: hidden; }
+  .risk .card-head h2 { color: #fff; }
+  .risk .ic { background: var(--night-2); }
+  .risk .meta { color: #a7b0bb; font-size: .9rem; }
+  .gauge { position: relative; margin: 6px auto 0; width: 100%; max-width: 420px; }
+  .gauge svg { width: 100%; height: auto; display: block; }
+  .gauge-read { position: absolute; left: 0; right: 0; bottom: 4px; text-align: center; }
+  .gauge-read .big { font-size: 5rem; font-weight: 800; letter-spacing: -0.05em; line-height: 1; }
+  .gauge-read .big .unit { color: #a7b0bb; font-size: .4em; }
+  .gauge-scale { display: flex; justify-content: space-between; color: #a7b0bb; font-size: .8rem; font-weight: 600; max-width: 420px; margin: 4px auto 0; }
+  .risk-foot { display: flex; align-items: center; justify-content: center; gap: 10px; margin-top: 14px; flex-wrap: wrap; }
+  .est { display: flex; gap: 12px; align-items: flex-start; margin-top: 20px; background: var(--night-2); border-radius: var(--r-md); padding: 14px 16px; color: #d9dee4; font-size: .92rem; }
+  .est b { color: #fff; }
+  .est .i { color: var(--mod); margin-top: 2px; }
+
+  /* Ledger */
+  .ledger { }
+  .ledger-sub { color: var(--ink-2); margin: -8px 0 16px; max-width: 60ch; }
+  .lrows { position: relative; display: grid; gap: 10px; }
+  .lrow { display: grid; grid-template-columns: 44px minmax(120px, 1fr) minmax(0, 2.2fr) 70px; gap: 12px; align-items: center; }
+  .lrow .name { font-weight: 700; font-size: .95rem; line-height: 1.25; }
+  .lrow .name small { display: block; font-weight: 500; color: var(--ink-2); font-size: .8rem; }
+  .bar { position: relative; height: 34px; background: var(--panel); border-radius: 11px; }
+  .bar .seg { position: absolute; top: 7px; bottom: 7px; border-radius: 6px; }
+  .bar .seg.up { background: linear-gradient(90deg, #ffb59c, var(--raise)); }
+  .bar .seg.down { background: linear-gradient(270deg, #9fe0bd, var(--lower)); }
+  .bar .avg { position: absolute; top: 4px; bottom: 4px; width: 0; border-left: 2px dashed #b3bac3; }
+  .lrow .eff { text-align: right; font-weight: 800; font-size: 1.05rem; }
+  .eff.up { color: #c4401c; } .eff.down { color: #17703f; }
+  .lrow.sum { padding-top: 8px; border-top: 1px solid var(--line); }
+  .lrow.sum .bar .you { position: absolute; top: 2px; bottom: 2px; width: 4px; border-radius: 2px; background: var(--ink); }
+  .lrow.sum .bar .you::after { content: attr(data-label); position: absolute; top: -26px; left: 50%; transform: translateX(-50%); background: var(--ink); color: #fff; font-size: .75rem; font-weight: 700; padding: 2px 8px; border-radius: 8px; white-space: nowrap; }
+  .axis { display: grid; grid-template-columns: 44px minmax(120px, 1fr) minmax(0, 2.2fr) 70px; gap: 12px; margin-top: 6px; color: var(--ink-3); font-size: .78rem; font-weight: 600; }
+  .axis div { display: flex; justify-content: space-between; }
+  .legend { display: flex; gap: 16px; flex-wrap: wrap; margin-top: 16px; font-size: .85rem; color: var(--ink-2); font-weight: 600; }
+  .legend i { display: inline-block; width: 22px; height: 8px; border-radius: 4px; margin-right: 7px; vertical-align: middle; }
+
+  /* Narrative */
+  .story { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 18px; align-items: end; }
+  .story p.lead { font-size: 1.12rem; line-height: 1.6; max-width: 62ch; }
+  .story p.lead mark { background: none; color: var(--ink); font-weight: 800; }
+  .note { color: var(--ink-2); font-size: .85rem; margin-top: 12px; }
+  .sparkle { background: linear-gradient(135deg, #e5ecff, #f3e8ff); color: var(--blue); }
+
+  /* Stat tiles */
+  .stats { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; padding: 12px; background: var(--panel); box-shadow: none; }
+  .stat { background: var(--tile); border-radius: var(--r-lg); padding: 16px; display: flex; flex-direction: column; justify-content: space-between; gap: 14px; min-height: 150px; }
+  .stat .top-row { display: flex; justify-content: space-between; align-items: center; gap: 8px; }
+  .stat h3 { font-size: .95rem; font-weight: 700; }
+  .stat .val { font-size: 2.1rem; font-weight: 800; letter-spacing: -0.04em; line-height: 1; }
+  .stat .sub { font-size: .8rem; color: var(--ink-2); font-weight: 600; }
+  .stat.sky { background: var(--sky); } .stat.sage { background: var(--sage); }
+  .stat.sky .ic, .stat.sage .ic { background: rgba(255,255,255,.7); }
+  .segs { display: flex; gap: 3px; height: 28px; align-items: stretch; }
+  .segs span { flex: 1; border-radius: 3px; background: rgba(16,19,23,.12); }
+  .segs span.on { background: var(--ink); }
+
+  /* What-If */
+  .whatif { background: var(--sky); }
+  .whatif .ic { background: rgba(255,255,255,.75); }
+  .wi-row { display: flex; align-items: flex-end; justify-content: space-between; gap: 10px; margin: 6px 0 14px; }
+  .wi-num { font-size: 3.4rem; font-weight: 800; letter-spacing: -0.05em; line-height: 1; }
+  .wi-num .from { color: #5b7584; font-size: .5em; font-weight: 700; margin-right: 8px; text-decoration: line-through; text-decoration-thickness: 2px; }
+  .delta { background: var(--ink); color: #fff; padding: 6px 12px; border-radius: var(--pill); font-weight: 800; font-size: .9rem; }
+  .slider label { display: flex; justify-content: space-between; font-weight: 700; font-size: .92rem; margin-bottom: 8px; }
+  .slider input { width: 100%; accent-color: var(--ink); }
+  .slider .ticks { display: flex; justify-content: space-between; font-size: .75rem; color: #4f6574; font-weight: 600; margin-top: 2px; }
+
+  /* Plan */
+  .plan { }
+  .daybar { display: flex; align-items: center; gap: 8px; margin-bottom: 18px; overflow-x: auto; padding-bottom: 2px; }
+  .daybar .circle { width: 40px; height: 40px; box-shadow: none; background: var(--panel); flex: none; }
+  .day { flex: none; display: grid; justify-items: center; gap: 2px; width: 58px; padding: 9px 0; border-radius: var(--r-md); background: var(--panel); font-weight: 700; font-size: .8rem; color: var(--ink-2); border: 0; cursor: pointer; }
+  .day b { font-size: 1.15rem; color: var(--ink); }
+  .day[aria-pressed="true"] { background: var(--blue); color: #dfe6ff; }
+  .day[aria-pressed="true"] b { color: #fff; }
+  .day .pip { width: 5px; height: 5px; border-radius: 50%; background: var(--lower); }
+  .day[aria-pressed="true"] .pip { background: #fff; }
+  .timeline { display: grid; gap: 0; }
+  .slot { display: grid; grid-template-columns: 44px 112px minmax(0, 1fr); gap: 14px; padding: 14px 0; border-top: 1px solid var(--line); }
+  .slot:first-child { border-top: 0; padding-top: 2px; }
+  .slot .when { font-weight: 800; padding-top: 10px; }
+  .slot .when small { display: block; font-weight: 600; color: var(--ink-2); font-size: .78rem; }
+  .tasks { display: grid; gap: 8px; }
+  .task { display: grid; grid-template-columns: 26px minmax(0, 1fr) auto; gap: 10px; align-items: start; background: var(--panel); border-radius: var(--r-md); padding: 12px 14px; }
+  .task input { width: 22px; height: 22px; margin: 1px 0 0; accent-color: var(--blue); }
+  .task .what { font-weight: 700; font-size: .95rem; }
+  .task ol { margin: 4px 0 0 18px; padding: 0; color: var(--ink-2); font-size: .85rem; }
+  .task .tag { font-size: .75rem; font-weight: 700; padding: 4px 10px; border-radius: var(--pill); background: var(--tile); color: var(--ink-2); white-space: nowrap; }
+  .task.done .what { text-decoration: line-through; text-decoration-color: #9aa3ad; color: var(--ink-2); }
+
+  /* System strip */
+  .system { margin-top: 16px; display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 16px; }
+  .swatches { grid-column: span 8; display: grid; grid-template-columns: repeat(6, 1fr); gap: 10px; }
+  .sw { border-radius: var(--r-md); padding: 12px; min-height: 92px; display: flex; flex-direction: column; justify-content: flex-end; font-size: .78rem; font-weight: 700; }
+  .sw span { font-weight: 600; opacity: .75; }
+  .typecard { grid-column: span 4; }
+  .typecard .t1 { font-size: 3.4rem; font-weight: 800; letter-spacing: -0.05em; line-height: 1; }
+
+  /* Phone */
+  .phone-wrap { display: grid; grid-template-columns: 390px minmax(0, 1fr); gap: 32px; align-items: center; margin-top: 16px; }
+  .phone { width: 390px; background: var(--panel); border-radius: 46px; padding: 14px; box-shadow: 0 30px 70px -30px rgba(16,19,23,.45), 0 0 0 8px #fff inset; position: relative; }
+  .phone .screen { border-radius: 34px; background: var(--panel); padding: 14px 6px 92px; display: grid; gap: 12px; }
+  .phone .p-top { display: flex; justify-content: space-between; align-items: center; padding: 4px 6px; }
+  .phone h2 { font-size: 1.9rem; font-weight: 800; letter-spacing: -0.04em; padding: 0 6px; }
+  .phone .risk { padding: 18px; }
+  .phone .risk .gauge-read .big { font-size: 3.6rem; }
+  .phone .mini .lrow { grid-template-columns: 34px minmax(0, 1fr) 54px; }
+  .phone .mini .lrow .bar { grid-column: 2 / -1; height: 26px; }
+  .phone .mini .lrow .ic { width: 34px; height: 34px; }
+  .tabbar { position: absolute; left: 22px; right: 22px; bottom: 22px; height: 70px; background: var(--night); border-radius: 36px; display: flex; align-items: center; justify-content: space-between; padding: 0 10px; }
+  .tabbar a { width: 50px; height: 50px; border-radius: 50%; display: grid; place-items: center; color: #c9cfd6; }
+  .tabbar a[aria-current="page"] { background: var(--sky); color: var(--ink); width: 56px; height: 56px; }
+  .why h2 { font-size: 1.6rem; font-weight: 800; letter-spacing: -0.03em; margin-bottom: 12px; }
+  .why ul { margin: 0; padding-left: 18px; color: var(--ink-2); display: grid; gap: 8px; max-width: 60ch; }
+  .sample { color: var(--ink-3); font-size: .8rem; font-weight: 600; }
+
+  @media (max-width: 1100px) {
+    .col-l, .col-r, .swatches, .typecard { grid-column: 1 / -1; }
+    .phone-wrap { grid-template-columns: minmax(0, 1fr); justify-items: center; }
+    .swatches { grid-template-columns: repeat(3, 1fr); }
+  }
+  @media (max-width: 720px) {
+    .frame { margin: 0; border-radius: 0; padding: 16px 14px 24px; }
+    .nav { display: none; }
+    .hello { position: relative; }
+    .hello > .hero-heart { position: absolute; right: -4px; top: -18px; width: 108px; height: 108px; margin: 0; }
+    .lrow, .axis { grid-template-columns: 40px minmax(0, 1fr) 60px; }
+    .lrow .bar, .axis div { grid-column: 2 / -1; }
+    .axis > span { display: none; }
+    .story { grid-template-columns: minmax(0, 1fr); }
+    .slot { grid-template-columns: 40px minmax(0, 1fr); }
+    .slot .tasks { grid-column: 1 / -1; }
+    .stats { grid-template-columns: 1fr 1fr; }
+    .phone { width: 100%; max-width: 390px; }
+  }
+  @media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; } }
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="i-heart" viewBox="0 0 24 24"><path d="M12 20.5 4.3 13a4.6 4.6 0 0 1 6.5-6.5L12 7.7l1.2-1.2a4.6 4.6 0 0 1 6.5 6.5Z"/></symbol>
+  <symbol id="i-bell" viewBox="0 0 24 24"><path d="M6 16V11a6 6 0 1 1 12 0v5l1.5 2h-15Z"/><path d="M10 20.5a2 2 0 0 0 4 0"/></symbol>
+  <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M7 17 17 7M9 7h8v8"/></symbol>
+  <symbol id="i-cal" viewBox="0 0 24 24"><rect x="4" y="5" width="16" height="15" rx="3"/><path d="M8 3v4M16 3v4M4 10h16"/></symbol>
+  <symbol id="i-drop" viewBox="0 0 24 24"><path d="M12 3.5s6 6.6 6 11a6 6 0 0 1-12 0c0-4.4 6-11 6-11Z"/></symbol>
+  <symbol id="i-age" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2"/></symbol>
+  <symbol id="i-run" viewBox="0 0 24 24"><circle cx="14" cy="4.5" r="1.8"/><path d="m6 20 3.5-5 3 2 1-5 3 3h3M9.5 10l3-2.5 3.5 1.5"/></symbol>
+  <symbol id="i-scale" viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="4"/><path d="M8.5 10a5 5 0 0 1 7 0l-2.5 3"/></symbol>
+  <symbol id="i-gauge" viewBox="0 0 24 24"><path d="M4 16a8 8 0 1 1 16 0"/><path d="m12 16 4-5"/></symbol>
+  <symbol id="i-sugar" viewBox="0 0 24 24"><path d="m12 3 7.5 4.3v8.6L12 20.2l-7.5-4.3V7.3Z"/></symbol>
+  <symbol id="i-dots" viewBox="0 0 24 24"><circle cx="6" cy="12" r="1.2"/><circle cx="12" cy="12" r="1.2"/><circle cx="18" cy="12" r="1.2"/></symbol>
+  <symbol id="i-spark" viewBox="0 0 24 24"><path d="M12 3.5 13.8 9 19.5 11l-5.7 2-1.8 5.5-1.8-5.5L4.5 11l5.7-2Z"/><path d="M19 3v3M17.5 4.5h3"/></symbol>
+  <symbol id="i-alert" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><path d="M12 7.5v5.5M12 16.2v.3"/></symbol>
+  <symbol id="i-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3.8"/><path d="M12 3v2M12 19v2M3 12h2M19 12h2M5.6 5.6 7 7M17 17l1.4 1.4M5.6 18.4 7 17M17 7l1.4-1.4"/></symbol>
+  <symbol id="i-cloud" viewBox="0 0 24 24"><path d="M7 18a4 4 0 0 1-.5-8 5.5 5.5 0 0 1 10.6 1.5A3.3 3.3 0 0 1 17 18Z"/></symbol>
+  <symbol id="i-moon" viewBox="0 0 24 24"><path d="M19 14.5A7.5 7.5 0 0 1 9.5 5 7.5 7.5 0 1 0 19 14.5Z"/></symbol>
+  <symbol id="i-left" viewBox="0 0 24 24"><path d="m14.5 6-6 6 6 6"/></symbol>
+  <symbol id="i-right" viewBox="0 0 24 24"><path d="m9.5 6 6 6-6 6"/></symbol>
+  <symbol id="i-home" viewBox="0 0 24 24"><path d="M4 11 12 4l8 7v8.5a.5.5 0 0 1-.5.5H15v-6H9v6H4.5a.5.5 0 0 1-.5-.5Z"/></symbol>
+  <symbol id="i-chat" viewBox="0 0 24 24"><path d="M5 18.5V7a3 3 0 0 1 3-3h8a3 3 0 0 1 3 3v6a3 3 0 0 1-3 3H8Z"/></symbol>
+  <symbol id="i-list" viewBox="0 0 24 24"><path d="M9 7h11M9 12h11M9 17h11M4.5 7h.01M4.5 12h.01M4.5 17h.01"/></symbol>
+  <symbol id="i-smoke" viewBox="0 0 24 24"><rect x="3" y="14" width="15" height="4" rx="1"/><path d="M14 14v4M20 14v4M18 10c0-2 2-2 2-4M15.5 10c0-2 2-2 2-4"/></symbol>
+</svg>
+
+<div class="frame">
+  <header class="top">
+    <div class="logo">
+      <span class="logo-mark"><svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="M12 20.5 4.3 13a4.6 4.6 0 0 1 6.5-6.5L12 7.7l1.2-1.2a4.6 4.6 0 0 1 6.5 6.5Z" fill="#f0643c"/><path d="M5.5 13h3.2l1.4-2.6 2.2 4.8 1.3-2.2h4.6" fill="none" stroke="#fff" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+      CardioXplain
+    </div>
+    <nav class="nav" aria-label="Main">
+      <a href="#"><svg class="i"><use href="#i-home"/></svg>Dashboard</a>
+      <a href="#" aria-current="page"><svg class="i"><use href="#i-heart"/></svg>My Risk</a>
+      <a href="#"><svg class="i"><use href="#i-gauge"/></svg>What-If</a>
+      <a href="#"><svg class="i"><use href="#i-cal"/></svg>Plan</a>
+      <a href="#"><svg class="i"><use href="#i-chat"/></svg>Navigator</a>
+    </nav>
+    <div class="me">
+      <button class="circle" type="button" aria-label="Notifications"><svg class="i"><use href="#i-bell"/></svg><span class="dot"></span></button>
+      <span class="avatar" aria-label="Ahmad Hafiz">AH</span>
+    </div>
+  </header>
+
+  <section class="hello">
+    <div>
+      <p>Good evening, Ahmad <span class="sample">· sample data</span></p>
+      <h1>Your heart, explained</h1>
+    </div>
+    <img class="hero-heart" src="assets/heart-3d.png" alt="">
+    <div class="actions">
+      <a class="btn btn-light" href="#">History<span class="go"><svg class="i"><use href="#i-arrow"/></svg></span></a>
+      <a class="btn btn-blue" href="#">New assessment<span class="go"><svg class="i"><use href="#i-arrow"/></svg></span></a>
+    </div>
+  </section>
+
+  <div class="grid">
+    <div class="col col-l">
+    <section class="card risk" aria-labelledby="risk-h">
+      <div class="card-head">
+        <div class="titled"><span class="ic"><svg class="i"><use href="#i-heart"/></svg></span><h2 id="risk-h">Estimated risk</h2></div>
+        <span class="meta">Thu 12 Nov · 16:40</span>
+      </div>
+      <div class="gauge">
+        <svg id="gauge" viewBox="0 0 400 230" role="img" aria-label="Risk gauge at 69 percent, Moderate"></svg>
+        <div class="gauge-read"><div class="big num">69<span class="unit">%</span></div></div>
+      </div>
+      <div class="gauge-scale"><span>0%</span><span>Low &lt;40 · Moderate · High 70+</span><span>100%</span></div>
+      <div class="risk-foot"><span class="chip mod">Moderate risk</span><span class="chip plain" style="background:#1b2027;color:#d9dee4">1 point below High</span></div>
+      <div class="est"><svg class="i"><use href="#i-alert"/></svg><div><b>Estimated result.</b> You did not know your blood pressure, so a typical value (120/80) was used. Get it checked, then reassess.</div></div>
+    </section>
+
+    <section class="card stats" aria-label="Your inputs">
+      <div class="stat sky">
+        <div class="top-row"><h3>Blood pressure</h3><span class="ic"><svg class="i"><use href="#i-drop"/></svg></span></div>
+        <div><div class="val num">120<span class="unit" style="color:#4f6574">/80 mmHg</span></div><div class="sub">Estimated · not measured</div></div>
+      </div>
+      <div class="stat">
+        <div class="top-row"><h3>Exercise</h3><span class="ic"><svg class="i"><use href="#i-run"/></svg></span></div>
+        <div><div class="val num">60<span class="unit">/150 min</span></div><div class="segs" aria-hidden="true" id="segs"></div></div>
+      </div>
+      <div class="stat">
+        <div class="top-row"><h3>BMI</h3><span class="ic"><svg class="i"><use href="#i-scale"/></svg></span></div>
+        <div><div class="val num">27.7</div><div class="sub">92 kg · 182 cm</div></div>
+      </div>
+      <div class="stat sage">
+        <div class="top-row"><h3>Smoking</h3><span class="ic"><svg class="i"><use href="#i-smoke"/></svg></span></div>
+        <div><div class="val num">10<span class="unit" style="color:#4a6340">a day</span></div><div class="sub">Model reads this as Yes</div></div>
+      </div>
+    </section>
+
+    <section class="card whatif" aria-labelledby="wi-h">
+      <div class="card-head">
+        <div class="titled"><span class="ic"><svg class="i"><use href="#i-gauge"/></svg></span><h2 id="wi-h">What if I exercise more?</h2></div>
+        <a class="circle circle-dark" href="#" aria-label="Open the What-If simulator"><svg class="i"><use href="#i-arrow"/></svg></a>
+      </div>
+      <div class="wi-row"><div class="wi-num num"><span class="from">69%</span>64<span class="unit" style="color:#4f6574">%</span></div><span class="delta num">−4.6 points</span></div>
+      <div class="slider">
+        <label for="mins"><span>Moderate exercise a week</span><span class="num">200 min</span></label>
+        <input id="mins" type="range" min="0" max="300" value="200" step="10">
+        <div class="ticks"><span>0</span><span>150 = active (WHO)</span><span>300</span></div>
+      </div>
+    </section>
+    </div>
+    <div class="col col-r">
+    <section class="card ledger" aria-labelledby="led-h">
+      <div class="card-head">
+        <div class="titled"><span class="ic"><svg class="i"><use href="#i-list"/></svg></span><h2 id="led-h">What moved your risk</h2></div>
+        <span class="chip plain">SHAP explanation</span>
+      </div>
+      <p class="ledger-sub">Everyone starts at the average risk in the data (47%). Each factor pushed you up or down from there, and the pushes add up to your 69%.</p>
+      <div class="lrows" id="lrows"></div>
+      <div class="axis" aria-hidden="true"><span></span><span></span><div><span>40%</span><span>50%</span><span>60%</span><span>70%</span><span>75%</span></div><span></span></div>
+      <div class="legend"><span><i style="background:var(--raise)"></i>Raises risk</span><span><i style="background:var(--lower)"></i>Lowers risk</span><span><i style="background:none;border-top:2px dashed #b3bac3;height:0;border-radius:0"></i>Average person</span></div>
+    </section>
+
+    <section class="card story" aria-labelledby="st-h">
+      <div>
+        <div class="card-head"><div class="titled"><span class="ic sparkle"><svg class="i"><use href="#i-spark"/></svg></span><h2 id="st-h">In plain words</h2></div></div>
+        <p class="lead">Your estimate is <mark>Moderate, at 69%</mark>. The biggest push came from your <mark>cholesterol level</mark>, then your age and how little you exercise. Your blood pressure was estimated, so the real result could be higher or lower. Building up to 150 minutes of brisk walking a week is one change that would bring this down.</p>
+        <p class="note">For education only, not a diagnosis. Please consult a healthcare professional.</p>
+      </div>
+      <a class="btn btn-light" href="#">Ask the Navigator<span class="go"><svg class="i"><use href="#i-arrow"/></svg></span></a>
+    </section>
+
+    <section class="card plan" aria-labelledby="pl-h">
+      <div class="card-head">
+        <div class="titled"><span class="ic"><svg class="i"><use href="#i-cal"/></svg></span><h2 id="pl-h">Your 7-day plan</h2></div>
+        <span class="chip plain">2 of 5 done today</span>
+      </div>
+      <div class="daybar">
+        <button class="circle" type="button" aria-label="Previous week"><svg class="i"><use href="#i-left"/></svg></button>
+        <button class="day" type="button" aria-pressed="true">Mon<b>16</b><span class="pip"></span></button>
+        <button class="day" type="button" aria-pressed="false">Tue<b>17</b><span class="pip"></span></button>
+        <button class="day" type="button" aria-pressed="false">Wed<b>18</b></button>
+        <button class="day" type="button" aria-pressed="false">Thu<b>19</b></button>
+        <button class="day" type="button" aria-pressed="false">Fri<b>20</b></button>
+        <button class="day" type="button" aria-pressed="false">Sat<b>21</b></button>
+        <button class="day" type="button" aria-pressed="false">Sun<b>22</b></button>
+        <button class="circle" type="button" aria-label="Next week"><svg class="i"><use href="#i-right"/></svg></button>
+      </div>
+      <div class="timeline">
+        <div class="slot">
+          <span class="ic" style="background:#fff3cf"><svg class="i"><use href="#i-sun"/></svg></span>
+          <div class="when">Morning<small>Start gently</small></div>
+          <div class="tasks">
+            <label class="task done"><input type="checkbox" checked><div><div class="what">1 glass (250 ml) of water after waking</div></div><span class="tag">Hydration</span></label>
+            <label class="task done"><input type="checkbox" checked><div><div class="what">Oats with banana, plain teh-o kosong</div><ol><li>1/2 cup rolled oats, cooked in water</li><li>1 small banana on top, no added sugar</li></ol></div><span class="tag">Meal</span></label>
+          </div>
+        </div>
+        <div class="slot">
+          <span class="ic" style="background:var(--sky)"><svg class="i"><use href="#i-cloud"/></svg></span>
+          <div class="when">Afternoon<small>Get moving</small></div>
+          <div class="tasks">
+            <label class="task"><input type="checkbox"><div><div class="what">15-minute brisk walk</div><ol><li>3 minutes easy warm-up</li><li>10 minutes able to talk, not sing</li><li>2 minutes slow cool-down</li></ol></div><span class="tag">Workout</span></label>
+          </div>
+        </div>
+        <div class="slot">
+          <span class="ic" style="background:#e9e3ff"><svg class="i"><use href="#i-moon"/></svg></span>
+          <div class="when">Evening<small>Wind down</small></div>
+          <div class="tasks">
+            <label class="task"><input type="checkbox"><div><div class="what">Cut to 8 cigarettes today</div></div><span class="tag">Habit</span></label>
+            <label class="task"><input type="checkbox"><div><div class="what">Screens off 21:30, in bed by 22:30</div></div><span class="tag">Sleep</span></label>
+          </div>
+        </div>
+      </div>
+    </section>
+    </div>
+  </div>
+
+  <div class="system">
+    <section class="card swatches" aria-label="Palette">
+      <div class="sw" style="background:var(--ground)">Ground<span>#E7EAEE</span></div>
+      <div class="sw" style="background:var(--night);color:#fff">Night<span>#0F1216</span></div>
+      <div class="sw" style="background:var(--blue);color:#fff">Action blue<span>#2155F5</span></div>
+      <div class="sw" style="background:var(--sky)">Sky<span>#CFE6F3</span></div>
+      <div class="sw" style="background:var(--sage)">Sage<span>#DCECCF</span></div>
+      <div class="sw" style="background:var(--butter)">Butter<span>#F7E7A8</span></div>
+      <div class="sw" style="background:var(--raise);color:var(--ink)">Raises<span>#F0643C</span></div>
+      <div class="sw" style="background:var(--lower);color:var(--ink)">Lowers<span>#2FAE6B</span></div>
+      <div class="sw" style="background:var(--low);color:var(--ink)">Low<span>with word</span></div>
+      <div class="sw" style="background:var(--mod)">Moderate<span>with word</span></div>
+      <div class="sw" style="background:var(--high);color:var(--ink)">High<span>with word</span></div>
+      <div class="sw" style="background:var(--tile);box-shadow:inset 0 0 0 1px var(--line)">Tile<span>#FFFFFF</span></div>
+    </section>
+    <section class="card typecard" aria-label="Type">
+      <p class="t1 num">69<span class="unit">%</span></p>
+      <p style="font-size:1.6rem;font-weight:800;letter-spacing:-0.03em;margin-top:10px">Manrope 800</p>
+      <p style="color:var(--ink-2);margin-top:6px">Big numbers, small units. Body at 16px, labels in bold, help text in grey at 6:1 contrast.</p>
+    </section>
+  </div>
+
+  <div class="phone-wrap">
+    <div class="phone" aria-label="Phone layout">
+      <div class="screen">
+        <div class="p-top"><span class="avatar" style="width:40px;height:40px">AH</span><button class="circle" type="button" aria-label="Notifications" style="width:42px;height:42px"><svg class="i"><use href="#i-bell"/></svg><span class="dot"></span></button></div>
+        <div class="p-hero"><h2>Your heart,<br>explained</h2><img class="hero-heart" src="assets/heart-3d.png" alt=""></div>
+        <section class="card risk">
+          <div class="gauge"><svg id="gauge2" viewBox="0 0 400 230" aria-hidden="true"></svg><div class="gauge-read"><div class="big num">69<span class="unit">%</span></div></div></div>
+          <div class="risk-foot"><span class="chip mod">Moderate risk</span></div>
+        </section>
+        <section class="card mini" style="padding:18px">
+          <div class="card-head" style="margin-bottom:12px"><h2 style="font-size:1.05rem">What moved your risk</h2></div>
+          <div class="lrows" id="lrows2"></div>
+        </section>
+      </div>
+      <nav class="tabbar" aria-label="Phone menu">
+        <a href="#" aria-current="page" aria-label="My risk"><svg class="i"><use href="#i-heart"/></svg></a>
+        <a href="#" aria-label="What-If"><svg class="i"><use href="#i-gauge"/></svg></a>
+        <a href="#" aria-label="Plan"><svg class="i"><use href="#i-cal"/></svg></a>
+        <a href="#" aria-label="Navigator"><svg class="i"><use href="#i-chat"/></svg></a>
+        <a href="#" aria-label="History"><svg class="i"><use href="#i-list"/></svg></a>
+      </nav>
+    </div>
+    <div class="why">
+      <h2>On a phone</h2>
+      <ul>
+        <li>The pill menu becomes a dark floating tab bar at the bottom, in thumb reach.</li>
+        <li>The risk gauge leads; the explanation bars stack under it, each bar under its label.</li>
+        <li>Every tap target is at least 44 px; text never drops below 13 px.</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<script>
+  // Risk gauge: ticks from green to red, lit up to the user's value.
+  function gauge(id, value) {
+    const svg = document.getElementById(id), n = 51, cx = 200, cy = 210, r1 = 150, r2 = 190;
+    const stops = [[0, [47,174,107]], [0.4, [230,163,30]], [0.7, [240,100,60]], [1, [229,72,77]]];
+    const mix = t => { for (let i = 1; i < stops.length; i++) { const [a, ca] = stops[i-1], [b, cb] = stops[i];
+      if (t <= b) { const k = (t - a) / (b - a); return `rgb(${ca.map((c, j) => Math.round(c + (cb[j] - c) * k))})`; } } };
+    let out = "";
+    for (let i = 0; i < n; i++) {
+      const t = i / (n - 1), ang = Math.PI * (1 - t), on = t <= value + 1e-9;
+      const long = i % 10 === 0, ri = long ? r1 - 10 : r1;
+      const x1 = cx + ri * Math.cos(ang), y1 = cy - ri * Math.sin(ang), x2 = cx + r2 * Math.cos(ang), y2 = cy - r2 * Math.sin(ang);
+      out += `<line x1="${x1.toFixed(1)}" y1="${y1.toFixed(1)}" x2="${x2.toFixed(1)}" y2="${y2.toFixed(1)}" stroke="${mix(t)}" stroke-width="${long ? 6 : 5}" stroke-linecap="round" opacity="${on ? 1 : .18}"/>`;
+    }
+    const a = Math.PI * (1 - value), nx = cx + (r1 - 26) * Math.cos(a), ny = cy - (r1 - 26) * Math.sin(a);
+    out += `<circle cx="${nx.toFixed(1)}" cy="${ny.toFixed(1)}" r="7" fill="#fff"/>`;
+    svg.innerHTML = out;
+  }
+  gauge("gauge", 0.69); gauge("gauge2", 0.69);
+
+  // SHAP ledger: baseline 47%, each factor's push, shown on a 40-75% scale.
+  const LO = 40, SPAN = 35, pos = v => (v - LO) / SPAN * 100;
+  const factors = [
+    ["i-drop", "Cholesterol", "Well above normal", 12.4],
+    ["i-age", "Age", "52 years", 6.1],
+    ["i-run", "Exercise", "60 of 150 min", 3.3],
+    ["i-scale", "BMI", "27.7", 2.4],
+    ["i-gauge", "Blood pressure", "120/80 estimated", -3.1],
+    ["i-sugar", "Glucose", "Normal", -1.0],
+    ["i-dots", "Other factors", "4 smaller ones", 1.9],
+  ];
+  function ledger(id, rows, withSum) {
+    let at = 47, html = "";
+    for (const [icon, name, sub, d] of rows) {
+      const from = at, to = at + d; at = to;
+      const left = pos(Math.min(from, to)), width = Math.abs(d) / SPAN * 100;
+      html += `<div class="lrow"><span class="ic"><svg class="i"><use href="#${icon}"/></svg></span>
+        <div class="name">${name}<small>${sub}</small></div>
+        <div class="bar"><span class="avg" style="left:${pos(47)}%"></span><span class="seg ${d > 0 ? "up" : "down"}" style="left:${left.toFixed(1)}%;width:${width.toFixed(1)}%"></span></div>
+        <div class="eff ${d > 0 ? "up" : "down"} num">${d > 0 ? "+" : "−"}${Math.abs(d).toFixed(1)}%</div></div>`;
+    }
+    if (withSum) html += `<div class="lrow sum"><span class="ic" style="background:var(--ink);color:#fff"><svg class="i"><use href="#i-heart"/></svg></span>
+      <div class="name">Your estimate<small>47% + all pushes</small></div>
+      <div class="bar"><span class="avg" style="left:${pos(47)}%"></span><span class="you" data-label="You" style="left:${pos(at).toFixed(1)}%"></span></div>
+      <div class="eff num">${at.toFixed(0)}%</div></div>`;
+    document.getElementById(id).innerHTML = html;
+  }
+  ledger("lrows", factors, true);
+  ledger("lrows2", factors.slice(0, 3), false);
+
+  // Exercise meter: 15 segments = 150 minutes.
+  document.getElementById("segs").innerHTML = Array.from({ length: 15 }, (_, i) => `<span class="${i < 6 ? "on" : ""}"></span>`).join("");
+</script>
+</body>
+</html>

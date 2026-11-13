@@ -50,3 +50,8 @@ https://www.kaggle.com/datasets/sulianova/cardiovascular-disease-dataset
 and place it in `backend/ml/data/`.
 
 > For educational purposes only. Not a medical diagnosis tool.
+
+## Credits
+
+- 3D heart image: Microsoft Fluent Emoji (MIT License), https://github.com/microsoft/fluentui-emoji
+- Font: Manrope (SIL Open Font License), installed with `@fontsource-variable/manrope`.

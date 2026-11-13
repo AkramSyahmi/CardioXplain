@@ -1,9 +1,10 @@
 .admin-section { margin-bottom: 20px; }
 .stats-5 { grid-template-columns: repeat(5, minmax(0, 1fr)); }
 .stat.butter { background: var(--butter); }
+.stat.butter .unit { color: #5c4a12; }
 
 .admin-tables { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; margin-bottom: 16px; }
-.admin-tables table, .admin-section.card table, .users-card table { box-shadow: none; border: 1px solid var(--line); margin: 0; }
+
 .training .params { display: flex; flex-wrap: wrap; gap: 8px; list-style: none; margin: 0; padding: 0; }
 .training .params li { padding: 6px 12px; border-radius: var(--pill); background: var(--panel); font-size: 0.9rem; font-weight: 600; }
 

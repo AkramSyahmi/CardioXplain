@@ -7,8 +7,8 @@
 .go.go-light { background: #fff; color: var(--blue); }
 
 .dash-grid { display: grid; grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); gap: 16px; align-items: start; }
-.recent table { box-shadow: none; border: 1px solid var(--line); margin: 0; }
-.recent .table-scroll { border-radius: var(--r-lg); }
+
+
 
 .actions { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
 .action {

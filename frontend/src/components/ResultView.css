@@ -46,7 +46,7 @@
 /* Exact numbers */
 .exact { margin-top: 18px; }
 .exact summary { cursor: pointer; font-weight: 700; min-height: 44px; display: flex; align-items: center; color: var(--blue); }
-.exact table { box-shadow: none; border: 1px solid var(--line); margin-top: 8px; }
+.exact table { margin-top: 8px; }
 
 /* Narrative */
 .narrative .lead { font-size: 1.1rem; line-height: 1.65; max-width: 64ch; }

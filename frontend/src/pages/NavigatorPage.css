@@ -13,13 +13,17 @@
   overflow-wrap: anywhere;
   white-space: pre-line;
 }
-.msg strong { display: block; font-size: 0.78rem; margin-bottom: 2px; }
+.msg > strong { display: block; font-size: 0.78rem; margin-bottom: 2px; }
 .msg-assistant { justify-self: start; background: var(--panel); border-bottom-left-radius: 6px; }
-.msg-assistant strong { color: var(--ink-2); }
+.msg-assistant > strong { color: var(--ink-2); }
 .msg-user { justify-self: end; background: var(--blue); color: #fff; border-bottom-right-radius: 6px; }
-.msg-user strong { color: #dfe6ff; }
+.msg-user > strong { color: #dfe6ff; }
 .msg-error { justify-self: start; background: #fde4e4; color: var(--high-ink); }
 .msg-error [role="alert"] { background: none; padding: 0; color: inherit; }
+.msg p { margin: 0 0 8px; }
+.msg p:last-child, .msg ul:last-child, .msg ol:last-child { margin-bottom: 0; }
+.msg ul, .msg ol { margin: 4px 0 8px; padding-left: 20px; }
+.msg-assistant { white-space: normal; }
 .msg-busy { color: var(--ink-2); font-style: italic; }
 
 .ask { display: flex; gap: 8px; padding: 6px; border-radius: var(--pill); background: var(--panel); }

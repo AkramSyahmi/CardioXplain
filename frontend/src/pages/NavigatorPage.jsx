@@ -1,5 +1,6 @@
 // UC-700 Use Virtual Care Navigator (Figure 3.33). The chat lives only in this page; nothing is stored.
 import { useState } from "react";
+import Markdown from "react-markdown";
 import { apiRequest } from "../api.js";
 import "./NavigatorPage.css";
 
@@ -19,6 +20,8 @@ const SUGGESTED = [
 ];
 
 const SPEAKER = { user: "You", assistant: "Navigator", error: "Navigator" };
+// LLM replies may use **bold** and lists; only these elements are shown, never raw HTML.
+const REPLY_ELEMENTS = ["p", "strong", "em", "ul", "ol", "li"];
 
 export default function NavigatorPage() {
   // role: "user" | "assistant" | "error" (error lines are shown but never sent back to the LLM)
@@ -64,7 +67,9 @@ export default function NavigatorPage() {
             {messages.map((m, i) => (
               <li key={i} className={`msg msg-${m.role}`}>
                 <strong>{SPEAKER[m.role]}:</strong>{" "}
-                {m.role === "error" ? <span role="alert">{m.content}</span> : m.content}
+                {m.role === "error" ? <span role="alert">{m.content}</span>
+                  : m.role === "assistant" ? <Markdown allowedElements={REPLY_ELEMENTS} unwrapDisallowed>{m.content}</Markdown>
+                  : m.content}
               </li>
             ))}
             {busy && <li className="msg msg-assistant msg-busy">Thinking...</li>}
