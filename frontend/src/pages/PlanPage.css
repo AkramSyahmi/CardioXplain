@@ -1,4 +1,4 @@
-.plan-create { max-width: 1100px; margin-bottom: 20px; position: relative; overflow: hidden; }
+.plan-create { margin-bottom: 20px; position: relative; overflow: hidden; }
 .plan-create > .chip { margin-bottom: 12px; }
 .plan-length { display: flex; flex-wrap: wrap; gap: 10px; }
 .plan-length legend { width: 100%; }
@@ -28,6 +28,5 @@
 }
 @keyframes busy { from { transform: translateX(-100%); } to { transform: translateX(340%); } }
 
-.plan { max-width: 1100px; }
 .plan-meta { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; color: var(--ink-2); font-weight: 600; }
 .plan .disclaimer { margin-top: 12px; }

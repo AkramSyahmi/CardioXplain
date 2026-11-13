@@ -46,7 +46,7 @@ body {
 ::selection { background: var(--blue); color: #fff; }
 :focus-visible { outline: 3px solid var(--blue); outline-offset: 3px; }
 
-main { max-width: 1400px; margin: 0 auto; padding: 8px 24px 48px; }
+main { padding: 8px 32px 48px; } /* full width; long text keeps its own max-width inside cards */
 
 h1, h2, h3, h4 { margin: 0 0 12px; letter-spacing: -0.02em; line-height: 1.15; text-wrap: balance; }
 h1 { font-size: clamp(2.2rem, 4.2vw, 3.6rem); font-weight: 800; letter-spacing: -0.045em; line-height: 1.05; }

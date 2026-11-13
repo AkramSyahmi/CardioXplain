@@ -11,9 +11,7 @@
 .skip-link:focus { top: 12px; color: #fff; }
 
 .topbar {
-  max-width: 1400px;
-  margin: 0 auto;
-  padding: 20px 24px 12px;
+  padding: 20px 32px 12px;
   display: flex;
   align-items: center;
   justify-content: space-between;
