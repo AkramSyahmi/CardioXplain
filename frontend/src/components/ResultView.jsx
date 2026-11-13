@@ -1,18 +1,9 @@
 // Risk result: score, SHAP explanation (UC-300), LLM narrative (UC-400). Figure 3.29.
 import { Bar, BarChart, CartesianGrid, ReferenceLine, Tooltip, XAxis, YAxis } from "recharts";
 import { Link } from "react-router";
+import { displayValue } from "../format.js";
 
-const YES_NO_FIELDS = ["smoke", "alco", "active"];
-const GENDER = { male: "Male", female: "Female" };
-const LEVEL = { 1: "Normal", 2: "Above normal", 3: "Well above normal" };
-
-/** The user's value in plain words, e.g. smoke 0 -> "No", cholesterol 2 -> "Above normal". */
-export function displayValue(feature, value) {
-  if (YES_NO_FIELDS.includes(feature)) return value ? "Yes" : "No";
-  if (feature === "gender") return GENDER[value] ?? value;
-  if (feature === "cholesterol" || feature === "gluc") return LEVEL[value] ?? value;
-  return value;
-}
+export { displayValue };
 
 function effect(shap) {
   const points = (shap * 100).toFixed(1);

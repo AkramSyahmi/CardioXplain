@@ -19,3 +19,15 @@ export function formatDay(isoDate) {
     weekday: "short", day: "numeric", month: "short", year: "numeric",
   }).replace(",", "");
 }
+
+const YES_NO_FIELDS = ["smoke", "alco", "active"];
+const GENDER = { male: "Male", female: "Female" };
+const LEVEL = { 1: "Normal", 2: "Above normal", 3: "Well above normal" };
+
+/** The user's value in plain words, e.g. smoke 0 -> "No", cholesterol 2 -> "Above normal". */
+export function displayValue(feature, value) {
+  if (YES_NO_FIELDS.includes(feature)) return value ? "Yes" : "No";
+  if (feature === "gender") return GENDER[value] ?? value;
+  if (feature === "cholesterol" || feature === "gluc") return LEVEL[value] ?? value;
+  return value;
+}

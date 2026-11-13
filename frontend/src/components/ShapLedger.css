@@ -1,0 +1,61 @@
+.ledger { --cols: 44px minmax(120px, 1fr) minmax(0, 2.2fr) 74px; }
+.ledger-intro { color: var(--ink-2); max-width: 62ch; margin-bottom: 18px; }
+
+.ledger-rows { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; }
+.ledger-row { display: grid; grid-template-columns: var(--cols); gap: 12px; align-items: center; }
+.ledger-icon { width: 44px; height: 44px; border-radius: 50%; display: grid; place-items: center; background: var(--panel); }
+.ledger-name { font-weight: 700; font-size: 0.95rem; line-height: 1.25; min-width: 0; overflow-wrap: anywhere; }
+.ledger-name small { display: block; font-weight: 500; font-size: 0.8rem; }
+
+.ledger-bar { position: relative; height: 34px; background: var(--panel); border-radius: 11px; }
+.ledger-seg { position: absolute; top: 7px; bottom: 7px; border-radius: 6px; }
+.ledger-seg.up { background: linear-gradient(90deg, #ffb59c, var(--raise)); }
+.ledger-seg.down { background: linear-gradient(270deg, #9fe0bd, var(--lower)); }
+.ledger-avg { position: absolute; top: 4px; bottom: 4px; border-left: 2px dashed #b3bac3; }
+
+.ledger-effect { text-align: right; font-weight: 800; font-size: 1.05rem; font-variant-numeric: tabular-nums; }
+.ledger-effect.up { color: #c4401c; }
+.ledger-effect.down { color: var(--low-ink); }
+
+.ledger-total { padding-top: 10px; border-top: 1px solid var(--line); margin-top: 4px; }
+.ledger-total .ledger-icon { background: var(--ink); color: #fff; }
+.ledger-you {
+  position: absolute;
+  top: 2px;
+  bottom: 2px;
+  width: 4px;
+  margin-left: -2px;
+  border-radius: 2px;
+  background: var(--ink);
+}
+.ledger-you::after {
+  content: "You";
+  position: absolute;
+  top: -24px;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 2px 8px;
+  border-radius: 8px;
+  background: var(--ink);
+  color: #fff;
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+
+.ledger-axis { display: grid; grid-template-columns: var(--cols); gap: 12px; margin-top: 8px; }
+.ledger-axis-track { grid-column: 3; position: relative; height: 1.4em; font-size: 0.78rem; font-weight: 600; color: var(--ink-3); }
+.ledger-axis-track span { position: absolute; transform: translateX(-50%); }
+
+.ledger-legend { display: flex; flex-wrap: wrap; gap: 16px; margin: 14px 0 0; font-size: 0.85rem; font-weight: 600; color: var(--ink-2); }
+.ledger-legend i { display: inline-block; width: 22px; height: 8px; border-radius: 4px; margin-right: 7px; vertical-align: middle; }
+.ledger-legend i.up { background: var(--raise); }
+.ledger-legend i.down { background: var(--lower); }
+.ledger-legend i.avg { height: 0; border-radius: 0; border-top: 2px dashed #b3bac3; }
+
+/* Phones: each bar drops under its name so names are never squeezed. */
+@media (max-width: 720px) {
+  .ledger { --cols: 36px minmax(0, 1fr) 64px; }
+  .ledger-icon { width: 36px; height: 36px; }
+  .ledger-bar { grid-column: 2 / -1; grid-row: 2; height: 26px; }
+  .ledger-axis-track { grid-column: 2 / -1; }
+}
