@@ -3,8 +3,13 @@ import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router";
 import { apiRequest } from "../api.js";
 import FieldError from "../components/FieldError.jsx";
+import Markdown from "react-markdown";
+import Icon from "../components/Icon.jsx";
 import { ShapTable, displayValue } from "../components/ResultView.jsx";
+import RiskGauge from "../components/RiskGauge.jsx";
+import ShapLedger from "../components/ShapLedger.jsx";
 import YesNoField from "../components/YesNoField.jsx";
+import "./SimulatorPage.css";
 
 const CHANGEABLE = ["smoke", "alco", "active", "weight", "cigarettes_per_day", "drinks_per_week", "activity_minutes"];
 
@@ -79,73 +84,101 @@ export default function SimulatorPage() {
     }
   }
 
+  const points = simulation?.change_percent_points;
+
   return (
     <>
       <h1>What-If Simulator</h1>
-      <p>See how lifestyle changes may affect your estimated risk. This is a simulation, not a guarantee.</p>
+      <p className="page-lead">See how lifestyle changes may affect your estimated risk. This is a simulation, not a guarantee.</p>
 
       {loadError && (
         <>
           <p role="alert">{loadError}</p>
-          <p><Link to="/assessment">Start Risk Assessment</Link></p>
+          <p><Link className="btn btn-primary" to="/assessment">Start Risk Assessment</Link></p>
         </>
       )}
       {!form && !loadError && <p>Loading...</p>}
 
       {form && (
-        <form onSubmit={simulate} noValidate>
-          <h2>Your fixed values</h2>
-          <p>These stay fixed in the simulator.</p>
-          <ul>
-            <li>Age: {inputs.age}</li>
-            <li>Height: {inputs.height} cm</li>
-            <li>Blood pressure: {inputs.ap_hi}/{inputs.ap_lo} mmHg</li>
-            <li>Cholesterol: {displayValue("cholesterol", inputs.cholesterol)}</li>
-            <li>Glucose: {displayValue("gluc", inputs.gluc)}</li>
-          </ul>
+        <form className="sim-form" onSubmit={simulate} noValidate>
+          <section className="card" aria-labelledby="fixed-heading">
+            <h2 id="fixed-heading">Your fixed values</h2>
+            <p className="help">These stay fixed in the simulator.</p>
+            <ul className="fixed-values">
+              <li>Age: {inputs.age}</li>
+              <li>Height: {inputs.height} cm</li>
+              <li>Blood pressure: {inputs.ap_hi}/{inputs.ap_lo} mmHg</li>
+              <li>Cholesterol: {displayValue("cholesterol", inputs.cholesterol)}</li>
+              <li>Glucose: {displayValue("gluc", inputs.gluc)}</li>
+            </ul>
+          </section>
 
-          <h2>Lifestyle changes to try</h2>
-          {LIFESTYLE.map((item) => (inputs[item.amount] == null ? (
-            <YesNoField key={item.flag} name={item.flag} label={item.label} form={form} fields={fields} onChange={change} />
-          ) : (
-            <p key={item.amount}>
-              <label htmlFor={item.amount}>{item.amountLabel}</label>
-              <br />
-              <input id={item.amount} name={item.amount} type="number" inputMode="numeric" value={form[item.amount]}
-                onChange={change} />
-              <FieldError fields={fields} name={item.amount} />
-            </p>
-          )))}
-          <p><small>150 minutes or more of moderate exercise a week counts as active (WHO guideline).</small></p>
-          <p>
-            <label htmlFor="weight">Weight (kg)</label>
-            <br />
-            <input id="weight" name="weight" type="number" inputMode="decimal" value={form.weight} onChange={change} />
-            <FieldError fields={fields} name="weight" />
-          </p>
-
-          {error && <p role="alert">{error}</p>}
-          <button type="submit" disabled={busy}>{busy ? "Simulating..." : "Simulate"}</button>
+          <section className="card card-sky" aria-labelledby="change-heading">
+            <h2 id="change-heading">Lifestyle changes to try</h2>
+            <div className="field-grid">
+              {LIFESTYLE.map((item) => (inputs[item.amount] == null ? (
+                <YesNoField key={item.flag} name={item.flag} label={item.label} form={form} fields={fields} onChange={change} />
+              ) : (
+                <div className="field" key={item.amount}>
+                  <label htmlFor={item.amount}>{item.amountLabel}</label>
+                  <input id={item.amount} name={item.amount} type="number" inputMode="numeric" value={form[item.amount]}
+                    onChange={change} />
+                  <FieldError fields={fields} name={item.amount} />
+                </div>
+              )))}
+              <div className="field">
+                <label htmlFor="weight">Weight (kg)</label>
+                <input id="weight" name="weight" type="number" inputMode="decimal" value={form.weight} onChange={change} />
+                <FieldError fields={fields} name="weight" />
+              </div>
+            </div>
+            <p className="help">150 minutes or more of moderate exercise a week counts as active (WHO guideline).</p>
+            {error && <p role="alert">{error}</p>}
+            <div className="submit-row">
+              <button type="submit" disabled={busy}>{busy ? "Simulating..." : "Simulate"}</button>
+            </div>
+          </section>
         </form>
       )}
 
       {simulation && (
-        <section>
-          <h2>Simulation result</h2>
-          <p>Before: {simulation.original.risk_percent}% ({simulation.original.risk_category})</p>
-          <p>After: {simulation.simulated.risk_percent}% ({simulation.simulated.risk_category})</p>
-          <p>{changeSentence(simulation.change_percent_points)}</p>
+        <section className="sim-result" aria-labelledby="sim-heading">
+          <h2 id="sim-heading">Simulation result</h2>
+          <div className="card compare">
+            <div className="compare-side">
+              <RiskGauge percent={simulation.original.risk_percent} category={simulation.original.risk_category} size="small" />
+              <p className="compare-caption">Before: {simulation.original.risk_percent}% ({simulation.original.risk_category})</p>
+            </div>
+            <span className="compare-arrow" aria-hidden="true"><Icon name="right" size={28} /></span>
+            <div className="compare-side">
+              <RiskGauge percent={simulation.simulated.risk_percent} category={simulation.simulated.risk_category} size="small" />
+              <p className="compare-caption">After: {simulation.simulated.risk_percent}% ({simulation.simulated.risk_category})</p>
+            </div>
+            <p className={`delta ${points < 0 ? "delta-down" : points > 0 ? "delta-up" : ""}`}>{changeSentence(points)}</p>
+          </div>
 
-          <h3>Factors after the change</h3>
-          {simulation.simulated.shap
-            ? <ShapTable shap={simulation.simulated.shap} />
-            : <p role="alert">{simulation.simulated.shap_error}</p>}
+          <section className="card" aria-labelledby="after-heading">
+            <h3 id="after-heading">Factors after the change</h3>
+            {simulation.simulated.shap ? (
+              <>
+                <ShapLedger shap={simulation.simulated.shap} riskScore={simulation.simulated.risk_score} />
+                <details className="exact">
+                  <summary>Show exact numbers</summary>
+                  <ShapTable shap={simulation.simulated.shap} />
+                </details>
+              </>
+            ) : <p role="alert">{simulation.simulated.shap_error}</p>}
+          </section>
 
-          <h3>What this means</h3>
-          <p>{simulation.narrative.text}</p>
-          <p><em>{simulation.disclaimer}</em></p>
+          <section className="card narrative" aria-labelledby="means-heading">
+            <h3 id="means-heading">What this means</h3>
+            <div className="lead">
+              <Markdown allowedElements={["p", "strong", "em"]} unwrapDisallowed>{simulation.narrative.text}</Markdown>
+            </div>
+            <p className="disclaimer"><em>{simulation.disclaimer}</em></p>
+          </section>
 
-          <button type="button" onClick={() => navigate("/plan", { state: { lifestyle: sentChanges } })}>
+          <button type="button" className="plan-button" onClick={() => navigate("/plan", { state: { lifestyle: sentChanges } })}>
             Create a health plan with these values
           </button>
         </section>

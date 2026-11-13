@@ -5,6 +5,7 @@ import { Link, useLocation } from "react-router";
 import { apiRequest } from "../api.js";
 import PlanCalendar from "../components/PlanCalendar.jsx";
 import { formatDateTime } from "../format.js";
+import "./PlanPage.css";
 
 const NO_PLAN_YET = "No health action plan yet.";
 const WAIT = "(this can take up to 45 seconds)";
@@ -69,62 +70,65 @@ export default function PlanPage() {
   return (
     <>
       <h1>Health Action Plan</h1>
-      <p>A day-by-day plan based on your risk result and lifestyle. For educational support only.</p>
+      <p className="page-lead">A day-by-day plan based on your risk result and lifestyle. For educational support only.</p>
 
       {!loaded && <p>Loading...</p>}
       {noAssessment && (
         <>
           <p role="alert">{noAssessment}</p>
-          <p><Link to="/assessment">Start Risk Assessment</Link></p>
+          <p><Link className="btn btn-primary" to="/assessment">Start Risk Assessment</Link></p>
         </>
       )}
 
       {loaded && !noAssessment && (
-        <section aria-label="Create a plan">
-          {lifestyle && <p>Using your What-If values.</p>}
-          {notice && <p>{notice}</p>}
-          <fieldset>
+        <section className="card plan-create" aria-label="Create a plan">
+          {lifestyle && <p className="chip">Using your What-If values.</p>}
+          {notice && <p className="help">{notice}</p>}
+          <fieldset className="plan-length">
             <legend>Plan length</legend>
-            <label>
+            <label className="choice">
               <input type="radio" name="length" checked={length === 7} onChange={() => setLength(7)} /> 7-day plan
-            </label>{" "}
-            <label>
+            </label>
+            <label className="choice">
               <input type="radio" name="length" checked={length === 30} onChange={() => setLength(30)} /> 30-day plan
               (built one week at a time)
             </label>
           </fieldset>
-          <p>
+          <div className="submit-row">
             <button type="button" onClick={generate} disabled={Boolean(busy)}>
               {busy.startsWith("Generating your plan") ? busy : plan ? "Generate a new plan" : "Generate my plan"}
             </button>
-          </p>
+          </div>
+          {busy && <span className="busy-bar" aria-hidden="true" />}
           {error && <p role="alert">{error}</p>}
           {riskCategory && <p>Your risk category: {riskCategory}</p>}
         </section>
       )}
 
       {plan && (
-        <article>
-          <p>Generated: {formatDateTime(plan.generated_at)}</p>
+        <article className="plan">
+          <p className="plan-meta">
+            <span>Generated: {formatDateTime(plan.generated_at)}</span>
+            {calendar && <span className="chip">Day {planned} of {calendar.length} planned.</span>}
+          </p>
           {calendar ? (
             <>
-              <p>Day {planned} of {calendar.length} planned.</p>
               {/* key: a new plan starts fresh instead of keeping the old plan's ticks */}
               <PlanCalendar key={plan.generated_at} plan={plan} />
               {nextWeek && (
-                <p>
+                <div className="submit-row">
                   <button type="button" disabled={Boolean(busy)}
                     onClick={() => request("/action-plan/next-week", {}, `Generating Week ${nextWeek}... ${WAIT}`)}>
                     {busy.startsWith("Generating Week") ? busy : `Generate Week ${nextWeek}`}
                   </button>
-                </p>
+                </div>
               )}
             </>
           ) : (
             // Older plans were saved as text; show them as Markdown (raw HTML is not rendered).
-            <Markdown>{plan.plan_text}</Markdown>
+            <div className="card"><Markdown>{plan.plan_text}</Markdown></div>
           )}
-          <p><em>{disclaimer}</em></p>
+          <p className="disclaimer"><em>{disclaimer}</em></p>
         </article>
       )}
     </>
