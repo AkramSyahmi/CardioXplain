@@ -1,7 +1,11 @@
 // Risk result: score, SHAP explanation (UC-300), LLM narrative (UC-400). Figure 3.29.
-import { Bar, BarChart, CartesianGrid, ReferenceLine, Tooltip, XAxis, YAxis } from "recharts";
+import Markdown from "react-markdown";
 import { Link } from "react-router";
 import { displayValue } from "../format.js";
+import Icon from "./Icon.jsx";
+import RiskGauge from "./RiskGauge.jsx";
+import ShapLedger from "./ShapLedger.jsx";
+import "./ResultView.css";
 
 export { displayValue };
 
@@ -24,11 +28,14 @@ function typicalValues(estimated) {
 
 function EstimateWarning({ estimated }) {
   return (
-    <p role="alert">
-      <strong>Estimated result.</strong> You did not know your{" "}
-      {estimated.map((name) => ESTIMATE_NAMES[name]).join(", ")}, so typical values were used (
-      {typicalValues(estimated)}). Your real risk may be higher or lower. Get these checked at a clinic or
-      pharmacy, then do a new assessment.
+    <p role="alert" className="estimate">
+      <Icon name="alert" />
+      <span>
+        <strong>Estimated result.</strong> You did not know your{" "}
+        {estimated.map((name) => ESTIMATE_NAMES[name]).join(", ")}, so typical values were used (
+        {typicalValues(estimated)}). Your real risk may be higher or lower. Get these checked at a clinic or
+        pharmacy, then do a new assessment.
+      </span>
     </p>
   );
 }
@@ -41,7 +48,7 @@ function LifestyleSummary({ inputs }) {
   if (inputs.activity_minutes != null) parts.push(`${inputs.activity_minutes} minutes of exercise per week`);
   if (parts.length === 0) return null;
   return (
-    <p>
+    <p className="lifestyle">
       Lifestyle: {parts.join(", ")}.
       <br />
       <small>The risk model uses Yes/No for lifestyle; your amounts are used to personalise your advice.</small>
@@ -78,72 +85,110 @@ export function ShapTable({ shap, estimated = [] }) {
   );
 }
 
-function ShapChart({ shap }) {
-  const data = shap.map((item) => ({ label: item.label, effect: Number((item.shap * 100).toFixed(1)) }));
+/** Big-number tiles for the inputs people can act on. */
+function InputTiles({ inputs, estimated }) {
+  const bpEstimated = estimated.includes("ap_hi") || estimated.includes("ap_lo");
+  const minutes = inputs.activity_minutes;
   return (
-    <figure>
-      <BarChart width={640} height={40 + data.length * 32} data={data} layout="vertical"
-        margin={{ left: 160, right: 24 }}>
-        <CartesianGrid horizontal={false} />
-        <XAxis type="number" unit="%" />
-        <YAxis type="category" dataKey="label" width={150} />
-        <Tooltip formatter={(value) => `${value > 0 ? "+" : ""}${value}%`} />
-        <ReferenceLine x={0} />
-        <Bar dataKey="effect" name="Effect on risk" />
-      </BarChart>
-      <figcaption>Bars to the right raise your risk; bars to the left lower it.</figcaption>
-    </figure>
+    <div className="tiles">
+      <div className="tile tile-sky">
+        <p className="tile-top"><span>Blood pressure</span><span className="tile-icon"><Icon name="drop" /></span></p>
+        <p className="big-num">{inputs.ap_hi}<span className="unit">/{inputs.ap_lo} mmHg</span></p>
+        <p className="tile-sub">{bpEstimated ? "Estimated, not measured" : "Measured by you"}</p>
+      </div>
+      <div className="tile">
+        <p className="tile-top"><span>Exercise</span><span className="tile-icon"><Icon name="run" /></span></p>
+        {minutes != null ? (
+          <>
+            <p className="big-num">{minutes}<span className="unit">/150 min a week</span></p>
+            <span className="meter" aria-hidden="true">
+              {Array.from({ length: 15 }, (_, i) => <span key={i} className={i < Math.floor(minutes / 10) ? "on" : ""} />)}
+            </span>
+          </>
+        ) : (
+          <p className="big-num">{inputs.active ? "Active" : "Not active"}</p>
+        )}
+      </div>
+      <div className="tile">
+        <p className="tile-top"><span>BMI</span><span className="tile-icon"><Icon name="scale" /></span></p>
+        <p className="big-num">{Number(inputs.bmi).toFixed(1)}</p>
+        <p className="tile-sub">{inputs.weight} kg, {inputs.height} cm</p>
+      </div>
+      <div className="tile tile-sage">
+        <p className="tile-top"><span>Smoking</span><span className="tile-icon"><Icon name="smoke" /></span></p>
+        {inputs.cigarettes_per_day != null ? (
+          <p className="big-num">{inputs.cigarettes_per_day}<span className="unit">a day</span></p>
+        ) : (
+          <p className="big-num">{inputs.smoke ? "Yes" : "No"}</p>
+        )}
+        <p className="tile-sub">Age {inputs.age}, {displayValue("gender", inputs.gender)}</p>
+      </div>
+    </div>
   );
 }
 
+const EXPLORE = [
+  ["/simulator", "What-If Lifestyle Simulator"],
+  ["/plan", "View Health Action Plan"],
+  ["/navigator", "Ask the Care Navigator"],
+  ["/history", "View All History"],
+];
+
 export default function ResultView({ result }) {
+  const estimated = result.estimated_fields ?? [];
   return (
-    <>
-      <section>
-        <h2>Risk Score</h2>
-        {result.estimated_fields?.length > 0 && <EstimateWarning estimated={result.estimated_fields} />}
-        <p>
-          <strong>{result.risk_percent}%</strong>
-        </p>
-        <p>
-          Risk category: <strong>{result.risk_category}</strong>
-        </p>
-        <p>
-          Input summary: Age {result.inputs.age}, {displayValue("gender", result.inputs.gender)}, BMI{" "}
-          {result.inputs.bmi}, BP {result.inputs.ap_hi}/{result.inputs.ap_lo}
-        </p>
-        <LifestyleSummary inputs={result.inputs} />
-      </section>
+    <div className="result">
+      <div className="result-col">
+        <section className="card card-dark risk-card" aria-labelledby="risk-heading">
+          <h2 id="risk-heading" className="card-title"><span className="title-icon"><Icon name="heart" /></span>Risk Score</h2>
+          <RiskGauge percent={result.risk_percent} category={result.risk_category} />
+          {estimated.length > 0 && <EstimateWarning estimated={estimated} />}
+        </section>
+        <section className="result-inputs" aria-label="Your inputs">
+          <InputTiles inputs={result.inputs} estimated={estimated} />
+          <LifestyleSummary inputs={result.inputs} />
+        </section>
+      </div>
 
-      <section>
-        <h2>SHAP Feature Contributions</h2>
-        {result.shap ? (
-          <>
-            <ShapChart shap={result.shap} />
-            <ShapTable shap={result.shap} estimated={result.estimated_fields ?? []} />
-          </>
-        ) : (
-          <p role="alert">{result.shap_error ?? "No explanation was saved for this result."}</p>
-        )}
-      </section>
+      <div className="result-col">
+        <section className="card" aria-labelledby="shap-heading">
+          <div className="card-head">
+            <h2 id="shap-heading" className="card-title"><span className="title-icon"><Icon name="list" /></span>What moved your risk</h2>
+            <span className="chip">SHAP explanation</span>
+          </div>
+          {result.shap ? (
+            <>
+              <ShapLedger shap={result.shap} riskScore={result.risk_score} estimated={estimated} />
+              <details className="exact">
+                <summary>Show exact numbers</summary>
+                <ShapTable shap={result.shap} estimated={estimated} />
+              </details>
+            </>
+          ) : (
+            <p role="alert">{result.shap_error ?? "No explanation was saved for this result."}</p>
+          )}
+        </section>
 
-      <section>
-        <h2>AI-Generated Risk Narrative</h2>
-        {result.narrative ? <p>{result.narrative.text}</p> : <p>No narrative was saved for this result.</p>}
-        <p>
-          <em>{result.disclaimer}</em>
-        </p>
-      </section>
+        <section className="card narrative" aria-labelledby="story-heading">
+          <h2 id="story-heading" className="card-title"><span className="title-icon spark"><Icon name="spark" /></span>In plain words</h2>
+          {result.narrative ? (
+            // LLM replies may use **bold**; only paragraphs and emphasis are shown, never raw HTML.
+            <div className="lead">
+              <Markdown allowedElements={["p", "strong", "em"]} unwrapDisallowed>{result.narrative.text}</Markdown>
+            </div>
+          ) : <p>No narrative was saved for this result.</p>}
+          <p className="disclaimer"><em>{result.disclaimer}</em></p>
+        </section>
 
-      <section>
-        <h2>Explore your results</h2>
-        <ul>
-          <li><Link to="/simulator">What-If Lifestyle Simulator</Link></li>
-          <li><Link to="/plan">View Health Action Plan</Link></li>
-          <li><Link to="/navigator">Ask the Care Navigator</Link></li>
-          <li><Link to="/history">View All History</Link></li>
-        </ul>
-      </section>
-    </>
+        <section aria-labelledby="explore-heading">
+          <h2 id="explore-heading" className="visually-hidden">Explore your results</h2>
+          <ul className="explore">
+            {EXPLORE.map(([to, label]) => (
+              <li key={to}><Link className="btn btn-light" to={to}>{label}<span className="go"><Icon name="arrow" /></span></Link></li>
+            ))}
+          </ul>
+        </section>
+      </div>
+    </div>
   );
 }

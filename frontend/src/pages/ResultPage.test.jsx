@@ -14,7 +14,7 @@ test("result page loads from API after refresh", async () => {
 test("result view shows score, factors and narrative", async () => {
   mockApi({ "GET /auth/me": [200, { user: USER }], "GET /history/7": [200, RESULT] });
   renderApp("/result/7");
-  expect(await screen.findByText("Moderate")).toBeInTheDocument();
+  expect(await screen.findByText("Moderate risk")).toBeInTheDocument();
   const table = screen.getByRole("table", { name: "Factor contributions" });
   const rows = within(table).getAllByRole("row");
   expect(within(rows[1]).getByText("Systolic blood pressure")).toBeInTheDocument();

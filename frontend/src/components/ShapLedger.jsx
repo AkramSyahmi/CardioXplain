@@ -29,13 +29,22 @@ export function ledgerRows(shap, riskScore) {
 
 function effectText(shap) {
   const points = Math.abs(shap * 100).toFixed(1);
+  if (points === "0.0") return "0.0%";
   return shap < 0 ? `−${points}%` : `+${points}%`;
+}
+
+/** Axis labels on round numbers: every 5 points on a narrow scale, every 10 on a wide one. */
+function axisTicks({ lo, hi }) {
+  const step = hi - lo > 0.25 ? 0.1 : 0.05;
+  const ticks = [];
+  for (let x = Math.ceil(lo / step - 1e-9) * step; x <= hi + 1e-9; x += step) ticks.push(round2(x));
+  return ticks;
 }
 
 export default function ShapLedger({ shap, riskScore, estimated = [] }) {
   const { baseline, rows, scale } = ledgerRows(shap, riskScore);
   const pos = (x) => ((x - scale.lo) / (scale.hi - scale.lo)) * 100;
-  const axis = Array.from({ length: 5 }, (_, i) => scale.lo + ((scale.hi - scale.lo) * i) / 4);
+  const axis = axisTicks(scale);
   const average = <span className="ledger-avg" style={{ left: `${pos(baseline)}%` }} />;
 
   return (
@@ -47,6 +56,7 @@ export default function ShapLedger({ shap, riskScore, estimated = [] }) {
       <ol className="ledger-rows">
         {rows.map((row) => {
           const up = row.shap >= 0;
+          const word = effectText(row.shap) === "0.0%" ? "No effect" : up ? "Raises risk" : "Lowers risk";
           return (
             <li key={row.feature} className="ledger-row">
               <span className="ledger-icon"><Icon name={ICONS[row.feature] ?? "dots"} /></span>
@@ -66,7 +76,7 @@ export default function ShapLedger({ shap, riskScore, estimated = [] }) {
               </span>
               <span className={`ledger-effect ${up ? "up" : "down"}`}>
                 {effectText(row.shap)}
-                <span className="visually-hidden">{up ? "Raises risk" : "Lowers risk"}</span>
+                <span className="visually-hidden">{word}</span>
               </span>
             </li>
           );
