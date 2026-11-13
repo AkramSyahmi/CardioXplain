@@ -182,3 +182,38 @@ def test_chat_malformed_reply_becomes_llm_unavailable(app, monkeypatch):
     top = [{"feature": "age", "label": "Age", "value": 50, "shap": 0.05}]
     text, source = llm_service.risk_narrative(0.5, "Moderate", top)
     assert source == "fallback"
+
+
+def test_plan_call_asks_for_json_mode(app, monkeypatch):
+    """DeepSeek sometimes dropped a closing brace in the long plan JSON; JSON mode guarantees valid JSON."""
+    from app.services import llm_service
+    requests = []
+
+    class FakeClient:
+        def __init__(self, **kwargs):
+            self.chat = self
+            self.completions = self
+
+        def create(self, **kwargs):
+            requests.append(kwargs)
+            message = type("M", (), {"content": "{}"})
+            return type("R", (), {"choices": [type("C", (), {"message": message})]})
+
+    monkeypatch.setattr(llm_service, "OpenAI", FakeClient)
+    llm_service.chat("system", [{"role": "user", "content": "plan"}], long_reply=True)
+    llm_service.chat("system", [{"role": "user", "content": "hi"}])
+    assert requests[0]["response_format"] == {"type": "json_object"}
+    assert "response_format" not in requests[1]
+
+
+def test_parse_week_accepts_flat_days(app):
+    """The prompt asks for morning/afternoon/evening directly on each day (no "blocks" level):
+    with the extra level DeepSeek kept dropping the brace that closes each day."""
+    import json
+    from app.services.llm_service import WEEK_FORMAT, parse_week
+    task = {"type": "meal", "task": "Oats with banana", "steps": ["Cook 1/2 cup oats"]}
+    flat = {"theme": "Start", "days": [{"day": n, "title": f"Day {n}", "morning": [task], "afternoon": [task],
+                                         "evening": [task]} for n in (1, 2)]}
+    week = parse_week(json.dumps(flat), 2)
+    assert week["days"][1]["blocks"]["evening"] == [task]
+    assert '"blocks"' not in WEEK_FORMAT

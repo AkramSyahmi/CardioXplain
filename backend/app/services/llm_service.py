@@ -47,10 +47,12 @@ def chat(system, messages, long_reply=False):
     timeout only limits the wait between pieces of data, so the call runs in a worker thread
     with an overall deadline. One attempt only: retries could keep the user waiting ~30 s.
     long_reply=True (the calendar plan) allows 6000 tokens, a 45 s deadline and uses the plan threads.
+    It also turns on JSON mode: without it, long plan JSON sometimes came back with a missing brace.
     """
     config = current_app.config
     deadline = config["LLM_PLAN_TIMEOUT_SECONDS"] if long_reply else config["LLM_TIMEOUT_SECONDS"]
     max_tokens = 6000 if long_reply else 400  # 400 keeps normal replies short and fast
+    json_mode = {"response_format": {"type": "json_object"}} if long_reply else {}
     try:
         client = OpenAI(api_key=config["LLM_API_KEY"], base_url=config["LLM_BASE_URL"],
                         timeout=deadline, max_retries=0)
@@ -59,6 +61,7 @@ def chat(system, messages, long_reply=False):
             model=config["LLM_MODEL"],
             max_tokens=max_tokens,
             messages=[{"role": "system", "content": system}, *messages],
+            **json_mode,
         )
         response = future.result(timeout=deadline)
         text = (response.choices[0].message.content or "").strip()
@@ -203,7 +206,7 @@ PLAN_TASK_TYPES = ("meal", "workout", "hydration", "sleep", "habit")
 WEEK_FORMAT = (
     'Reply with JSON only, no other text, in exactly this shape:\n'
     '{"theme": "short theme for the week", "days": [{"day": 1, "title": "short focus for the day", '
-    '"blocks": {"morning": [TASK, ...], "afternoon": [TASK, ...], "evening": [TASK, ...]}}, ...]}\n'
+    '"morning": [TASK, ...], "afternoon": [TASK, ...], "evening": [TASK, ...]}, ...]}\n'
     'where TASK is {"type": "meal" | "workout" | "hydration" | "sleep" | "habit", '
     '"task": "what to do, with exact amounts or times", "steps": ["checklist step", ...]}.'
 )
@@ -223,7 +226,9 @@ def parse_week(text, days_in_week):
         text = text.strip("`").removeprefix("json").strip()
     try:
         week = json.loads(text)
-        days = week["days"]
+        # Days come flat ({"morning": [...], ...}); older replies used a "blocks" object (same check).
+        days = [{**day, "blocks": day.get("blocks") or {b: day.get(b) for b in PLAN_BLOCKS}}
+                if isinstance(day, dict) else day for day in week["days"]]
         valid = (isinstance(week.get("theme"), str) and isinstance(days, list) and len(days) == days_in_week
                  and all(isinstance(day, dict) and isinstance(day.get("title"), str)
                          and isinstance(day.get("blocks"), dict)
