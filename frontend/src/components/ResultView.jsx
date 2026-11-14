@@ -91,7 +91,7 @@ function InputTiles({ inputs, estimated }) {
   const minutes = inputs.activity_minutes;
   return (
     <div className="tiles">
-      <div className="tile tile-sky">
+      <div className={bpEstimated ? "tile tile-estimated" : "tile"}>
         <p className="tile-top"><span>Blood pressure</span><span className="tile-icon"><Icon name="drop" /></span></p>
         <p className="big-num">{inputs.ap_hi}<span className="unit">/{inputs.ap_lo} mmHg</span></p>
         <p className="tile-sub">{bpEstimated ? "Estimated, not measured" : "Measured by you"}</p>
@@ -114,7 +114,7 @@ function InputTiles({ inputs, estimated }) {
         <p className="big-num">{Number(inputs.bmi).toFixed(1)}</p>
         <p className="tile-sub">{inputs.weight} kg, {inputs.height} cm</p>
       </div>
-      <div className="tile tile-sage">
+      <div className="tile">
         <p className="tile-top"><span>Smoking</span><span className="tile-icon"><Icon name="smoke" /></span></p>
         {inputs.cigarettes_per_day != null ? (
           <p className="big-num">{inputs.cigarettes_per_day}<span className="unit">a day</span></p>

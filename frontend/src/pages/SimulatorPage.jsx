@@ -113,7 +113,7 @@ export default function SimulatorPage() {
             </ul>
           </section>
 
-          <section className="card card-sky" aria-labelledby="change-heading">
+          <section className="card" aria-labelledby="change-heading">
             <h2 id="change-heading">Lifestyle changes to try</h2>
             <div className="field-grid">
               {LIFESTYLE.map((item) => (inputs[item.amount] == null ? (

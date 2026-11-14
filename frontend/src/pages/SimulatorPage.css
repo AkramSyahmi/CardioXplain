@@ -6,7 +6,7 @@
 
 .sim-result { display: grid; gap: 16px; }
 .sim-result > h2 { margin: 0; }
-.card.compare { display: grid; grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr); align-items: center; gap: 12px; background: var(--sky); }
+.card.compare { display: grid; grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr); align-items: center; gap: 12px; }
 .compare-side { display: grid; justify-items: center; gap: 4px; min-width: 0; }
 .compare-caption { margin: 0; font-weight: 700; }
 .compare-arrow { width: 52px; height: 52px; border-radius: 50%; display: grid; place-items: center; background: var(--ink); color: #fff; }

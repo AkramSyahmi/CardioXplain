@@ -53,13 +53,13 @@ export default function DashboardPage() {
       {history && (
         <ul className="stats" aria-label="Summary">
           <StatTile label="Total Assessments" value={predictions.length} />
-          <StatTile label="Latest Risk Score" value={latest ? `${latest.risk_percent}%` : "-"} tone="sky">
+          <StatTile label="Latest Risk Score" value={latest ? `${latest.risk_percent}%` : "-"}>
             {latest ? <>{latest.risk_percent}<span className="unit">%</span></> : "-"}
           </StatTile>
           <StatTile label="Risk Category" value={latest ? latest.risk_category : "-"}>
             {latest ? <span className={`chip ${categoryClass(latest.risk_category)}`}>{latest.risk_category}</span> : "-"}
           </StatTile>
-          <StatTile label="Last Assessment" value={latest ? formatDate(latest.prediction_date) : "-"} tone="sage">
+          <StatTile label="Last Assessment" value={latest ? formatDate(latest.prediction_date) : "-"}>
             <span className="stat-text">{latest ? formatDate(latest.prediction_date) : "-"}</span>
           </StatTile>
         </ul>

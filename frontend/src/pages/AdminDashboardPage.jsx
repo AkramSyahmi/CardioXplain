@@ -25,11 +25,11 @@ function Metrics({ metrics, training }) {
     <>
       <p className="help">Results on {metrics.test_rows} unseen test records.</p>
       <ul className="stats stats-5" aria-label="Model metrics">
-        <StatTile label="Accuracy" value={percent(metrics.accuracy)} tone="sky" />
+        <StatTile label="Accuracy" value={percent(metrics.accuracy)} />
         <StatTile label="Precision" value={percent(metrics.precision)} />
         <StatTile label="Recall" value={percent(metrics.recall)} />
         <StatTile label="F1-score" value={percent(metrics.f1_score)} />
-        <StatTile label="AUC" value={metrics.auc} tone="sage" />
+        <StatTile label="AUC" value={metrics.auc} />
       </ul>
 
       <div className="admin-tables">
@@ -104,7 +104,7 @@ export default function AdminDashboardPage() {
         {stats && (
           <ul className="stats stats-6" aria-label="System usage">
             <StatTile label="Total users" value={stats.total_users} />
-            <StatTile label="Total assessments" value={stats.total_assessments} tone="sky" />
+            <StatTile label="Total assessments" value={stats.total_assessments} />
             {Object.entries(stats.risk_distribution).map(([name, count]) => (
               <StatTile key={name} label={name} value={count} />
             ))}
