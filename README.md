@@ -54,5 +54,6 @@ and place it in `backend/ml/data/`.
 ## Credits
 
 - 3D heart image: Microsoft Fluent Emoji (MIT License), https://github.com/microsoft/fluentui-emoji
-- Animated 3D heart on the login page: Microsoft Fluent Emoji Animated (MIT License), https://github.com/microsoft/fluentui-emoji-animated (re-timed to about 65 beats a minute)
+- Animated heart on the login page (phones): Microsoft Fluent Emoji Animated (MIT License), https://github.com/microsoft/fluentui-emoji-animated (re-timed to about 65 beats a minute)
+- 3D anatomical heart on the login page (desktop): "Heart - animated anatomical 3d model" by assetfactory, Sketchfab Standard licence, https://sketchfab.com/3d-models/heart-animated-anatomical-3d-model-dedbab26bd27413eaf55148caaccc9f7 (textures resized, packed as one .glb). Shown with Google model-viewer (Apache-2.0).
 - Font: Manrope (SIL Open Font License), installed with `@fontsource-variable/manrope`.

@@ -81,7 +81,10 @@
     justify-items: start;
     gap: 32px;
   }
-  .login-heart { justify-self: center; width: clamp(240px, 18vw, 300px); height: clamp(240px, 18vw, 300px); } /* animation is 256 px; keep it sharp */
+  .login-heart { justify-self: center; width: clamp(240px, 18vw, 300px); height: clamp(240px, 18vw, 300px); } /* flat animation is 256 px; keep it sharp */
+  .login-heart-3d { width: clamp(320px, 26vw, 460px); height: clamp(320px, 26vw, 460px); }
+  .login-heart-3d model-viewer { width: 100%; height: 100%; background: transparent; --poster-color: transparent; }
+  .login-heart-3d model-viewer::part(default-progress-bar) { display: none; }
   .login-line { text-align: left; font-size: clamp(2rem, 2.8vw, 3rem); max-width: 16ch; text-wrap: balance; }
   .login-panel {
     border-radius: 0;
