@@ -112,3 +112,14 @@ test("activity log shows the latest 10 and can show all", async () => {
   await userEvent.click(screen.getByRole("button", { name: "Show all 25" }));
   expect(within(logs).getAllByRole("row")).toHaveLength(26);
 });
+
+test("password reset sits behind a Set new password toggle in each row", async () => {
+  adminApi({ "GET /admin/users": [200, USERS] });
+  renderApp("/admin/users");
+  const row = (await screen.findByText("ali@mail.com")).closest("tr");
+  const toggle = within(row).getByText("Set new password");
+  expect(toggle.closest("details")).not.toHaveAttribute("open");
+  await userEvent.click(toggle);
+  expect(toggle.closest("details")).toHaveAttribute("open");
+  expect(within(row).getByLabelText("New password for Ali Ahmad")).toBeInTheDocument();
+});

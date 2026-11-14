@@ -50,16 +50,21 @@ function UserRow({ user, onUpdated }) {
       </td>
       <td>{user.status}</td>
       <td>{formatDate(user.created_at)}</td>
-      <td>
+      <td className="row-actions">
         <button type="button" className={user.status === "active" ? "danger" : ""} disabled={busy}
           onClick={() => update({ status: nextStatus }, nextStatus === "active" ? "Activated." : "Deactivated.")}>
           {user.status === "active" ? "Deactivate" : "Activate"}
         </button>
-        <br />
-        <input type="password" aria-label={`New password for ${user.full_name}`} placeholder="New password"
-          value={password} onChange={(e) => setPassword(e.target.value)} />{" "}
-        <button type="button" disabled={busy || !password} onClick={resetPassword}>Reset password</button>
-        {message && <p role="status">{message}</p>}
+        {/* Password reset stays folded away so each row is one line until it is needed. */}
+        <details className="pw-reset">
+          <summary>Set new password</summary>
+          <div className="pw-pop">
+            <input type="password" aria-label={`New password for ${user.full_name}`} placeholder="New password"
+              value={password} onChange={(e) => setPassword(e.target.value)} />
+            <button type="button" disabled={busy || !password} onClick={resetPassword}>Reset password</button>
+          </div>
+        </details>
+        {message && <p role="status" className="row-message">{message}</p>}
       </td>
     </tr>
   );

@@ -14,11 +14,21 @@
 
 .users-card { margin-bottom: 20px; }
 .users-card table { min-width: 900px; }
+.users-card td { padding-top: 12px; padding-bottom: 12px; }
 .users-card td { vertical-align: middle; }
 .users-card td select, .users-card td input { min-height: 40px; }
 .users-card td button { min-height: 40px; padding: 0 14px; margin: 2px 0; background: var(--panel); color: var(--ink); border: 1px solid var(--line); }
 .users-card td button:hover:not(:disabled) { background: var(--blue-soft); }
 .users-card td button.danger { color: var(--high-ink); }
+.row-actions { white-space: nowrap; }
+.users-card td:nth-child(3), .users-card td:nth-child(5) { white-space: nowrap; } /* role menu + Save role, and the date, on one line */
+.pw-reset { display: inline-block; position: relative; margin-left: 8px; vertical-align: middle; }
+.pw-reset summary { list-style: none; cursor: pointer; display: inline-flex; align-items: center; min-height: 40px; padding: 0 14px;
+  border-radius: var(--pill); border: 1px solid var(--line); background: var(--panel); font-weight: 700; font-size: 0.9rem; }
+.pw-reset summary::-webkit-details-marker { display: none; }
+.pw-reset[open] summary { background: var(--blue-soft); border-color: var(--blue); }
+.pw-pop { display: flex; gap: 8px; margin-top: 8px; }
+.row-message { margin: 6px 0 0; font-size: 0.85rem; font-weight: 600; color: var(--ink-2); white-space: normal; }
 .admin-create { max-width: 920px; }
 
 .not-found { min-height: 100vh; display: grid; place-items: center; }
