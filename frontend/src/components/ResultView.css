@@ -25,9 +25,9 @@
 .risk-card .estimate .icon { color: var(--mod); flex: none; margin-top: 2px; }
 
 /* Input tiles */
-.result-inputs { background: var(--panel); border-radius: var(--r-xl); padding: 12px; }
+.result-inputs { display: grid; gap: 12px; } /* tiles sit straight on the page: no box inside a box */
 .tiles { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-.tile { background: var(--tile); border-radius: var(--r-lg); padding: 16px; display: flex; flex-direction: column; justify-content: space-between; gap: 10px; min-height: 150px; min-width: 0; }
+.tile { background: var(--tile); border-radius: var(--r-lg); box-shadow: var(--shadow); padding: 16px; display: flex; flex-direction: column; justify-content: space-between; gap: 10px; min-height: 150px; min-width: 0; }
 .tile p { margin: 0; }
 .tile-sky { background: var(--sky); }
 .tile-estimated { background: #fbf3d6; } /* amber tint = this value was estimated, not measured */
@@ -46,7 +46,7 @@
 .meter { display: flex; gap: 3px; height: 24px; }
 .meter span { flex: 1; border-radius: 3px; background: rgba(16, 19, 23, 0.12); }
 .meter span.on { background: var(--ink); }
-.lifestyle { margin: 12px 4px 4px; font-size: 0.9rem; }
+.lifestyle { margin: 0 4px; font-size: 0.9rem; }
 
 /* Exact numbers */
 .exact { margin-top: 18px; }

@@ -38,7 +38,7 @@
 .action-white .action-icon { background: var(--panel); }
 .action .go { position: absolute; top: 18px; right: 18px; background: var(--ink); }
 
-.notice { margin-top: 24px; padding: 18px 22px; border-radius: var(--r-lg); background: var(--panel); color: var(--ink-2); }
+.notice { margin-top: 32px; padding: 20px 4px 0; border-top: 1px solid #d5dae1; color: var(--ink-2); } /* quiet text, not another box */
 .notice h2 { display: flex; align-items: center; gap: 8px; font-size: 1rem; color: var(--ink); margin-bottom: 6px; }
 .notice p { margin: 0; max-width: 90ch; }
 
