@@ -137,15 +137,13 @@ export default function AssessmentPage() {
 
         <section className="card form-section" aria-labelledby="life-heading">
           <h2 id="life-heading"><span className="step-num" aria-hidden="true">3</span>Lifestyle</h2>
-          <div className="field-grid">
+          <div className="field-grid field-grid-3">
             <NumberField name="cigarettes_per_day" label="Cigarettes per day" help="Enter 0 if you do not smoke." {...shared} />
             <NumberField name="drinks_per_week" label="Alcoholic drinks per week"
               help="One drink = a can of beer, a glass of wine or a shot. Enter 0 if you do not drink." {...shared} />
-            <div className="field-wide">
-              <NumberField name="activity_minutes" label="Moderate exercise (minutes per week)"
-                help="Activities like brisk walking or cycling. 150 minutes or more a week counts as active (WHO guideline)."
-                {...shared} />
-            </div>
+            <NumberField name="activity_minutes" label="Moderate exercise (minutes per week)"
+              help="Activities like brisk walking or cycling. 150 minutes or more a week counts as active (WHO guideline)."
+              {...shared} />
           </div>
           <p className="help">The risk model uses Yes/No for lifestyle; your amounts are used to personalise your advice.</p>
         </section>
