@@ -21,7 +21,7 @@
 }
 
 .logo { display: flex; align-items: center; margin: 0; flex: none; }
-.logo img { display: block; width: auto; height: 36px; }
+.logo img { display: block; width: auto; height: 40px; }
 
 .mainnav { display: flex; gap: 4px; background: var(--tile); padding: 5px; border-radius: var(--pill); box-shadow: var(--shadow); }
 .mainnav a {

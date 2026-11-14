@@ -36,7 +36,7 @@ export default function Layout({ children }) {
       <a className="skip-link" href="#main">Skip to content</a>
       <header className={links.length > 3 ? "topbar" : "topbar topbar-few"}>
         <Link className="logo" to={homeFor(user)} aria-label="CardioXplain home">
-          <img src={logo} alt="" width="190" height="36" />
+          <img src={logo} alt="" width="211" height="40" />
         </Link>
         <nav className="mainnav" aria-label="Main">
           {links.map(([to, label, icon]) => (
