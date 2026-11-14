@@ -32,12 +32,16 @@ export default function LoginHeart() {
 
   if (show3d) {
     return (
-      <span className="login-heart login-heart-3d" aria-hidden="true">
-        {/* time-scale 1.8: the model's beat is 1.67 s; this makes it about 65 beats a minute. */}
-        <model-viewer src="/models/heart-anatomical.glb" poster={heart} alt="" autoplay="" time-scale="1.8"
-          auto-rotate="" rotation-per-second="12deg" auto-rotate-delay="0" interaction-prompt="none"
+      <figure className="login-heart login-heart-3d">
+        {/* time-scale 1.8: the model's beat is 1.67 s; this makes it about 65 beats a minute.
+            Drag (or arrow keys) to rotate; it turns again by itself 3 s after you let go. */}
+        <model-viewer src="/models/heart-anatomical.glb" poster={heart}
+          alt="3D model of a beating human heart. Drag or use the arrow keys to rotate it."
+          autoplay="" time-scale="1.8" camera-controls="" disable-zoom="" disable-pan="" touch-action="pan-y"
+          auto-rotate="" rotation-per-second="12deg" auto-rotate-delay="3000" interaction-prompt="none"
           camera-orbit="0deg 80deg auto" exposure="1.1" shadow-intensity="0" loading="eager" />
-      </span>
+        <figcaption className="heart-hint" aria-hidden="true">Drag to rotate</figcaption>
+      </figure>
     );
   }
   return (
