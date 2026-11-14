@@ -93,7 +93,8 @@
   .login-heart-3d model-viewer { cursor: grab; }
   .login-heart-3d model-viewer:active { cursor: grabbing; }
   .login-heart-3d model-viewer:focus-visible { outline: 3px solid #fff; outline-offset: 4px; border-radius: var(--r-lg); }
-  .login-line { text-align: left; font-size: clamp(2rem, 2.8vw, 3rem); max-width: 16ch; text-wrap: balance; }
+  .login-line { text-align: center; justify-self: center; font-size: clamp(2rem, 2.8vw, 3rem); max-width: 18ch; text-wrap: balance; }
+  .login-logo { justify-self: center; } /* logo, heart and tagline share one centre line */
   .login-panel {
     border-radius: 0;
     box-shadow: none;
