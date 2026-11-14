@@ -48,6 +48,9 @@ body {
 
 /* Full width up to 1920px (fills normal screens; stays centred on very large monitors). */
 main { max-width: 1920px; margin: 0 auto; padding: 8px 32px 48px; }
+@media (min-width: 1101px) {
+  main { padding-top: 32px; } /* room between the menu and the page title */
+}
 
 h1, h2, h3, h4 { margin: 0 0 12px; letter-spacing: -0.02em; line-height: 1.15; text-wrap: balance; }
 h1 { font-size: clamp(2.2rem, 4.2vw, 3.6rem); font-weight: 800; letter-spacing: -0.045em; line-height: 1.05; }
