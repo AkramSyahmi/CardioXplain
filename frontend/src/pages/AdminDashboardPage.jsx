@@ -1,4 +1,4 @@
-// UC-900 Monitor Model Performance (Figure 3.34).
+// UC-900 Monitor Model performance (Figure 3.34).
 import { useEffect, useState } from "react";
 
 const LOG_PREVIEW = 10; // the log can hold 50 rows; the rest are one click away
@@ -89,7 +89,7 @@ export default function AdminDashboardPage() {
 
   return (
     <>
-      <h1>Model Performance</h1>
+      <h1>Model performance</h1>
 
       <section className="admin-section">
         <h2>Model evaluation</h2>

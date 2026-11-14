@@ -14,7 +14,7 @@ import { formatDate } from "../format.js";
 import "./DashboardPage.css";
 
 const QUICK_ACTIONS = [
-  ["/assessment", "Start Risk Assessment", "plus", "sky"],
+  ["/assessment", "Start risk assessment", "plus", "sky"],
   ["/simulator", "What-If Simulator", "gauge", "sage"],
   ["/plan", "Health Action Plan", "calendar", "butter"],
   ["/navigator", "Care Navigator", "chat", "white"],
@@ -42,7 +42,7 @@ export default function DashboardPage() {
         <div className="hero-actions">
           <Link className="btn btn-light" to="/history">View all<span className="go"><Icon name="arrow" /></span></Link>
           <Link className="btn btn-primary" to="/assessment">
-            New Assessment<span className="go go-light"><Icon name="plus" /></span>
+            New assessment<span className="go go-light"><Icon name="plus" /></span>
           </Link>
         </div>
       </section>
@@ -52,14 +52,14 @@ export default function DashboardPage() {
 
       {history && (
         <ul className="stats" aria-label="Summary">
-          <StatTile label="Total Assessments" value={predictions.length} />
-          <StatTile label="Latest Risk Score" value={latest ? `${latest.risk_percent}%` : "-"}>
+          <StatTile label="Total assessments" value={predictions.length} />
+          <StatTile label="Latest risk score" value={latest ? `${latest.risk_percent}%` : "-"}>
             {latest ? <>{latest.risk_percent}<span className="unit">%</span></> : "-"}
           </StatTile>
-          <StatTile label="Risk Category" value={latest ? latest.risk_category : "-"}>
+          <StatTile label="Risk category" value={latest ? latest.risk_category : "-"}>
             {latest ? <span className={`chip ${categoryClass(latest.risk_category)}`}>{latest.risk_category}</span> : "-"}
           </StatTile>
-          <StatTile label="Last Assessment" value={latest ? formatDate(latest.prediction_date) : "-"}>
+          <StatTile label="Last assessment" value={latest ? formatDate(latest.prediction_date) : "-"}>
             <span className="stat-text">{latest ? formatDate(latest.prediction_date) : "-"}</span>
           </StatTile>
         </ul>
@@ -71,14 +71,14 @@ export default function DashboardPage() {
           {predictions.length > 0 && <RiskTrend predictions={predictions} />}
           <section className="card recent" aria-labelledby="recent-heading">
             <div className="card-head">
-              <h2 id="recent-heading">Recent Assessments</h2>
+              <h2 id="recent-heading">Recent assessments</h2>
               {predictions.length > 0 && <Link to="/history">View all</Link>}
             </div>
             {history && predictions.length === 0 && <p>{history.message}</p>}
             {predictions.length > 0 && <HistoryTable predictions={predictions.slice(0, 5)} />}
           </section>
           <section className="dash-actions" aria-labelledby="actions-heading">
-            <h2 id="actions-heading">Quick Actions</h2>
+            <h2 id="actions-heading">Quick actions</h2>
             <ul className="actions">
               {QUICK_ACTIONS.map(([to, label, icon, tone]) => (
                 <li key={to}>
@@ -101,7 +101,7 @@ export default function DashboardPage() {
       </div>
 
       <section className="notice" aria-labelledby="notice-heading">
-        <h2 id="notice-heading"><Icon name="alert" />Educational Notice</h2>
+        <h2 id="notice-heading"><Icon name="alert" />Educational notice</h2>
         <p>
           CardioXplain provides AI-driven risk awareness for educational purposes. Results are not a
           medical diagnosis. Always consult a qualified healthcare professional for medical advice.

@@ -101,10 +101,10 @@ export default function LoginPage() {
 
           <div role="tablist" className="login-tabs">
             <button type="button" role="tab" aria-selected={tab === "signin"} onClick={() => switchTab("signin")}>
-              Sign In
+              Sign in
             </button>
             <button type="button" role="tab" aria-selected={tab === "register"} onClick={() => switchTab("register")}>
-              Create Account
+              Create account
             </button>
           </div>
 
@@ -115,13 +115,13 @@ export default function LoginPage() {
           <form onSubmit={submit}>
             {tab === "register" && (
               <div className="field">
-                <label htmlFor="full_name">Full Name</label>
+                <label htmlFor="full_name">Full name</label>
                 <input id="full_name" name="full_name" value={form.full_name} onChange={change} required />
                 <FieldError fields={fields} name="full_name" />
               </div>
             )}
             <div className="field">
-              <label htmlFor="email">Email Address</label>
+              <label htmlFor="email">Email address</label>
               <input id="email" name="email" type="email" value={form.email} onChange={change} required />
               <FieldError fields={fields} name="email" />
             </div>
@@ -132,13 +132,13 @@ export default function LoginPage() {
             </div>
             {tab === "register" && (
               <div className="field">
-                <label htmlFor="confirm">Confirm Password</label>
+                <label htmlFor="confirm">Confirm password</label>
                 <input id="confirm" name="confirm" type="password" value={form.confirm} onChange={change} required />
                 <FieldError fields={fields} name="confirm" />
               </div>
             )}
             <button type="submit" className="login-submit" disabled={busy}>
-              {busy ? "Please wait..." : tab === "signin" ? "Sign In" : "Create my account"}
+              {busy ? "Please wait..." : tab === "signin" ? "Sign in" : "Create my account"}
             </button>
           </form>
           {/* Desktop only (hidden on phones by CSS): a second, plainer way to switch between the two tabs. */}

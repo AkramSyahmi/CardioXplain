@@ -112,7 +112,7 @@ export default function AdminUsersPage() {
 
   return (
     <>
-      <h1>User Management</h1>
+      <h1>User management</h1>
       {loadError && <p role="alert">{loadError}</p>}
       {!users && !loadError && <p>Loading...</p>}
       {users && (

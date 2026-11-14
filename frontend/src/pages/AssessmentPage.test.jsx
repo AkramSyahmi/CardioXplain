@@ -39,8 +39,8 @@ test("assessment sends the form and goes to the result page", async () => {
   renderApp("/assessment");
   await screen.findByLabelText("Age (years)");
   await fillForm();
-  await userEvent.click(screen.getByRole("button", { name: "Predict Risk" }));
-  expect(await screen.findByRole("heading", { name: "Risk Assessment Results" })).toBeInTheDocument();
+  await userEvent.click(screen.getByRole("button", { name: "Predict risk" }));
+  expect(await screen.findByRole("heading", { name: "Assessment result" })).toBeInTheDocument();
   const body = JSON.parse(api.mock.calls.find(([url]) => url === "/api/predict")[1].body);
   expect(body).toEqual({ age: 50, gender: "male", height: 170, weight: 80, ap_hi: 140, ap_lo: 90,
     cholesterol: 2, gluc: 1, cigarettes_per_day: 0, drinks_per_week: 0, activity_minutes: 200 });
@@ -55,7 +55,7 @@ test("assessment shows field errors from the API", async () => {
   renderApp("/assessment");
   await screen.findByLabelText("Age (years)");
   await fillForm();
-  await userEvent.click(screen.getByRole("button", { name: "Predict Risk" }));
+  await userEvent.click(screen.getByRole("button", { name: "Predict risk" }));
   expect(await screen.findByText("Please correct the highlighted fields.")).toBeInTheDocument();
   expect(screen.getByText("Systolic blood pressure must be between 60 and 300 mmHg.")).toBeInTheDocument();
 });
@@ -67,7 +67,7 @@ test("assessment button disabled while waiting", async () => {
   renderApp("/assessment");
   await screen.findByLabelText("Age (years)");
   await fillForm();
-  await userEvent.click(screen.getByRole("button", { name: "Predict Risk" }));
+  await userEvent.click(screen.getByRole("button", { name: "Predict risk" }));
   const button = screen.getByRole("button", { name: /Analysing/ });
   expect(button).toBeDisabled();
   await userEvent.click(button);
@@ -83,8 +83,8 @@ test("unknown blood pressure and cholesterol are sent as unknown", async () => {
   expect(screen.getByLabelText("Systolic blood pressure (mmHg)")).toBeDisabled();
   expect(screen.getByLabelText("Diastolic blood pressure (mmHg)")).toBeDisabled();
   await userEvent.selectOptions(screen.getByLabelText("Cholesterol level"), "unknown");
-  await userEvent.click(screen.getByRole("button", { name: "Predict Risk" }));
-  await screen.findByRole("heading", { name: "Risk Assessment Results" });
+  await userEvent.click(screen.getByRole("button", { name: "Predict risk" }));
+  await screen.findByRole("heading", { name: "Assessment result" });
   const body = JSON.parse(api.mock.calls.find(([url]) => url === "/api/predict")[1].body);
   expect(body).toMatchObject({ ap_hi: "unknown", ap_lo: "unknown", cholesterol: "unknown", gluc: 1, age: 50 });
 });

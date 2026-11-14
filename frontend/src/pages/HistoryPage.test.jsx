@@ -27,5 +27,5 @@ test("history shows empty message", async () => {
   });
   renderApp("/history");
   expect(await screen.findByText("No prediction history found. Please complete a Risk Assessment.")).toBeInTheDocument();
-  expect(screen.getByRole("link", { name: "Start Risk Assessment" })).toHaveAttribute("href", "/assessment");
+  expect(screen.getByRole("link", { name: "Start risk assessment" })).toHaveAttribute("href", "/assessment");
 });

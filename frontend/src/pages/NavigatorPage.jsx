@@ -1,11 +1,11 @@
-// UC-700 Use Virtual Care Navigator (Figure 3.33). The chat lives only in this page; nothing is stored.
+// UC-700 Use Care Navigator (Figure 3.33). The chat lives only in this page; nothing is stored.
 import { useState } from "react";
 import Markdown from "react-markdown";
 import { apiRequest } from "../api.js";
 import "./NavigatorPage.css";
 
 const GREETING =
-  "Hello! I'm your CardioXplain Virtual Care Navigator. I can help you understand cardiovascular health, " +
+  "Hello! I'm your CardioXplain Care Navigator. I can help you understand cardiovascular health, " +
   "explain your risk results, and provide educational guidance. Please note that I provide educational " +
   "information only and cannot replace professional medical advice. How can I help you today?";
 
@@ -53,13 +53,13 @@ export default function NavigatorPage() {
 
   return (
     <>
-      <h1>Virtual Care Navigator</h1>
+      <h1>Care Navigator</h1>
       <p className="page-lead">Ask health-related questions and receive educational guidance.</p>
       <p className="chip nav-note"><strong>Educational only - not medical advice.</strong></p>
 
       <div className="chat-layout">
         <section className="card chat" aria-labelledby="chat-heading">
-          <h2 id="chat-heading">Health Chat</h2>
+          <h2 id="chat-heading">Health chat</h2>
           <ol className="messages" aria-label="Conversation">
             <li className="msg msg-assistant">
               <strong>Navigator:</strong> {GREETING}
@@ -84,8 +84,8 @@ export default function NavigatorPage() {
         </section>
 
         <section aria-labelledby="suggest-heading">
-          <h2 id="suggest-heading">Suggested Questions</h2>
-          <ul className="suggestions" aria-label="Suggested Questions">
+          <h2 id="suggest-heading">Suggested questions</h2>
+          <ul className="suggestions" aria-label="Suggested questions">
             {SUGGESTED.map((text) => (
               <li key={text}>
                 <button type="button" onClick={() => send(text)} disabled={busy}>{text}</button>

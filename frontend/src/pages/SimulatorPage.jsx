@@ -94,7 +94,7 @@ export default function SimulatorPage() {
       {loadError && (
         <>
           <p role="alert">{loadError}</p>
-          <p><Link className="btn btn-primary" to="/assessment">Start Risk Assessment</Link></p>
+          <p><Link className="btn btn-primary" to="/assessment">Start risk assessment</Link></p>
         </>
       )}
       {!form && !loadError && <p>Loading...</p>}

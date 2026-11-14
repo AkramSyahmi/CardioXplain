@@ -16,14 +16,14 @@ test("shows stats from history", async () => {
   renderApp("/dashboard");
   expect(await screen.findByText(/Welcome back, Ali!/)).toBeInTheDocument();
   const stats = await screen.findByRole("list", { name: "Summary" });
-  expect(within(stats).getByText(/Total Assessments: 2/)).toBeInTheDocument();
-  expect(within(stats).getByText(/Latest Risk Score: 66%/)).toBeInTheDocument();
-  expect(within(stats).getByText(/Risk Category: Moderate/)).toBeInTheDocument();
-  expect(within(stats).getByText(/Last Assessment: 12 Jun 2026/)).toBeInTheDocument();
+  expect(within(stats).getByText(/Total assessments: 2/)).toBeInTheDocument();
+  expect(within(stats).getByText(/Latest risk score: 66%/)).toBeInTheDocument();
+  expect(within(stats).getByText(/Risk category: Moderate/)).toBeInTheDocument();
+  expect(within(stats).getByText(/Last assessment: 12 Jun 2026/)).toBeInTheDocument();
   const rows = within(screen.getByRole("table")).getAllByRole("row");
   expect(rows).toHaveLength(3); // header + 2
   expect(within(rows[1]).getByRole("link", { name: "View" })).toHaveAttribute("href", "/result/9");
-  expect(screen.getByRole("link", { name: "Start Risk Assessment" })).toHaveAttribute("href", "/assessment");
+  expect(screen.getByRole("link", { name: "Start risk assessment" })).toHaveAttribute("href", "/assessment");
   expect(screen.getByText(/not a medical diagnosis/)).toBeInTheDocument();
 });
 
@@ -33,7 +33,7 @@ test("shows only the latest 5 assessments", async () => {
   renderApp("/dashboard");
   await screen.findByText(/Welcome back, Ali!/);
   expect(within(await screen.findByRole("table")).getAllByRole("row")).toHaveLength(6);
-  expect(screen.getByText(/Total Assessments: 7/)).toBeInTheDocument();
+  expect(screen.getByText(/Total assessments: 7/)).toBeInTheDocument();
 });
 
 test("shows empty history message", async () => {

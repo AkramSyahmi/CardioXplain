@@ -35,7 +35,7 @@ test("simulator without assessment shows message", async () => {
     "GET /simulation": [404, { error: "Please complete a Risk Assessment first." }] });
   renderApp("/simulator");
   expect(await screen.findByText("Please complete a Risk Assessment first.")).toBeInTheDocument();
-  expect(screen.getByRole("link", { name: "Start Risk Assessment" })).toHaveAttribute("href", "/assessment");
+  expect(screen.getByRole("link", { name: "Start risk assessment" })).toHaveAttribute("href", "/assessment");
 });
 
 test("simulator sends only changed fields and shows before and after", async () => {

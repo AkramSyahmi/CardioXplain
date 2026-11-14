@@ -18,7 +18,7 @@ export default function ResultPage() {
 
   return (
     <>
-      <h1>Risk Assessment Results</h1>
+      <h1>Assessment result</h1>
       {result?.prediction_date && <p>Assessment #{result.prediction_id} - {formatDateTime(result.prediction_date)}</p>}
       {error && <p role="alert">{error}</p>}
       {!result && !error && <p>Loading...</p>}

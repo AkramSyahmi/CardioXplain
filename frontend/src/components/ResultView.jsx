@@ -131,7 +131,7 @@ const EXPLORE = [
   ["/simulator", "What-If Lifestyle Simulator"],
   ["/plan", "View Health Action Plan"],
   ["/navigator", "Ask the Care Navigator"],
-  ["/history", "View All History"],
+  ["/history", "View all history"],
 ];
 
 export default function ResultView({ result }) {
@@ -140,7 +140,7 @@ export default function ResultView({ result }) {
     <div className="result">
       <div className="result-col">
         <section className="card card-dark risk-card" aria-labelledby="risk-heading">
-          <h2 id="risk-heading" className="card-title"><span className="title-icon"><Icon name="heart" /></span>Risk Score</h2>
+          <h2 id="risk-heading" className="card-title"><span className="title-icon"><Icon name="heart" /></span>Risk score</h2>
           <RiskGauge percent={result.risk_percent} category={result.risk_category} />
           {estimated.length > 0 && <EstimateWarning estimated={estimated} />}
         </section>

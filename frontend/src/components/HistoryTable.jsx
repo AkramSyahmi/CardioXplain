@@ -12,7 +12,7 @@ export default function HistoryTable({ predictions }) {
         <tr>
           <th>#</th>
           <th>Date</th>
-          <th>Risk Score</th>
+          <th>Risk score</th>
           <th>Category</th>
           <th>Details</th>
         </tr>

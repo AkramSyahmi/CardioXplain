@@ -93,7 +93,7 @@ export default function AssessmentPage() {
 
   return (
     <>
-      <h1>New Risk Assessment</h1>
+      <h1>New assessment</h1>
       <p className="page-lead">Enter your health and lifestyle information. Results are for educational purposes only.</p>
       {error && <p role="alert">{error}</p>}
 
@@ -149,7 +149,7 @@ export default function AssessmentPage() {
         </section>
 
         <div className="submit-row">
-          <button type="submit" disabled={busy}>{busy ? "Analysing... (this can take up to 10 seconds)" : "Predict Risk"}</button>
+          <button type="submit" disabled={busy}>{busy ? "Analysing... (this can take up to 10 seconds)" : "Predict risk"}</button>
         </div>
       </form>
     </>

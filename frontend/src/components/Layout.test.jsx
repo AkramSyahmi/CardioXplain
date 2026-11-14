@@ -11,7 +11,7 @@ test("current page link is marked and every link stays available", async () => {
   const nav = await screen.findByRole("navigation", { name: "Main" });
   expect(within(nav).getByRole("link", { name: "Dashboard" })).toHaveAttribute("aria-current", "page");
   expect(within(nav).getByRole("link", { name: "Care Navigator" })).not.toHaveAttribute("aria-current");
-  expect(screen.getByRole("button", { name: "Sign Out" })).toBeInTheDocument();
+  expect(screen.getByRole("button", { name: "Sign out" })).toBeInTheDocument();
 });
 
 test("clicking the logo goes to the user's home page", async () => {

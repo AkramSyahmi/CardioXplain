@@ -76,7 +76,7 @@ export default function PlanPage() {
       {noAssessment && (
         <>
           <p role="alert">{noAssessment}</p>
-          <p><Link className="btn btn-primary" to="/assessment">Start Risk Assessment</Link></p>
+          <p><Link className="btn btn-primary" to="/assessment">Start risk assessment</Link></p>
         </>
       )}
 

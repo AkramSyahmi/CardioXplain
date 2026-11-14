@@ -3,7 +3,7 @@ import userEvent from "@testing-library/user-event";
 import { setToken } from "../api.js";
 import { RESULT, USER, mockApi, renderApp } from "../test/helpers.jsx";
 
-const UNAVAILABLE = "The Virtual Care Navigator is currently unavailable. Please try again later.";
+const UNAVAILABLE = "The Care Navigator is currently unavailable. Please try again later.";
 
 beforeEach(() => setToken("t1"));
 
@@ -23,7 +23,7 @@ test("navigator sends question with history", async () => {
     "POST /navigator": () => [200, { reply: `Answer ${++n}`, disclaimer: RESULT.disclaimer }],
   });
   renderApp("/navigator");
-  expect(await screen.findByText(/I'm your CardioXplain Virtual Care Navigator/)).toBeInTheDocument();
+  expect(await screen.findByText(/I'm your CardioXplain Care Navigator/)).toBeInTheDocument();
   await ask("What is BMI?");
   expect(await screen.findByText("Answer 1")).toBeInTheDocument();
   await ask("Is mine high?");
@@ -38,7 +38,7 @@ test("navigator sends question with history", async () => {
 test("suggested question is sent on click", async () => {
   const api = mockApi({ "GET /auth/me": [200, { user: USER }], "POST /navigator": [200, { reply: "Sure.", disclaimer: "" }] });
   renderApp("/navigator");
-  const suggestions = await screen.findByRole("list", { name: "Suggested Questions" });
+  const suggestions = await screen.findByRole("list", { name: "Suggested questions" });
   expect(within(suggestions).getAllByRole("button")).toHaveLength(7);
   await userEvent.click(within(suggestions).getByRole("button", { name: "How do I lower my blood pressure?" }));
   expect(await screen.findByText("Sure.")).toBeInTheDocument();

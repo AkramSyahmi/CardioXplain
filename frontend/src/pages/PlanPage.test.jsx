@@ -116,7 +116,7 @@ test("plan page without assessment links to the form", async () => {
     "GET /action-plan": [404, { error: "Please complete a Risk Assessment first." }] });
   renderApp("/plan");
   expect(await screen.findByText("Please complete a Risk Assessment first.")).toBeInTheDocument();
-  expect(screen.getByRole("link", { name: "Start Risk Assessment" })).toHaveAttribute("href", "/assessment");
+  expect(screen.getByRole("link", { name: "Start risk assessment" })).toHaveAttribute("href", "/assessment");
   expect(screen.queryByRole("button", { name: "Generate my plan" })).not.toBeInTheDocument();
 });
 

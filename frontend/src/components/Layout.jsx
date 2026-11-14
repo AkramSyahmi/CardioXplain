@@ -6,15 +6,15 @@ import "./Layout.css";
 
 const USER_LINKS = [
   ["/dashboard", "Dashboard", "home"],
-  ["/assessment", "New Assessment", "plus"],
-  ["/history", "My History", "list"],
+  ["/assessment", "New assessment", "plus"],
+  ["/history", "My history", "list"],
   ["/simulator", "What-If Simulator", "gauge"],
   ["/plan", "Health Action Plan", "calendar"],
   ["/navigator", "Care Navigator", "chat"],
 ];
 const ADMIN_LINKS = [
-  ["/admin", "Model Performance", "chart"],
-  ["/admin/users", "User Management", "user"],
+  ["/admin", "Model performance", "chart"],
+  ["/admin/users", "User management", "user"],
 ];
 
 function initials(name) {
@@ -55,7 +55,7 @@ export default function Layout({ children }) {
           </span>
           <button type="button" className="signout" onClick={signOut}>
             <Icon name="logout" />
-            Sign Out
+            Sign out
           </button>
         </div>
       </header>

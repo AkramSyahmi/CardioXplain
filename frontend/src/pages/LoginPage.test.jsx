@@ -6,9 +6,9 @@ import { ADMIN, USER, mockApi, renderApp } from "../test/helpers.jsx";
 beforeEach(() => clearToken());
 
 async function signIn(email = "ali@mail.com", password = "Passw0rd!") {
-  await userEvent.type(screen.getByLabelText("Email Address"), email);
+  await userEvent.type(screen.getByLabelText("Email address"), email);
   await userEvent.type(screen.getByLabelText("Password"), password);
-  await userEvent.click(screen.getByRole("button", { name: "Sign In" }));
+  await userEvent.click(screen.getByRole("button", { name: "Sign in" }));
 }
 
 test("sign in shows the API message on wrong password", async () => {
@@ -30,17 +30,17 @@ test("sign in sends admin to admin page", async () => {
   mockApi({ "POST /auth/login": [200, { token: "t2", user: ADMIN }] });
   renderApp("/login");
   await signIn("admin@cardioxplain.com");
-  expect(await screen.findByRole("heading", { name: "Model Performance" })).toBeInTheDocument();
+  expect(await screen.findByRole("heading", { name: "Model performance" })).toBeInTheDocument();
 });
 
 test("create account checks confirm password locally", async () => {
   const api = mockApi({});
   renderApp("/login");
-  await userEvent.click(screen.getByRole("tab", { name: "Create Account" }));
-  await userEvent.type(screen.getByLabelText("Full Name"), "Ali Ahmad");
-  await userEvent.type(screen.getByLabelText("Email Address"), "ali@mail.com");
+  await userEvent.click(screen.getByRole("tab", { name: "Create account" }));
+  await userEvent.type(screen.getByLabelText("Full name"), "Ali Ahmad");
+  await userEvent.type(screen.getByLabelText("Email address"), "ali@mail.com");
   await userEvent.type(screen.getByLabelText("Password"), "Passw0rd!");
-  await userEvent.type(screen.getByLabelText("Confirm Password"), "Different1");
+  await userEvent.type(screen.getByLabelText("Confirm password"), "Different1");
   await userEvent.click(screen.getByRole("button", { name: "Create my account" }));
   expect(screen.getByText("Passwords do not match.")).toBeInTheDocument();
   expect(api).not.toHaveBeenCalled();
@@ -55,16 +55,16 @@ test("create account shows field errors from the API, then success switches to s
       : [201, { message: "Registration successful. Please log in." }]),
   });
   renderApp("/login");
-  await userEvent.click(screen.getByRole("tab", { name: "Create Account" }));
-  await userEvent.type(screen.getByLabelText("Full Name"), "Ali Ahmad");
-  await userEvent.type(screen.getByLabelText("Email Address"), "ali@mail.com");
+  await userEvent.click(screen.getByRole("tab", { name: "Create account" }));
+  await userEvent.type(screen.getByLabelText("Full name"), "Ali Ahmad");
+  await userEvent.type(screen.getByLabelText("Email address"), "ali@mail.com");
   await userEvent.type(screen.getByLabelText("Password"), "weakpass");
-  await userEvent.type(screen.getByLabelText("Confirm Password"), "weakpass");
+  await userEvent.type(screen.getByLabelText("Confirm password"), "weakpass");
   await userEvent.click(screen.getByRole("button", { name: "Create my account" }));
   expect(await screen.findByText(rule)).toBeInTheDocument();
   await userEvent.click(screen.getByRole("button", { name: "Create my account" }));
   expect(await screen.findByText("Registration successful. Please log in.")).toBeInTheDocument();
-  expect(screen.queryByLabelText("Confirm Password")).not.toBeInTheDocument();
+  expect(screen.queryByLabelText("Confirm password")).not.toBeInTheDocument();
 });
 
 test("protected route sends logged-out user to login", async () => {
@@ -100,7 +100,7 @@ test("sign out returns to login and forgets the token", async () => {
   setToken("t1");
   mockApi({ "GET /auth/me": [200, { user: USER }] });
   renderApp("/dashboard");
-  await userEvent.click(await screen.findByRole("button", { name: "Sign Out" }));
+  await userEvent.click(await screen.findByRole("button", { name: "Sign out" }));
   expect(await screen.findByRole("heading", { name: "Welcome back" })).toBeInTheDocument();
   expect(localStorage.getItem("cardioxplain_token")).toBeNull();
 });
@@ -125,7 +125,7 @@ test("the link under the form switches between sign in and create account", asyn
   mockApi({});
   renderApp("/login");
   await userEvent.click(await screen.findByRole("button", { name: "Create an account" }));
-  expect(screen.getByLabelText("Confirm Password")).toBeInTheDocument();
+  expect(screen.getByLabelText("Confirm password")).toBeInTheDocument();
   await userEvent.click(screen.getByRole("button", { name: "Sign in instead" }));
-  expect(screen.queryByLabelText("Confirm Password")).not.toBeInTheDocument();
+  expect(screen.queryByLabelText("Confirm password")).not.toBeInTheDocument();
 });
