@@ -61,6 +61,10 @@
 .login-submit { width: 100%; min-height: 52px; margin-top: 4px; }
 .login-note { margin: 18px 0 0; }
 .login-switch { display: none; }
+.quick-login { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-top: 18px; padding: 12px 14px; border: 1px dashed var(--line); border-radius: var(--r-md); }
+.quick-login p { margin: 0 auto 0 0; font-size: 0.85rem; font-weight: 700; color: var(--ink-2); }
+.quick-login button { min-height: 36px; padding: 0 14px; background: var(--panel); color: var(--ink); }
+.quick-login button:hover:not(:disabled) { background: var(--blue-soft); }
 .link-button { min-height: 0; padding: 0; background: none; color: var(--blue); font-weight: 700; text-decoration: underline; text-underline-offset: 3px; }
 .link-button:hover:not(:disabled) { background: none; color: #1442cc; }
 

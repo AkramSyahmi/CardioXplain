@@ -43,6 +43,8 @@ npm run dev      # http://localhost:5173
 npm test         # run the frontend tests
 ```
 
+Quick login while testing: copy `frontend/.env.local.example` to `frontend/.env.local` and fill in test accounts. The login page then shows one-click buttons during `npm run dev` only; they are removed from `npm run build`, and `.env.local` is never committed.
+
 ## Dataset
 
 Download `cardio_train.csv` from

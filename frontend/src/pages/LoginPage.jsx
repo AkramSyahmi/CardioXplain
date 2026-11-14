@@ -10,6 +10,14 @@ import "./LoginPage.css";
 
 const EMPTY = { full_name: "", email: "", password: "", confirm: "" };
 
+// Dev-only one-click logins for testing. Accounts come from frontend/.env.local (never committed);
+// import.meta.env.DEV is false in "npm run build", so this list is empty and removed from the real site.
+const QUICK_LOGINS = import.meta.env.DEV
+  ? [["Test user", import.meta.env.VITE_DEV_USER_EMAIL, import.meta.env.VITE_DEV_USER_PASSWORD],
+    ["Test admin", import.meta.env.VITE_DEV_ADMIN_EMAIL, import.meta.env.VITE_DEV_ADMIN_PASSWORD]]
+    .filter(([, email, password]) => email && password)
+  : [];
+
 export default function LoginPage() {
   const { user, notice, login, register } = useAuth();
   const navigate = useNavigate();
@@ -31,6 +39,18 @@ export default function LoginPage() {
     setError("");
     setFields({});
     setSuccess("");
+  }
+
+  async function quickLogin(email, password) {
+    setError("");
+    setBusy(true);
+    try {
+      const loggedIn = await login(email, password);
+      navigate(homeFor(loggedIn), { replace: true });
+    } catch (err) {
+      setError(err.message);
+      setBusy(false);
+    }
   }
 
   async function submit(event) {
@@ -129,6 +149,16 @@ export default function LoginPage() {
             </button>
           </p>
 
+          {import.meta.env.DEV && QUICK_LOGINS.length > 0 && (
+            <div className="quick-login">
+              <p>Quick login (dev only)</p>
+              {QUICK_LOGINS.map(([label, email, password]) => (
+                <button key={label} type="button" disabled={busy} onClick={() => quickLogin(email, password)}>
+                  {label}
+                </button>
+              ))}
+            </div>
+          )}
           <p className="help login-note">This system is for educational purposes only and does not provide medical advice.</p>
         </div>
       </section>
