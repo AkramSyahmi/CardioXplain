@@ -121,6 +121,13 @@ export default function LoginPage() {
               {busy ? "Please wait..." : tab === "signin" ? "Sign In" : "Create my account"}
             </button>
           </form>
+          {/* Desktop only (hidden on phones by CSS): a second, plainer way to switch between the two tabs. */}
+          <p className="login-switch">
+            {tab === "signin" ? "New here? " : "Already have an account? "}
+            <button type="button" className="link-button" onClick={() => switchTab(tab === "signin" ? "register" : "signin")}>
+              {tab === "signin" ? "Create an account" : "Sign in instead"}
+            </button>
+          </p>
 
           <p className="help login-note">This system is for educational purposes only and does not provide medical advice.</p>
         </div>

@@ -120,3 +120,12 @@ test("refresh while the backend is down keeps the saved login and says why", asy
   expect(await screen.findByText("Cannot reach the server. Please check that the backend is running.")).toBeInTheDocument();
   expect(localStorage.getItem("cardioxplain_token")).toBe("t1");
 });
+
+test("the link under the form switches between sign in and create account", async () => {
+  mockApi({});
+  renderApp("/login");
+  await userEvent.click(await screen.findByRole("button", { name: "Create an account" }));
+  expect(screen.getByLabelText("Confirm Password")).toBeInTheDocument();
+  await userEvent.click(screen.getByRole("button", { name: "Sign in instead" }));
+  expect(screen.queryByLabelText("Confirm Password")).not.toBeInTheDocument();
+});
