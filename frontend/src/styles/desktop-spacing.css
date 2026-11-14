@@ -1,0 +1,38 @@
+/* Desktop and laptop spacing pass (screens 1101 px and wider). Phones keep their own styles.
+   Loaded last (after every page and component stylesheet) so these values win. */
+
+@media (min-width: 1101px) {
+  /* 1. Readable small text for users aged 35-54: nothing below about 13.5 px. */
+  .help { font-size: 0.9rem; }
+  .tile-sub, .ledger-name small, .driver-name small, .today-text small, .name small { font-size: 0.85rem; }
+  .task ol { font-size: 0.9rem; }
+  .disclaimer { font-size: 0.9rem; }
+  .ledger-axis-track { font-size: 0.82rem; }
+  .gauge-scale { font-size: 0.85rem; }
+
+  /* 2. SHAP chart: wider name column so "Systolic blood pressure" stays on one line on laptops. */
+  .ledger { --cols: 44px minmax(170px, 1.3fr) minmax(0, 2fr) 74px; }
+
+  /* 5. Dashboard: more room under the heading row before the number tiles. */
+  .hero { margin-bottom: 28px; }
+
+  /* 6. Form fields: label, box and help text a little further apart; more space between fields. */
+  .field { gap: 8px; margin-bottom: 22px; }
+  .field .help { margin-top: -4px; }
+
+  /* 7. One distance from a card's title to its content everywhere. */
+  .card-head, .card-title, .form-section h2 { margin-bottom: 16px; }
+}
+
+/* 3. Laptops: one explore button per row, so long labels never wrap into the arrow. */
+@media (min-width: 1101px) and (max-width: 1439px) {
+  .explore { grid-template-columns: minmax(0, 1fr); }
+}
+
+/* 4. Wide screens: 20 px between cards instead of 16 px. */
+@media (min-width: 1440px) {
+  .result, .result-col, .dash-columns, .dash-col, .stats, .actions, .sim-form, .sim-explain, .admin-tables,
+  .grid-12 { gap: 20px; }
+  .assessment-form { column-gap: 20px; }
+  .form-section, .plan-week, .admin-section { margin-bottom: 20px; }
+}
