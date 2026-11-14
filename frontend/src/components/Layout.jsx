@@ -60,6 +60,14 @@ export default function Layout({ children }) {
         </div>
       </header>
       <main id="main" tabIndex="-1">{children}</main>
+      <footer className="app-footer">
+        <p>
+          <strong>CardioXplain</strong> · Final Year Project, Universiti Malaysia Pahang Al-Sultan Abdullah (UMPSA), 2026
+        </p>
+        <p>
+          For education only. Results are not a medical diagnosis; always consult a qualified healthcare professional.
+        </p>
+      </footer>
     </>
   );
 }

@@ -21,3 +21,11 @@ test("clicking the logo goes to the user's home page", async () => {
   await userEvent.click(await screen.findByRole("link", { name: "CardioXplain home" }));
   expect(await screen.findByRole("heading", { name: "Dashboard" })).toBeInTheDocument();
 });
+
+test("every page after login has a footer with the disclaimer", async () => {
+  mockApi({ "GET /auth/me": [200, { user: USER }], "GET /history": [200, { predictions: [], message: "No assessments yet." }] });
+  renderApp("/dashboard");
+  const footer = await screen.findByRole("contentinfo");
+  expect(within(footer).getByText(/Results are not a medical diagnosis/)).toBeInTheDocument();
+  expect(within(footer).getByText(/Final Year Project/)).toBeInTheDocument();
+});

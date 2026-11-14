@@ -98,14 +98,6 @@ export default function DashboardPage() {
           </div>
         )}
       </div>
-
-      <section className="notice" aria-labelledby="notice-heading">
-        <h2 id="notice-heading"><Icon name="alert" />Educational notice</h2>
-        <p>
-          CardioXplain provides AI-driven risk awareness for educational purposes. Results are not a
-          medical diagnosis. Always consult a qualified healthcare professional for medical advice.
-        </p>
-      </section>
     </>
   );
 }

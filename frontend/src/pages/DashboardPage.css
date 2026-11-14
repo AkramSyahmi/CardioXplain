@@ -38,9 +38,6 @@
 .action-white .action-icon { background: var(--panel); }
 .action .go { position: absolute; top: 18px; right: 18px; } /* same blue arrow as every other button */
 
-.notice { margin-top: 32px; padding: 20px 4px 0; border-top: 1px solid #d5dae1; color: var(--ink-2); } /* quiet text, not another box */
-.notice h2 { display: flex; align-items: center; gap: 8px; font-size: 1rem; color: var(--ink); margin-bottom: 6px; }
-.notice p { margin: 0; max-width: 90ch; }
 
 @media (max-width: 1100px) {
   .dash-grid, .dash-columns { grid-template-columns: minmax(0, 1fr); }
