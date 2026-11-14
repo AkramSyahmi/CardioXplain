@@ -40,7 +40,6 @@ export default function DashboardPage() {
           <h1>Dashboard</h1>
         </div>
         <div className="hero-actions">
-          <Link className="btn btn-light" to="/history">View all<span className="go"><Icon name="arrow" /></span></Link>
           <Link className="btn btn-primary" to="/assessment">
             New assessment<span className="go go-light"><Icon name="plus" /></span>
           </Link>

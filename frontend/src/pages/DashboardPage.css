@@ -36,7 +36,7 @@
 .action-white { background: var(--tile); }
 .action-icon { width: 44px; height: 44px; border-radius: 50%; display: grid; place-items: center; background: rgba(255, 255, 255, 0.75); }
 .action-white .action-icon { background: var(--panel); }
-.action .go { position: absolute; top: 18px; right: 18px; background: var(--ink); }
+.action .go { position: absolute; top: 18px; right: 18px; } /* same blue arrow as every other button */
 
 .notice { margin-top: 32px; padding: 20px 4px 0; border-top: 1px solid #d5dae1; color: var(--ink-2); } /* quiet text, not another box */
 .notice h2 { display: flex; align-items: center; gap: 8px; font-size: 1rem; color: var(--ink); margin-bottom: 6px; }
@@ -47,7 +47,7 @@
 }
 @media (max-width: 720px) {
   .hero { margin-top: 8px; }
-  .hero-actions .btn-light { display: none; } /* "View all" is also in the Recent Assessments card */
+
   .recent table { font-size: 0.9rem; }
   .recent th, .recent td { padding: 10px; }
 }
