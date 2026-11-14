@@ -1,5 +1,7 @@
 // UC-900 Monitor Model Performance (Figure 3.34).
 import { useEffect, useState } from "react";
+
+const LOG_PREVIEW = 10; // the log can hold 50 rows; the rest are one click away
 import { apiRequest } from "../api.js";
 import StatTile from "../components/StatTile.jsx";
 import { formatDateTime } from "../format.js";
@@ -82,6 +84,8 @@ export default function AdminDashboardPage() {
   const [model, modelError] = useAdminData("/admin/metrics");
   const [stats, statsError] = useAdminData("/admin/stats");
   const [logs, logsError] = useAdminData("/admin/logs?limit=50");
+  const [allLogs, setAllLogs] = useState(false);
+  const shownLogs = logs ? (allLogs ? logs.logs : logs.logs.slice(0, LOG_PREVIEW)) : [];
 
   return (
     <>
@@ -123,7 +127,7 @@ export default function AdminDashboardPage() {
               <tr><th>Time</th><th>Action</th><th>User ID</th><th>Description</th></tr>
             </thead>
             <tbody>
-              {logs.logs.map((log) => (
+              {shownLogs.map((log) => (
                 <tr key={log.log_id}>
                   <td>{formatDateTime(log.timestamp)}</td>
                   <td>{log.action}</td>
@@ -134,6 +138,9 @@ export default function AdminDashboardPage() {
             </tbody>
           </table>
           </div>
+        )}
+        {logs && !allLogs && logs.logs.length > LOG_PREVIEW && (
+          <button type="button" className="show-more" onClick={() => setAllLogs(true)}>Show all {logs.logs.length}</button>
         )}
       </section>
     </>

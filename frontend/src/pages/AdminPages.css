@@ -1,4 +1,6 @@
 .admin-section { margin-bottom: 20px; }
+.show-more { margin-top: 14px; background: var(--panel); color: var(--ink); }
+.show-more:hover:not(:disabled) { background: var(--blue-soft); }
 .stats-5 { grid-template-columns: repeat(5, minmax(0, 1fr)); }
 .stats-6 { grid-template-columns: repeat(6, minmax(0, 1fr)); }
 .stats-6 .stat-value { font-size: 2rem; }

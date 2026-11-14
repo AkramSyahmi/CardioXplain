@@ -101,3 +101,14 @@ test("admin can reset a password", async () => {
   expect(await within(row).findByText("Password reset.")).toBeInTheDocument();
   expect(JSON.parse(api.mock.calls.find(([, o]) => o.method === "PATCH")[1].body)).toEqual({ password: "NewPass99" });
 });
+
+test("activity log shows the latest 10 and can show all", async () => {
+  const many = { logs: Array.from({ length: 25 }, (_, i) => ({ log_id: 100 - i, user_id: 3, action: `ACTION_${i}`,
+    description: "", timestamp: "2026-06-12T08:48:00" })) };
+  adminApi({ "GET /admin/metrics": [200, METRICS], "GET /admin/stats": [200, STATS], "GET /admin/logs?limit=50": [200, many] });
+  renderApp("/admin");
+  const logs = await screen.findByRole("table", { name: "Activity log" });
+  expect(within(logs).getAllByRole("row")).toHaveLength(11); // header + 10
+  await userEvent.click(screen.getByRole("button", { name: "Show all 25" }));
+  expect(within(logs).getAllByRole("row")).toHaveLength(26);
+});
