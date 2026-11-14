@@ -6,6 +6,7 @@
 .hero-actions .btn { padding-right: 8px; min-height: 52px; }
 .go.go-light { background: #fff; color: var(--blue); }
 
+.dash-insights { display: grid; grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); gap: 16px; align-items: stretch; margin-bottom: 16px; }
 .dash-grid { display: grid; grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); gap: 16px; align-items: stretch; }
 .dash-actions { display: grid; grid-template-rows: auto 1fr; }
 .dash-actions .actions { grid-auto-rows: 1fr; }

@@ -7,6 +7,7 @@ import { useAuth } from "../auth.jsx";
 import HistoryTable from "../components/HistoryTable.jsx";
 import Icon from "../components/Icon.jsx";
 import { categoryClass } from "../components/RiskGauge.jsx";
+import RiskTrend from "../components/RiskTrend.jsx";
 import StatTile from "../components/StatTile.jsx";
 import { formatDate } from "../format.js";
 import "./DashboardPage.css";
@@ -62,6 +63,12 @@ export default function DashboardPage() {
             <span className="stat-text">{latest ? formatDate(latest.prediction_date) : "-"}</span>
           </StatTile>
         </ul>
+      )}
+
+      {predictions.length > 0 && (
+        <div className="dash-insights">
+          <RiskTrend predictions={predictions} />
+        </div>
       )}
 
       <div className="dash-grid">

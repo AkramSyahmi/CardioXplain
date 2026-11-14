@@ -1,0 +1,12 @@
+.trend .card-head h2 { margin: 0; }
+.trend-chart { display: block; width: 100%; height: auto; }
+.band-low { fill: #e3f4ea; }
+.band-mod { fill: #fbefcf; }
+.band-high { fill: #fde4e4; }
+.band-label { font-size: 12px; font-weight: 700; fill: var(--ink-2); }
+.trend-line { fill: none; stroke: var(--ink); stroke-width: 3; stroke-linejoin: round; stroke-linecap: round; }
+.trend-dot { fill: var(--blue); stroke: #fff; stroke-width: 3; }
+.trend-value { font-size: 13px; font-weight: 800; fill: var(--ink); }
+.trend-date { font-size: 12px; font-weight: 600; fill: var(--ink-2); }
+.chip.trend-up { color: var(--high-ink); background: #fde4e4; }
+.chip.trend-down { color: var(--low-ink); background: #e3f4ea; }
