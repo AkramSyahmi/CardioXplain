@@ -20,6 +20,10 @@
   .field { gap: 8px; margin-bottom: 22px; }
   .field .help { margin-top: -4px; }
 
+  /* Hierarchy: smaller page titles, semi-bold labels; card titles bold and big numbers extra-bold stay the focus. */
+  h1 { font-size: clamp(2.2rem, 2.2vw, 2.6rem); letter-spacing: -0.035em; }
+  .stat-label, .tile-top, .field label, th, .ledger-name, .driver-name, .today-text, .task-text, .compare-caption { font-weight: 600; }
+
   /* 7. One distance from a card's title to its content everywhere. */
   .card-head, .card-title, .form-section h2 { margin-bottom: 16px; }
 }
