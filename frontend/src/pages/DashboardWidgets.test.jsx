@@ -27,3 +27,14 @@ test("risk trend with one assessment asks for another one", async () => {
   const card = await screen.findByRole("region", { name: "Your risk over time" });
   expect(within(card).getByText("Do another assessment later to see your trend.")).toBeInTheDocument();
 });
+
+test("risk drivers card lists the factors that raise the latest risk", async () => {
+  mockApi({ "GET /auth/me": [200, { user: USER }], "GET /history": [200, HISTORY], "GET /history/9": [200, RESULT] });
+  renderApp("/dashboard");
+  const card = await screen.findByRole("region", { name: "What's driving your risk" });
+  expect(await within(card).findByText("Systolic blood pressure")).toBeInTheDocument();
+  expect(within(card).getByText("+15.2%")).toBeInTheDocument();
+  expect(within(card).getByText("Age")).toBeInTheDocument();
+  expect(within(card).queryByText("Physical activity")).not.toBeInTheDocument(); // lowers risk, so not a driver
+  expect(within(card).getByRole("link", { name: "See the full explanation" })).toHaveAttribute("href", "/result/9");
+});

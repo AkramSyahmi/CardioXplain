@@ -7,6 +7,7 @@ import { useAuth } from "../auth.jsx";
 import HistoryTable from "../components/HistoryTable.jsx";
 import Icon from "../components/Icon.jsx";
 import { categoryClass } from "../components/RiskGauge.jsx";
+import RiskDrivers from "../components/RiskDrivers.jsx";
 import RiskTrend from "../components/RiskTrend.jsx";
 import StatTile from "../components/StatTile.jsx";
 import { formatDate } from "../format.js";
@@ -68,6 +69,7 @@ export default function DashboardPage() {
       {predictions.length > 0 && (
         <div className="dash-insights">
           <RiskTrend predictions={predictions} />
+          <RiskDrivers predictionId={latest.prediction_id} />
         </div>
       )}
 

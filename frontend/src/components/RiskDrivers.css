@@ -1,0 +1,10 @@
+.drivers { display: grid; grid-template-rows: auto 1fr auto; gap: 8px; }
+.drivers .card-head h2 { margin: 0; }
+.driver-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 16px; align-content: start; }
+.driver-list li { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 6px 12px; align-items: baseline; }
+.driver-name { font-weight: 700; }
+.driver-name small { display: block; font-weight: 500; font-size: 0.82rem; }
+.driver-effect { font-weight: 800; font-size: 1.1rem; color: #c4401c; font-variant-numeric: tabular-nums; }
+.driver-bar { grid-column: 1 / -1; height: 10px; border-radius: var(--pill); background: var(--panel); overflow: hidden; }
+.driver-bar span { display: block; height: 100%; border-radius: var(--pill); background: linear-gradient(90deg, #ffb59c, var(--raise)); }
+.drivers-link { justify-self: start; padding-right: 8px; }
