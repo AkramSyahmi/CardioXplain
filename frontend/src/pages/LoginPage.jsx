@@ -4,6 +4,7 @@ import { Navigate, useNavigate } from "react-router";
 import { homeFor, useAuth } from "../auth.jsx";
 import FieldError from "../components/FieldError.jsx";
 import LoginHeart from "../components/LoginHeart.jsx";
+import logoLight from "../assets/logo-light.png";
 import logo from "../assets/logo-full.png";
 import "./LoginPage.css";
 
@@ -62,7 +63,13 @@ export default function LoginPage() {
   return (
     <main className="login">
       <section className="login-art" aria-label="About CardioXplain">
-        <p className="login-logo"><img src={logo} alt="CardioXplain" width="170" height="32" /><span className="login-sub">XAI-Driven CVD Risk Assessment</span></p>
+        <p className="login-logo">
+          {/* Desktop: light logo straight on the dark panel. Phones keep the logo on a white pill. */}
+          <picture>
+            <source srcSet={logoLight} media="(min-width: 821px)" />
+            <img src={logo} alt="CardioXplain" width="170" height="32" />
+          </picture>
+          <span className="login-sub">XAI-Driven CVD Risk Assessment</span></p>
         <LoginHeart />
         <p className="login-line">Understand your heart risk and what you can change.</p>
       </section>

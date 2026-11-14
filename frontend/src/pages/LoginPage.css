@@ -101,5 +101,8 @@
     padding: 48px clamp(40px, 5vw, 96px);
   }
   .login-form { width: 100%; max-width: 440px; }
+  .login-logo { gap: 18px; }
+  .login-logo img { height: 40px; padding: 0; background: none; border-radius: 0; }
+  .login-sub { padding-left: 18px; border-left: 1px solid rgba(255, 255, 255, 0.18); }
 }
 
