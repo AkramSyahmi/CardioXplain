@@ -39,7 +39,7 @@ export default function LoginHeart() {
           alt="3D model of a beating human heart. Drag or use the arrow keys to rotate it."
           autoplay="" time-scale="1.8" camera-controls="" disable-zoom="" disable-pan="" touch-action="pan-y"
           auto-rotate="" rotation-per-second="12deg" auto-rotate-delay="3000" interaction-prompt="none"
-          camera-orbit="0deg 80deg auto" exposure="1.1" shadow-intensity="0" loading="eager" />
+          camera-orbit="0deg 80deg auto" field-of-view="42deg" max-field-of-view="42deg" exposure="1.1" shadow-intensity="0" loading="eager" />
       </figure>
     );
   }
