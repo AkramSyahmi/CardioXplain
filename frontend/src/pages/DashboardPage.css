@@ -1,7 +1,6 @@
 .hero { position: relative; display: flex; align-items: flex-end; justify-content: space-between; gap: 20px; flex-wrap: wrap; margin: 18px 4px 22px; }
 .hero h1 { margin: 6px 0 0; }
 .hello { margin: 0; color: var(--ink-2); font-weight: 600; }
-.hero-heart { width: 120px; height: 120px; margin: 0 auto; align-self: center; filter: drop-shadow(0 22px 24px rgba(16, 19, 23, 0.18)); flex: none; }
 .hero-actions { display: flex; gap: 10px; flex-wrap: wrap; }
 .hero-actions .btn { padding-right: 8px; min-height: 52px; }
 .go.go-light { background: #fff; color: var(--blue); }
@@ -47,8 +46,7 @@
   .dash-grid, .dash-columns { grid-template-columns: minmax(0, 1fr); }
 }
 @media (max-width: 720px) {
-  .hero { padding-right: 96px; margin-top: 8px; }
-  .hero-heart { position: absolute; right: -6px; top: -14px; width: 104px; height: 104px; margin: 0; }
+  .hero { margin-top: 8px; }
   .hero-actions .btn-light { display: none; } /* "View all" is also in the Recent Assessments card */
   .recent table { font-size: 0.9rem; }
   .recent th, .recent td { padding: 10px; }

@@ -2,7 +2,6 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router";
 import { apiRequest } from "../api.js";
-import heart from "../assets/heart-3d.png";
 import { useAuth } from "../auth.jsx";
 import HistoryTable from "../components/HistoryTable.jsx";
 import Icon from "../components/Icon.jsx";
@@ -40,7 +39,6 @@ export default function DashboardPage() {
           <p className="hello">Welcome back, {user.full_name.split(" ")[0]}! Your cardiovascular health overview.</p>
           <h1>Dashboard</h1>
         </div>
-        <img className="hero-heart" src={heart} alt="" width="190" height="190" />
         <div className="hero-actions">
           <Link className="btn btn-light" to="/history">View all<span className="go"><Icon name="arrow" /></span></Link>
           <Link className="btn btn-primary" to="/assessment">
