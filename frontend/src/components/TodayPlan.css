@@ -1,0 +1,17 @@
+.today { display: grid; gap: 12px; align-content: start; }
+.today .card-head { margin-bottom: 0; }
+.today .card-head h2 { margin: 0; }
+.today-empty { display: grid; gap: 14px; justify-items: start; color: var(--ink-2); }
+.today-empty p { margin: 0; max-width: 46ch; }
+.today-progress { height: 8px; border-radius: var(--pill); background: var(--panel); overflow: hidden; }
+.today-progress span { display: block; height: 100%; border-radius: var(--pill); background: var(--lower); transition: width 0.3s; }
+.today-tasks { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
+.today-tasks label { display: grid; grid-template-columns: 22px 36px minmax(0, 1fr); gap: 12px; align-items: center;
+  padding: 10px 14px; border-radius: var(--r-md); background: var(--panel); cursor: pointer; }
+.today-tasks input { width: 20px; height: 20px; margin: 0; }
+.today-icon { width: 36px; height: 36px; border-radius: 50%; display: grid; place-items: center; background: var(--tile); }
+.today-text { font-weight: 700; min-width: 0; }
+.today-task { display: block; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; } /* one line here; full text on hover and on the Plan page */
+.today-text small { display: block; font-weight: 600; font-size: 0.8rem; }
+.today-tasks li.done .today-text { color: var(--ink-2); text-decoration: line-through; text-decoration-color: #9aa3ad; }
+.today-link { justify-self: start; }

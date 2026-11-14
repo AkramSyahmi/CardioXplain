@@ -2,7 +2,7 @@
 import { formatDate } from "../format.js";
 import "./RiskTrend.css";
 
-const W = 640, H = 240, PAD_X = 36, PAD_TOP = 16, PAD_BOTTOM = 28;
+const W = 700, H = 250, PAD_X = 36, PAD_RIGHT = 110, PAD_TOP = 26, PAD_BOTTOM = 30;
 const y = (percent) => PAD_TOP + (1 - percent / 100) * (H - PAD_TOP - PAD_BOTTOM);
 const BANDS = [["band-high", 70, 100, "High"], ["band-mod", 40, 70, "Moderate"], ["band-low", 0, 40, "Low"]];
 
@@ -14,8 +14,8 @@ function changeText(first, last) {
 
 export default function RiskTrend({ predictions }) {
   const points = [...predictions].reverse(); // oldest first
-  const step = points.length > 1 ? (W - PAD_X * 2) / (points.length - 1) : 0;
-  const x = (i) => (points.length > 1 ? PAD_X + i * step : W / 2);
+  const step = points.length > 1 ? (W - PAD_X - PAD_RIGHT) / (points.length - 1) : 0;
+  const x = (i) => (points.length > 1 ? PAD_X + i * step : (W - PAD_RIGHT + PAD_X) / 2);
   const label = `Risk over time: ${points.map((p) => `${p.risk_percent}% on ${formatDate(p.prediction_date)}`).join(", ")}`;
   const first = points[0]?.risk_percent;
   const last = points.at(-1)?.risk_percent;
@@ -30,8 +30,9 @@ export default function RiskTrend({ predictions }) {
       <svg viewBox={`0 0 ${W} ${H}`} role="img" aria-label={label} className="trend-chart">
         {BANDS.map(([cls, lo, hi, name]) => (
           <g key={cls}>
-            <rect className={cls} x={PAD_X - 16} width={W - PAD_X * 2 + 32} y={y(hi)} height={y(lo) - y(hi)} rx="10" />
-            <text className="band-label" x={W - PAD_X + 10} y={y(hi) + 16} textAnchor="end">{name}</text>
+            <rect className={cls} x={PAD_X - 16} width={W - PAD_X - PAD_RIGHT + 32} y={y(hi)} height={y(lo) - y(hi)} rx="10" />
+            {/* Band names sit in their own column right of the chart, so they never touch a point. */}
+            <text className="band-label" x={W - PAD_RIGHT + 30} y={(y(hi) + y(lo)) / 2 + 4}>{name}</text>
           </g>
         ))}
         {points.length > 1 && (

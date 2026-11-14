@@ -4,10 +4,15 @@ import { formatDay } from "../format.js";
 import Icon from "./Icon.jsx";
 import "./PlanCalendar.css";
 
-const BLOCKS = [["morning", "Morning", "sun"], ["afternoon", "Afternoon", "cloud"], ["evening", "Evening", "moon"]];
-const TYPE_NAMES = { meal: "Meal", workout: "Workout", hydration: "Hydration", sleep: "Sleep", habit: "Habit" };
+export const BLOCKS = [["morning", "Morning", "sun"], ["afternoon", "Afternoon", "cloud"], ["evening", "Evening", "moon"]];
+export const TYPE_NAMES = { meal: "Meal", workout: "Workout", hydration: "Hydration", sleep: "Sleep", habit: "Habit" };
 
-function loadTicks(key) {
+/** Ticks are saved per plan in this browser; the dashboard's Today's plan uses the same key. */
+export function ticksKey(plan) {
+  return `cardioxplain_plan_${plan.prediction_id}_${plan.generated_at}`;
+}
+
+export function loadTicks(key) {
   try {
     return new Set(JSON.parse(localStorage.getItem(key) || "[]"));
   } catch {
@@ -15,7 +20,7 @@ function loadTicks(key) {
   }
 }
 
-function saveTicks(key, ticks) {
+export function saveTicks(key, ticks) {
   try {
     localStorage.setItem(key, JSON.stringify([...ticks]));
   } catch {
@@ -24,7 +29,7 @@ function saveTicks(key, ticks) {
 }
 
 export default function PlanCalendar({ plan }) {
-  const storageKey = `cardioxplain_plan_${plan.prediction_id}_${plan.generated_at}`;
+  const storageKey = ticksKey(plan);
   const [ticks, setTicks] = useState(() => loadTicks(storageKey));
 
   function toggle(id) {

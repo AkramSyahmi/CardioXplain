@@ -6,11 +6,11 @@
 .hero-actions .btn { padding-right: 8px; min-height: 52px; }
 .go.go-light { background: #fff; color: var(--blue); }
 
-.dash-insights { display: grid; grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); gap: 16px; align-items: stretch; margin-bottom: 16px; }
+.dash-columns { display: grid; grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); gap: 16px; align-items: start; }
+.dash-col { display: grid; gap: 16px; min-width: 0; }
 .dash-grid { display: grid; grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); gap: 16px; align-items: stretch; }
-.dash-actions { display: grid; grid-template-rows: auto 1fr; }
-.dash-actions .actions { grid-auto-rows: 1fr; }
-.dash-actions .actions li { display: grid; } /* each card fills its row, so both columns end together */
+.dash-actions h2 { margin-top: 4px; }
+.dash-actions .actions li { display: grid; }
 
 
 
@@ -39,12 +39,12 @@
 .action-white .action-icon { background: var(--panel); }
 .action .go { position: absolute; top: 18px; right: 18px; background: var(--ink); }
 
-.notice { margin-top: 16px; padding: 18px 22px; border-radius: var(--r-lg); background: var(--panel); color: var(--ink-2); }
+.notice { margin-top: 24px; padding: 18px 22px; border-radius: var(--r-lg); background: var(--panel); color: var(--ink-2); }
 .notice h2 { display: flex; align-items: center; gap: 8px; font-size: 1rem; color: var(--ink); margin-bottom: 6px; }
 .notice p { margin: 0; max-width: 90ch; }
 
 @media (max-width: 1100px) {
-  .dash-grid { grid-template-columns: minmax(0, 1fr); }
+  .dash-grid, .dash-columns { grid-template-columns: minmax(0, 1fr); }
 }
 @media (max-width: 720px) {
   .hero { padding-right: 96px; margin-top: 8px; }

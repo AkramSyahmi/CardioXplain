@@ -10,6 +10,7 @@ import { categoryClass } from "../components/RiskGauge.jsx";
 import RiskDrivers from "../components/RiskDrivers.jsx";
 import RiskTrend from "../components/RiskTrend.jsx";
 import StatTile from "../components/StatTile.jsx";
+import TodayPlan from "../components/TodayPlan.jsx";
 import { formatDate } from "../format.js";
 import "./DashboardPage.css";
 
@@ -66,37 +67,39 @@ export default function DashboardPage() {
         </ul>
       )}
 
-      {predictions.length > 0 && (
-        <div className="dash-insights">
-          <RiskTrend predictions={predictions} />
-          <RiskDrivers predictionId={latest.prediction_id} />
+      {/* Two stacked columns, so each card keeps its natural height. */}
+      <div className="dash-columns">
+        <div className="dash-col">
+          {predictions.length > 0 && <RiskTrend predictions={predictions} />}
+          <section className="card recent" aria-labelledby="recent-heading">
+            <div className="card-head">
+              <h2 id="recent-heading">Recent Assessments</h2>
+              {predictions.length > 0 && <Link to="/history">View all</Link>}
+            </div>
+            {history && predictions.length === 0 && <p>{history.message}</p>}
+            {predictions.length > 0 && <HistoryTable predictions={predictions.slice(0, 5)} />}
+          </section>
+          <section className="dash-actions" aria-labelledby="actions-heading">
+            <h2 id="actions-heading">Quick Actions</h2>
+            <ul className="actions">
+              {QUICK_ACTIONS.map(([to, label, icon, tone]) => (
+                <li key={to}>
+                  <Link className={`action action-${tone}`} to={to}>
+                    <span className="action-icon"><Icon name={icon} /></span>
+                    {label}
+                    <span className="go"><Icon name="arrow" /></span>
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </section>
         </div>
-      )}
-
-      <div className="dash-grid">
-        <section className="card recent" aria-labelledby="recent-heading">
-          <div className="card-head">
-            <h2 id="recent-heading">Recent Assessments</h2>
-            {predictions.length > 0 && <Link to="/history">View all</Link>}
+        {predictions.length > 0 && (
+          <div className="dash-col">
+            <RiskDrivers predictionId={latest.prediction_id} />
+            <TodayPlan />
           </div>
-          {history && predictions.length === 0 && <p>{history.message}</p>}
-          {predictions.length > 0 && <HistoryTable predictions={predictions.slice(0, 5)} />}
-        </section>
-
-        <section className="dash-actions" aria-labelledby="actions-heading">
-          <h2 id="actions-heading">Quick Actions</h2>
-          <ul className="actions">
-            {QUICK_ACTIONS.map(([to, label, icon, tone]) => (
-              <li key={to}>
-                <Link className={`action action-${tone}`} to={to}>
-                  <span className="action-icon"><Icon name={icon} /></span>
-                  {label}
-                  <span className="go"><Icon name="arrow" /></span>
-                </Link>
-              </li>
-            ))}
-          </ul>
-        </section>
+        )}
       </div>
 
       <section className="notice" aria-labelledby="notice-heading">
