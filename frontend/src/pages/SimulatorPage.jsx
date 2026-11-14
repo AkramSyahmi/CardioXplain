@@ -157,31 +157,33 @@ export default function SimulatorPage() {
             <p className={`delta ${points < 0 ? "delta-down" : points > 0 ? "delta-up" : ""}`}>{changeSentence(points)}</p>
           </div>
 
-          <section className="card" aria-labelledby="after-heading">
-            <h3 id="after-heading">Factors after the change</h3>
-            {simulation.simulated.shap ? (
-              <>
-                <ShapLedger shap={simulation.simulated.shap} riskScore={simulation.simulated.risk_score}
-                  riskPercent={simulation.simulated.risk_percent} />
-                <details className="exact">
-                  <summary>Show exact numbers</summary>
-                  <ShapTable shap={simulation.simulated.shap} />
-                </details>
-              </>
-            ) : <p role="alert">{simulation.simulated.shap_error}</p>}
-          </section>
+          <div className="sim-explain">
+            <section className="card" aria-labelledby="after-heading">
+              <h3 id="after-heading">Factors after the change</h3>
+              {simulation.simulated.shap ? (
+                <>
+                  <ShapLedger shap={simulation.simulated.shap} riskScore={simulation.simulated.risk_score}
+                    riskPercent={simulation.simulated.risk_percent} />
+                  <details className="exact">
+                    <summary>Show exact numbers</summary>
+                    <ShapTable shap={simulation.simulated.shap} />
+                  </details>
+                </>
+              ) : <p role="alert">{simulation.simulated.shap_error}</p>}
+            </section>
 
-          <section className="card narrative" aria-labelledby="means-heading">
-            <h3 id="means-heading">What this means</h3>
-            <div className="lead">
-              <Markdown allowedElements={["p", "strong", "em"]} unwrapDisallowed>{simulation.narrative.text}</Markdown>
-            </div>
-            <p className="disclaimer"><em>{simulation.disclaimer}</em></p>
-          </section>
+            <section className="card narrative" aria-labelledby="means-heading">
+              <h3 id="means-heading">What this means</h3>
+              <div className="lead">
+                <Markdown allowedElements={["p", "strong", "em"]} unwrapDisallowed>{simulation.narrative.text}</Markdown>
+              </div>
+              <p className="disclaimer"><em>{simulation.disclaimer}</em></p>
+              <button type="button" className="plan-button" onClick={() => navigate("/plan", { state: { lifestyle: sentChanges } })}>
+                Create a health plan with these values
+              </button>
+            </section>
+          </div>
 
-          <button type="button" className="plan-button" onClick={() => navigate("/plan", { state: { lifestyle: sentChanges } })}>
-            Create a health plan with these values
-          </button>
         </section>
       )}
     </>
