@@ -30,3 +30,11 @@
 
 .plan-meta { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; color: var(--ink-2); font-weight: 600; }
 .plan .disclaimer { margin-top: 12px; }
+
+/* Desktop: plan length choices and the generate button on one compact row. */
+@media (min-width: 1101px) {
+  .plan-create { display: flex; flex-wrap: wrap; align-items: flex-end; column-gap: 24px; row-gap: 12px; padding: 18px 24px; }
+  .plan-create > p { flex-basis: 100%; margin: 0; }
+  .plan-create .plan-length { margin: 0; }
+  .plan-create .submit-row { margin: 0; }
+}

@@ -141,3 +141,15 @@ test("a newly generated plan starts with nothing ticked", async () => {
   expect(screen.getByRole("checkbox", { name: "Workout: Walk day 1" })).not.toBeChecked();
   localStorage.removeItem("cardioxplain_plan_7_2026-11-17T10:00:00");
 });
+
+test("only one day is open at a time and the day buttons switch it", async () => {
+  mockApi({ "GET /auth/me": [200, { user: USER }], "GET /action-plan": [200, plan(7, [week(1, 16)])] });
+  renderApp("/plan");
+  const day1 = await screen.findByRole("region", { name: "Mon 16 Nov 2026 - Day 1: Day 1 focus" });
+  const day2 = screen.getByRole("region", { name: "Tue 17 Nov 2026 - Day 2: Day 2 focus" });
+  expect(day1.querySelector("details")).toHaveAttribute("open");
+  expect(day2.querySelector("details")).not.toHaveAttribute("open");
+  await userEvent.click(screen.getByRole("button", { name: "Tue 17" }));
+  expect(day2.querySelector("details")).toHaveAttribute("open");
+  expect(day1.querySelector("details")).not.toHaveAttribute("open");
+});

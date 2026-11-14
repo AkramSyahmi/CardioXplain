@@ -1,6 +1,12 @@
 // Day-by-day calendar health action plan (UC-1000, CHANGES.md #25). Ticks are kept in this browser.
 import { useState } from "react";
 import { formatDay } from "../format.js";
+
+function todayIso() {
+  const now = new Date();
+  const pad = (n) => String(n).padStart(2, "0");
+  return `${now.getFullYear()}-${pad(now.getMonth() + 1)}-${pad(now.getDate())}`;
+}
 import Icon from "./Icon.jsx";
 import "./PlanCalendar.css";
 
@@ -31,6 +37,9 @@ export function saveTicks(key, ticks) {
 export default function PlanCalendar({ plan }) {
   const storageKey = ticksKey(plan);
   const [ticks, setTicks] = useState(() => loadTicks(storageKey));
+  // One day open at a time (today, or day 1 if the plan has not started), so the page is not one long wall.
+  const allDays = plan.calendar.weeks.flatMap((week) => week.days);
+  const [openDay, setOpenDay] = useState(() => (allDays.find((day) => day.date === todayIso()) ?? allDays[0])?.day);
 
   function toggle(id) {
     const next = new Set(ticks);
@@ -49,17 +58,28 @@ export default function PlanCalendar({ plan }) {
             {week.days.map((day) => {
               const [weekday, date] = formatDay(day.date).split(" ");
               return (
-                <a key={day.day} href={`#day-${day.day}`} className="day-pill">
+                <button key={day.day} type="button" className="day-pill" aria-pressed={openDay === day.day}
+                  aria-label={`${weekday} ${date}`} onClick={() => setOpenDay(day.day)}>
                   {weekday}<b>{date}</b>
-                </a>
+                </button>
               );
             })}
           </nav>
           {week.days.map((day) => {
             const heading = `${formatDay(day.date)} - Day ${day.day}: ${day.title}`;
+            const ids = BLOCKS.flatMap(([block]) => day.blocks[block].map((_, i) => `${day.day}-${block}-${i}`));
+            const done = ids.filter((id) => ticks.has(id)).length;
             return (
               <section key={day.day} id={`day-${day.day}`} className="plan-day" aria-label={heading}>
-                <h3>{heading}</h3>
+                <details open={openDay === day.day}
+                  onToggle={(event) => {
+                    if (event.currentTarget.open) setOpenDay(day.day);
+                    else if (openDay === day.day) setOpenDay(null);
+                  }}>
+                <summary>
+                  <h3>{heading}</h3>
+                  <span className="chip">{done} of {ids.length} done</span>
+                </summary>
                 {BLOCKS.map(([block, blockName, icon]) => (
                   <div key={block} className="slot">
                     <span className={`slot-icon slot-${block}`}><Icon name={icon} /></span>
@@ -87,6 +107,7 @@ export default function PlanCalendar({ plan }) {
                     </ul>
                   </div>
                 ))}
+                </details>
               </section>
             );
           })}

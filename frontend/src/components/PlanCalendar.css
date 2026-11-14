@@ -16,11 +16,19 @@
   text-decoration: none;
 }
 .day-pill b { font-size: 1.15rem; color: var(--ink); }
-.day-pill:hover, .day-pill:focus-visible { background: var(--blue); color: #dfe6ff; }
-.day-pill:hover b, .day-pill:focus-visible b { color: #fff; }
+.day-pill { border: 0; cursor: pointer; min-height: 0; }
+.day-pill:hover:not(:disabled) { background: var(--blue-soft); }
+.day-pill[aria-pressed="true"] { background: var(--blue); color: #dfe6ff; }
+.day-pill[aria-pressed="true"] b { color: #fff; }
 
 .plan-day { padding: 20px 0 4px; border-top: 1px solid var(--line); scroll-margin-top: 16px; }
-.plan-day h3 { margin-bottom: 14px; }
+.plan-day summary { display: flex; align-items: center; justify-content: space-between; gap: 12px; cursor: pointer; list-style: none; min-height: 44px; }
+.plan-day summary::-webkit-details-marker { display: none; }
+.plan-day summary h3 { margin: 0; }
+.plan-day summary::after { content: ""; width: 10px; height: 10px; border-right: 2px solid var(--ink-2); border-bottom: 2px solid var(--ink-2); transform: rotate(45deg); margin: 0 6px 4px auto; transition: transform 0.2s; }
+.plan-day details[open] > summary::after { transform: rotate(-135deg); margin-bottom: -4px; }
+.plan-day details[open] > summary { margin-bottom: 14px; }
+.plan-day { padding: 14px 0 8px; }
 
 .slot { display: grid; grid-template-columns: 44px 112px minmax(0, 1fr); gap: 14px; padding: 12px 0; }
 .slot h4 { margin: 10px 0 0; font-size: 1rem; }
