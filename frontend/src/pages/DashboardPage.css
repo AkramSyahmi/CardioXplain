@@ -39,6 +39,20 @@
 .action .go { position: absolute; top: 18px; right: 18px; } /* same blue arrow as every other button */
 
 
+/* Desktop: one shared grid, so "Your risk over time" and "What's driving your risk" sit in the same row
+   and always have the same height. The column wrappers step aside (display: contents). */
+@media (min-width: 1101px) {
+  .dash-columns:has(.drivers) {
+    grid-template-areas: "trend drivers" "recent today" "actions today";
+    grid-template-rows: auto auto 1fr;
+  }
+  .dash-columns:has(.drivers) .dash-col { display: contents; }
+  .dash-columns:has(.drivers) .trend { grid-area: trend; align-self: stretch; }
+  .dash-columns:has(.drivers) .drivers { grid-area: drivers; align-self: stretch; align-content: start; } /* extra height goes below, rows keep their spacing */
+  .dash-columns:has(.drivers) .recent { grid-area: recent; }
+  .dash-columns:has(.drivers) .dash-actions { grid-area: actions; }
+  .dash-columns:has(.drivers) .today { grid-area: today; }
+}
 @media (max-width: 1100px) {
   .dash-grid, .dash-columns { grid-template-columns: minmax(0, 1fr); }
 }
