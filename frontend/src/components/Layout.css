@@ -98,18 +98,30 @@
   .logo img { height: 36px; }
   .mainnav { flex-direction: column; background: none; box-shadow: none; padding: 0; border-radius: 0; }
   .mainnav a { min-height: 48px; }
-  .me { margin-top: auto; justify-content: space-between; }
+  .sidebar-toggle {
+    align-items: center;
+    gap: 8px;
+    margin-top: auto;
+    min-height: 44px;
+    padding: 0 16px;
+    background: none;
+    color: var(--ink-2);
+    font-weight: 600;
+  }
+  .sidebar-toggle:hover:not(:disabled) { background: var(--panel); color: var(--ink); }
+  .me { justify-content: space-between; }
   .signout { box-shadow: none; background: var(--panel); }
 }
 
-/* Small laptops: a narrow icon-only sidebar, so the page keeps its width. Names stay for screen readers. */
-@media (min-width: 1101px) and (max-width: 1279px) {
-  .shell { grid-template-columns: 80px minmax(0, 1fr); }
-  .topbar { padding: 24px 12px; align-items: center; }
-  .logo { padding: 0; width: 46px; overflow: hidden; } /* shows only the heart mark of the logo */
-  .logo img { height: 34px; }
-  .mainnav a { justify-content: center; padding: 0; width: 52px; }
-  .mainnav .nav-label, .signout-label {
+/* Icon-only sidebar: chosen with "Hide menu", and always on small laptops (1101-1279 px) so the page keeps its width.
+   Names stay for screen readers and show as a tooltip on hover. */
+@media (min-width: 1101px) {
+  .shell-rail { grid-template-columns: 80px minmax(0, 1fr); }
+  .shell-rail .topbar { padding: 24px 12px; align-items: center; }
+  .shell-rail .logo { padding: 0; width: 46px; overflow: hidden; } /* shows only the heart mark of the logo */
+  .shell-rail .logo img { height: 34px; }
+  .shell-rail .mainnav a, .shell-rail .sidebar-toggle { justify-content: center; padding: 0; width: 52px; }
+  .shell-rail .nav-label, .shell-rail .signout-label, .shell-rail .sidebar-toggle-label {
     position: absolute;
     width: 1px;
     height: 1px;
@@ -118,8 +130,12 @@
     clip: rect(0 0 0 0);
     white-space: nowrap;
   }
-  .me { flex-direction: column; }
-  .signout { width: 44px; padding: 0; justify-content: center; }
+  .shell-rail .me { flex-direction: column; }
+  .shell-rail .signout { width: 44px; padding: 0; justify-content: center; }
+}
+.sidebar-toggle { display: none; } /* phones have the bottom tab bar instead */
+@media (min-width: 1101px) {
+  .sidebar-toggle { display: flex; }
 }
 
 /* Phones and tablets: the menu becomes a dark tab bar at the bottom, in thumb reach. */

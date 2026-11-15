@@ -1,24 +1,13 @@
 // Login heart. Desktop: real 3D anatomical heart (Sketchfab "Heart - animated anatomical 3d model" by assetfactory,
 // Sketchfab Standard licence) shown with <model-viewer>. Phones keep the animated Fluent heart (MIT), and users who
 // ask for reduced motion get a still image.
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import heartBeating from "../assets/heart-beating.png";
 import heart from "../assets/heart-3d.png";
+import useMedia from "../useMedia.js";
 
 const DESKTOP = "(min-width: 821px)";
 const CALM = "(prefers-reduced-motion: reduce)";
-
-function useMedia(query) {
-  const [matches, setMatches] = useState(() => window.matchMedia?.(query).matches ?? false);
-  useEffect(() => {
-    const media = window.matchMedia?.(query);
-    if (!media) return undefined;
-    const update = () => setMatches(media.matches);
-    media.addEventListener("change", update);
-    return () => media.removeEventListener("change", update);
-  }, [query]);
-  return matches;
-}
 
 export default function LoginHeart() {
   const desktop = useMedia(DESKTOP);

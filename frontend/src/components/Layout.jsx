@@ -1,6 +1,8 @@
+import { useState } from "react";
 import { Link, NavLink, useNavigate } from "react-router";
 import { homeFor, useAuth } from "../auth.jsx";
 import logo from "../assets/logo-full.png";
+import useMedia from "../useMedia.js";
 import Icon from "./Icon.jsx";
 import "./Layout.css";
 
@@ -17,6 +19,15 @@ const ADMIN_LINKS = [
   ["/admin/users", "User management", "user"],
 ];
 
+// The user's "hide menu" choice is remembered in this browser only (private windows may not allow it).
+function savedHidden() {
+  try {
+    return localStorage.getItem("cx-sidebar") === "hidden";
+  } catch {
+    return false;
+  }
+}
+
 function initials(name) {
   return name.split(" ").filter(Boolean).slice(0, 2).map((part) => part[0].toUpperCase()).join("");
 }
@@ -25,6 +36,19 @@ export default function Layout({ children }) {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
   const links = user.role === "admin" ? ADMIN_LINKS : USER_LINKS;
+  const [hidden, setHidden] = useState(savedHidden);
+  // Small laptops always get the icon-only sidebar, so the page keeps its width.
+  const narrow = useMedia("(min-width: 1101px) and (max-width: 1279px)");
+  const rail = hidden || narrow;
+
+  function toggleSidebar() {
+    setHidden(!hidden);
+    try {
+      localStorage.setItem("cx-sidebar", hidden ? "shown" : "hidden");
+    } catch {
+      // not remembered, still works for this visit
+    }
+  }
 
   function signOut() {
     logout();
@@ -35,7 +59,7 @@ export default function Layout({ children }) {
     <>
       <a className="skip-link" href="#main">Skip to content</a>
       {/* Desktop: sidebar on the left, page on the right. Phones: top bar plus bottom tab bar. */}
-      <div className="shell">
+      <div className={rail ? "shell shell-rail" : "shell"}>
       <header className="topbar">
         <Link className="logo" to={homeFor(user)} aria-label="CardioXplain home">
           <img src={logo} alt="" width="211" height="40" />
@@ -50,6 +74,12 @@ export default function Layout({ children }) {
             </NavLink>
           ))}
         </nav>
+        {!narrow && (
+          <button type="button" className="sidebar-toggle" onClick={toggleSidebar} title={hidden ? "Show menu" : "Hide menu"}>
+            <Icon name={hidden ? "right" : "left"} />
+            <span className="sidebar-toggle-label">{hidden ? "Show menu" : "Hide menu"}</span>
+          </button>
+        )}
         <div className="me">
           <span className="avatar" aria-hidden="true">{initials(user.full_name)}</span>
           <span className="me-text">

@@ -29,3 +29,15 @@ test("every page after login has a footer with the disclaimer", async () => {
   expect(within(footer).getByText(/Results are not a medical diagnosis/)).toBeInTheDocument();
   expect(within(footer).getByText(/Final Year Project/)).toBeInTheDocument();
 });
+
+test("the sidebar can be hidden to icons and shown again", async () => {
+  mockApi({ "GET /auth/me": [200, { user: USER }], "GET /history": [200, { predictions: [], message: "No assessments yet." }] });
+  renderApp("/dashboard");
+  await userEvent.click(await screen.findByRole("button", { name: "Hide menu" }));
+  expect(document.querySelector(".shell")).toHaveClass("shell-rail");
+  expect(localStorage.getItem("cx-sidebar")).toBe("hidden");
+  await userEvent.click(screen.getByRole("button", { name: "Show menu" }));
+  expect(document.querySelector(".shell")).not.toHaveClass("shell-rail");
+  // Links stay reachable while the sidebar is small.
+  expect(within(screen.getByRole("navigation", { name: "Main" })).getByRole("link", { name: "Dashboard" })).toBeInTheDocument();
+});
