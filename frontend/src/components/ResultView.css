@@ -48,6 +48,7 @@
 /* Narrative */
 .narrative .lead { font-size: 1.1rem; line-height: 1.65; max-width: 64ch; }
 .narrative .lead p { margin: 0 0 12px; }
+.result .narrative .lead p { text-align: justify; } /* "In plain words" paragraph: even left and right edges */
 .disclaimer { margin: 0; font-size: 0.88rem; color: var(--ink-2); }
 
 /* Explore links */
