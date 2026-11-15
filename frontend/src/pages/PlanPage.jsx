@@ -64,6 +64,36 @@ export default function PlanPage() {
     request("/action-plan", lifestyle ? { length, lifestyle } : { length }, `Generating your plan... ${WAIT}`);
   }
 
+  const generating = busy.startsWith("Generating your plan");
+  const createForm = (
+    <div className="plan-create-body">
+      {lifestyle && <p className="chip">Using your What-If values.</p>}
+      {notice && <p className="help">{notice}</p>}
+      <fieldset className="plan-length">
+        <legend>Plan length</legend>
+        <label className="choice">
+          <input type="radio" name="length" checked={length === 7} onChange={() => setLength(7)} /> 7-day plan
+        </label>
+        <label className="choice">
+          <input type="radio" name="length" checked={length === 30} onChange={() => setLength(30)} /> 30-day plan
+          (built one week at a time)
+        </label>
+      </fieldset>
+      <div className="submit-row">
+        <button type="button" onClick={generate} disabled={Boolean(busy)}>
+          {generating ? busy : plan ? "Generate a new plan" : "Generate my plan"}
+        </button>
+      </div>
+      {busy && <span className="busy-bar" aria-hidden="true" />}
+    </div>
+  );
+  const problem = (
+    <>
+      {error && <p role="alert">{error}</p>}
+      {riskCategory && <p>Your risk category: {riskCategory}</p>}
+    </>
+  );
+
   const calendar = plan?.calendar;
   const planned = calendar ? daysPlanned(calendar) : 0;
   const nextWeek = calendar && calendar.length === 30 && planned < 30 ? calendar.weeks.length + 1 : null;
@@ -81,28 +111,11 @@ export default function PlanPage() {
         </>
       )}
 
-      {loaded && !noAssessment && (
+      {/* No plan yet: making one is the main action. */}
+      {loaded && !noAssessment && !plan && (
         <section className="card plan-create" aria-label="Create a plan">
-          {lifestyle && <p className="chip">Using your What-If values.</p>}
-          {notice && <p className="help">{notice}</p>}
-          <fieldset className="plan-length">
-            <legend>Plan length</legend>
-            <label className="choice">
-              <input type="radio" name="length" checked={length === 7} onChange={() => setLength(7)} /> 7-day plan
-            </label>
-            <label className="choice">
-              <input type="radio" name="length" checked={length === 30} onChange={() => setLength(30)} /> 30-day plan
-              (built one week at a time)
-            </label>
-          </fieldset>
-          <div className="submit-row">
-            <button type="button" onClick={generate} disabled={Boolean(busy)}>
-              {busy.startsWith("Generating your plan") ? busy : plan ? "Generate a new plan" : "Generate my plan"}
-            </button>
-          </div>
-          {busy && <span className="busy-bar" aria-hidden="true" />}
-          {error && <p role="alert">{error}</p>}
-          {riskCategory && <p>Your risk category: {riskCategory}</p>}
+          {createForm}
+          {problem}
         </section>
       )}
 
@@ -112,6 +125,7 @@ export default function PlanPage() {
             <span>Generated: {formatDateTime(plan.generated_at)}</span>
             {calendar && <span className="chip">Day {planned} of {calendar.length} planned.</span>}
           </p>
+          {problem}
           {calendar ? (
             <>
               {/* key: a new plan starts fresh instead of keeping the old plan's ticks */}
@@ -129,6 +143,11 @@ export default function PlanPage() {
             // Older plans were saved as text; show them as Markdown (raw HTML is not rendered).
             <div className="card"><Markdown>{plan.plan_text}</Markdown></div>
           )}
+          {/* A plan exists: it comes first, and replacing it is a folded option underneath. */}
+          <details className="card plan-create plan-new" open={generating}>
+            <summary>Make a new plan</summary>
+            {createForm}
+          </details>
           <p className="disclaimer"><em>{disclaimer}</em></p>
         </article>
       )}

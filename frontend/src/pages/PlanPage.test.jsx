@@ -29,24 +29,28 @@ test("plan shows a day-by-day calendar with dates, time blocks and checklists", 
   mockApi({ "GET /auth/me": [200, { user: USER }], "GET /action-plan": [200, plan(7, [week(1, 16)])] });
   renderApp("/plan");
   expect(await screen.findByRole("heading", { name: "Week 1: Theme 1" })).toBeInTheDocument();
-  const day1 = screen.getByRole("region", { name: "Mon 16 Nov 2026 - Day 1: Day 1 focus" });
+  const day1 = screen.getByRole("region", { name: "Mon 16 Nov 2026, Day 1: Day 1 focus" });
   expect(within(day1).getByRole("heading", { name: "Morning" })).toBeInTheDocument();
   expect(within(day1).getByRole("heading", { name: "Afternoon" })).toBeInTheDocument();
   expect(within(day1).getByRole("heading", { name: "Evening" })).toBeInTheDocument();
   expect(within(day1).getByRole("checkbox", { name: "Meal: Breakfast day 1" })).toBeInTheDocument();
   expect(within(day1).getByText("Breakfast day 1: step one")).toBeInTheDocument();
-  expect(screen.getByRole("region", { name: "Sun 22 Nov 2026 - Day 7: Day 7 focus" })).toBeInTheDocument();
+  await userEvent.click(screen.getByRole("button", { name: "Sun 22" }));
+  expect(screen.getByRole("region", { name: "Sun 22 Nov 2026, Day 7: Day 7 focus" })).toBeInTheDocument();
   expect(screen.getByText(RESULT.disclaimer)).toBeInTheDocument();
 });
 
 test("ticked tasks are remembered after reload", async () => {
   mockApi({ "GET /auth/me": [200, { user: USER }], "GET /action-plan": [200, plan(7, [week(1, 16)])] });
   const first = renderApp("/plan");
-  await userEvent.click(await screen.findByRole("checkbox", { name: "Workout: Walk day 2" }));
+  await userEvent.click(await screen.findByRole("button", { name: "Tue 17" }));
+  await userEvent.click(screen.getByRole("checkbox", { name: "Workout: Walk day 2" }));
   expect(screen.getByRole("checkbox", { name: "Workout: Walk day 2" })).toBeChecked();
   first.unmount();
   renderApp("/plan");
-  expect(await screen.findByRole("checkbox", { name: "Workout: Walk day 2" })).toBeChecked();
+  await userEvent.click(await screen.findByRole("button", { name: "Tue 17" }));
+  expect(screen.getByRole("checkbox", { name: "Workout: Walk day 2" })).toBeChecked();
+  await userEvent.click(screen.getByRole("button", { name: "Wed 18" }));
   expect(screen.getByRole("checkbox", { name: "Workout: Walk day 3" })).not.toBeChecked();
 });
 
@@ -63,7 +67,8 @@ test("generate a 30-day plan, then the next week", async () => {
   expect(screen.getByText("Day 7 of 30 planned.")).toBeInTheDocument();
   await userEvent.click(screen.getByRole("button", { name: "Generate Week 2" }));
   expect(await screen.findByRole("heading", { name: "Week 2: Theme 2" })).toBeInTheDocument();
-  expect(screen.getByRole("region", { name: "Mon 23 Nov 2026 - Day 8: Day 8 focus" })).toBeInTheDocument();
+  await userEvent.click(screen.getByRole("button", { name: "Mon 23" }));
+  expect(screen.getByRole("region", { name: "Mon 23 Nov 2026, Day 8: Day 8 focus" })).toBeInTheDocument();
   const body = JSON.parse(api.mock.calls.find(([url, o]) => url === "/api/action-plan" && o.method === "POST")[1].body);
   expect(body).toEqual({ length: 30 });
 });
@@ -73,6 +78,7 @@ test("7-day plan has no next-week button", async () => {
   renderApp("/plan");
   await screen.findByRole("heading", { name: "Week 1: Theme 1" });
   expect(screen.queryByRole("button", { name: /Generate Week/ })).not.toBeInTheDocument();
+  await userEvent.click(screen.getByText("Make a new plan"));
   expect(screen.getByRole("button", { name: "Generate a new plan" })).toBeInTheDocument();
 });
 
@@ -136,20 +142,29 @@ test("a newly generated plan starts with nothing ticked", async () => {
     "POST /action-plan": [201, newer] });
   renderApp("/plan");
   await userEvent.click(await screen.findByRole("checkbox", { name: "Workout: Walk day 1" }));
+  await userEvent.click(screen.getByText("Make a new plan"));
   await userEvent.click(screen.getByRole("button", { name: "Generate a new plan" }));
   await screen.findByText(/Generated: 17 Nov 2026/);
   expect(screen.getByRole("checkbox", { name: "Workout: Walk day 1" })).not.toBeChecked();
   localStorage.removeItem("cardioxplain_plan_7_2026-11-17T10:00:00");
 });
 
-test("only one day is open at a time and the day buttons switch it", async () => {
+test("only the chosen day is shown and the day buttons switch it", async () => {
   mockApi({ "GET /auth/me": [200, { user: USER }], "GET /action-plan": [200, plan(7, [week(1, 16)])] });
   renderApp("/plan");
-  const day1 = await screen.findByRole("region", { name: "Mon 16 Nov 2026 - Day 1: Day 1 focus" });
-  const day2 = screen.getByRole("region", { name: "Tue 17 Nov 2026 - Day 2: Day 2 focus" });
-  expect(day1.querySelector("details")).toHaveAttribute("open");
-  expect(day2.querySelector("details")).not.toHaveAttribute("open");
+  expect(await screen.findByRole("region", { name: "Mon 16 Nov 2026, Day 1: Day 1 focus" })).toBeInTheDocument();
+  expect(screen.queryByRole("region", { name: /Day 2:/ })).not.toBeInTheDocument();
+  expect(screen.getByRole("button", { name: "Mon 16" })).toHaveAttribute("aria-pressed", "true");
   await userEvent.click(screen.getByRole("button", { name: "Tue 17" }));
-  expect(day2.querySelector("details")).toHaveAttribute("open");
-  expect(day1.querySelector("details")).not.toHaveAttribute("open");
+  expect(screen.getByRole("region", { name: "Tue 17 Nov 2026, Day 2: Day 2 focus" })).toBeInTheDocument();
+  expect(screen.queryByRole("region", { name: /Day 1:/ })).not.toBeInTheDocument();
+});
+
+test("an existing plan comes first; making a new one is a folded option below it", async () => {
+  mockApi({ "GET /auth/me": [200, { user: USER }], "GET /action-plan": [200, plan(7, [week(1, 16)])] });
+  renderApp("/plan");
+  const weekHeading = await screen.findByRole("heading", { name: "Week 1: Theme 1" });
+  const newPlan = screen.getByText("Make a new plan").closest("details");
+  expect(newPlan).not.toHaveAttribute("open");
+  expect(weekHeading.compareDocumentPosition(newPlan) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
 });

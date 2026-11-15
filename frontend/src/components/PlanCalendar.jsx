@@ -37,7 +37,7 @@ export function saveTicks(key, ticks) {
 export default function PlanCalendar({ plan }) {
   const storageKey = ticksKey(plan);
   const [ticks, setTicks] = useState(() => loadTicks(storageKey));
-  // One day open at a time (today, or day 1 if the plan has not started), so the page is not one long wall.
+  // One day shown at a time (today, or day 1 if the plan has not started); the day buttons pick it.
   const allDays = plan.calendar.weeks.flatMap((week) => week.days);
   const [openDay, setOpenDay] = useState(() => (allDays.find((day) => day.date === todayIso()) ?? allDays[0])?.day);
 
@@ -65,21 +65,19 @@ export default function PlanCalendar({ plan }) {
               );
             })}
           </nav>
-          {week.days.map((day) => {
-            const heading = `${formatDay(day.date)} - Day ${day.day}: ${day.title}`;
+          {week.days.filter((day) => day.day === openDay).map((day) => {
             const ids = BLOCKS.flatMap(([block]) => day.blocks[block].map((_, i) => `${day.day}-${block}-${i}`));
             const done = ids.filter((id) => ticks.has(id)).length;
             return (
-              <section key={day.day} id={`day-${day.day}`} className="plan-day" aria-label={heading}>
-                <details open={openDay === day.day}
-                  onToggle={(event) => {
-                    if (event.currentTarget.open) setOpenDay(day.day);
-                    else if (openDay === day.day) setOpenDay(null);
-                  }}>
-                <summary>
-                  <h3>{heading}</h3>
+              <section key={day.day} id={`day-${day.day}`} className="plan-day"
+                aria-label={`${formatDay(day.date)}, Day ${day.day}: ${day.title}`}>
+                <div className="plan-day-head">
+                  <div>
+                    <p className="plan-day-date">{formatDay(day.date)}</p>
+                    <h3>Day {day.day}: {day.title}</h3>
+                  </div>
                   <span className="chip">{done} of {ids.length} done</span>
-                </summary>
+                </div>
                 {BLOCKS.map(([block, blockName, icon]) => (
                   <div key={block} className={`slot time-${block}`}>
                     <span className="slot-icon"><Icon name={icon} /></span>
@@ -107,7 +105,6 @@ export default function PlanCalendar({ plan }) {
                     </ul>
                   </div>
                 ))}
-                </details>
               </section>
             );
           })}
