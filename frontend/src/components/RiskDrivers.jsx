@@ -41,7 +41,7 @@ export default function RiskDrivers({ predictionId }) {
           ))}
         </ol>
       )}
-      <Link className="btn btn-light drivers-link" to={`/result/${predictionId}`}>
+      <Link className="drivers-link" to={`/result/${predictionId}`}>
         See the full explanation
       </Link>
     </section>

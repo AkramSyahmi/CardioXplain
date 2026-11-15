@@ -179,7 +179,7 @@ export default function ResultView({ result }) {
         </section>
 
         <section className="card narrative" aria-labelledby="story-heading">
-          <h2 id="story-heading" className="card-title"><span className="title-icon spark"><Icon name="spark" /></span>In plain words</h2>
+          <h2 id="story-heading" className="card-title"><span className="title-icon"><Icon name="chat" /></span>In plain words</h2>
           {result.narrative ? (
             // LLM replies may use **bold**; only paragraphs and emphasis are shown, never raw HTML.
             <div className="lead">

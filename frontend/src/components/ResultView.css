@@ -7,7 +7,6 @@
 .card-head .card-title { margin: 0; }
 .card-title { display: flex; align-items: center; gap: 12px; font-size: 1.2rem; margin-bottom: 14px; }
 .title-icon { width: 44px; height: 44px; border-radius: 50%; display: grid; place-items: center; background: var(--panel); flex: none; }
-.title-icon.spark { background: linear-gradient(135deg, #e5ecff, #f3e8ff); color: var(--blue); }
 
 /* Dark risk card */
 .risk-card .title-icon { background: var(--night-2); }

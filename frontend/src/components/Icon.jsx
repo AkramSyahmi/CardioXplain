@@ -14,7 +14,6 @@ const PATHS = {
   sugar: <path d="m12 3 7.5 4.3v8.6L12 20.2l-7.5-4.3V7.3Z" />,
   smoke: <><rect x="3" y="14" width="15" height="4" rx="1" /><path d="M14 14v4M20 14v4M18 10c0-2 2-2 2-4M15.5 10c0-2 2-2 2-4" /></>,
   dots: <><circle cx="6" cy="12" r="1.2" /><circle cx="12" cy="12" r="1.2" /><circle cx="18" cy="12" r="1.2" /></>,
-  spark: <><path d="M12 3.5 13.8 9 19.5 11l-5.7 2-1.8 5.5-1.8-5.5L4.5 11l5.7-2Z" /><path d="M19 3v3M17.5 4.5h3" /></>,
   alert: <><circle cx="12" cy="12" r="8.5" /><path d="M12 7.5v5.5M12 16.2v.3" /></>,
   sun: <><circle cx="12" cy="12" r="3.8" /><path d="M12 3v2M12 19v2M3 12h2M19 12h2M5.6 5.6 7 7M17 17l1.4 1.4M5.6 18.4 7 17M17 7l1.4-1.4" /></>,
   cloud: <path d="M7 18a4 4 0 0 1-.5-8 5.5 5.5 0 0 1 10.6 1.5A3.3 3.3 0 0 1 17 18Z" />,
