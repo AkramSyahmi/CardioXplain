@@ -110,9 +110,9 @@
     gap: 28px;
     background: var(--tile);
   }
-  .sidebar-head { display: flex; align-items: center; padding-left: 4px; }
-  .logo { width: 160px; overflow: hidden; transition: width var(--slide) var(--ease); }
-  .logo img { height: 30px; max-width: none; }
+  .sidebar-head { display: flex; align-items: center; justify-content: center; } /* logo centred in the sidebar; the arrow sits on the edge, outside this row */
+  .logo { width: 159px; overflow: hidden; transition: width var(--slide) var(--ease); } /* = logo image width at 30px tall */
+  .logo img { height: 30px; max-width: none; transition: height var(--slide) var(--ease); }
   .mainnav { flex-direction: column; background: none; box-shadow: none; padding: 0; border-radius: 0; }
   .mainnav a { min-height: 48px; overflow: hidden; }
   .mainnav a .icon, .signout .icon { flex: none; } /* icons never squeeze when the sidebar narrows */
@@ -151,14 +151,15 @@
    Labels stay in the page for screen readers; links also show their name as a tooltip on hover. */
 @media (min-width: 1101px) {
   .shell-rail { grid-template-columns: 80px minmax(0, 1fr); }
-  .shell-rail .logo { width: 40px; } /* only the heart mark of the logo shows */
+  .shell-rail .logo { width: 42px; } /* the whole heart mark (first 206 of 637 px of the image) shows */
+  .shell-rail .logo img { height: 24px; }
   .shell-rail .nav-label, .shell-rail .signout-label { opacity: 0; }
   .shell-rail .avatar { width: 0; opacity: 0; }
   .shell-rail .me { gap: 0; }
   .shell-rail .signout { width: 44px; }
 }
 @media (min-width: 1101px) and (prefers-reduced-motion: reduce) {
-  .shell, .logo, .nav-label, .signout-label, .avatar, .me, .signout { transition: none; }
+  .shell, .logo, .logo img, .nav-label, .signout-label, .avatar, .me, .signout { transition: none; }
 }
 .sidebar-toggle { display: none; } /* phones have the bottom tab bar instead */
 @media (min-width: 1101px) {
