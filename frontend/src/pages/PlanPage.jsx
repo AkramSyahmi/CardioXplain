@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import Markdown from "react-markdown";
 import { Link, useLocation } from "react-router";
 import { apiRequest } from "../api.js";
+import PageHeader from "../components/PageHeader.jsx";
 import PlanCalendar from "../components/PlanCalendar.jsx";
 import { formatDateTime } from "../format.js";
 import "./PlanPage.css";
@@ -100,8 +101,10 @@ export default function PlanPage() {
 
   return (
     <>
-      <h1>Health Action Plan</h1>
-      <p className="page-lead">A day-by-day plan based on your risk result and lifestyle. For educational support only.</p>
+      <PageHeader icon="calendar" title="Health Action Plan" lead="A day-by-day plan based on your latest result and lifestyle.">
+        {plan && <span className="plan-generated">Generated: {formatDateTime(plan.generated_at)}</span>}
+        {calendar && <span className="chip">Day {planned} of {calendar.length} planned.</span>}
+      </PageHeader>
 
       {!loaded && <Skeleton lines={6} />}
       {noAssessment && (
@@ -121,10 +124,6 @@ export default function PlanPage() {
 
       {plan && (
         <article className="plan">
-          <p className="plan-meta">
-            <span>Generated: {formatDateTime(plan.generated_at)}</span>
-            {calendar && <span className="chip">Day {planned} of {calendar.length} planned.</span>}
-          </p>
           {problem}
           {calendar ? (
             <>

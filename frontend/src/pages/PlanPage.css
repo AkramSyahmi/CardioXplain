@@ -31,7 +31,7 @@
 }
 @keyframes busy { from { transform: translateX(-100%); } to { transform: translateX(340%); } }
 
-.plan-meta { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; color: var(--ink-2); font-weight: 600; }
+.plan-generated { color: var(--ink-2); font-weight: 600; }
 .plan .disclaimer { margin-top: 12px; }
 
 /* Desktop: plan length choices and the generate button on one compact row. */

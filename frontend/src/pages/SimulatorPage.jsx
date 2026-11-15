@@ -5,6 +5,8 @@ import { apiRequest } from "../api.js";
 import FieldError from "../components/FieldError.jsx";
 import Markdown from "react-markdown";
 import Icon from "../components/Icon.jsx";
+import PageHeader from "../components/PageHeader.jsx";
+import { formatDate } from "../format.js";
 import { ShapTable, displayValue } from "../components/ResultView.jsx";
 import RiskGauge from "../components/RiskGauge.jsx";
 import ShapLedger from "../components/ShapLedger.jsx";
@@ -43,6 +45,7 @@ export default function SimulatorPage() {
   const navigate = useNavigate();
   const [inputs, setInputs] = useState(null);
   const [estimated, setEstimated] = useState([]);
+  const [basedOn, setBasedOn] = useState("");
   const [form, setForm] = useState(null);
   const [loadError, setLoadError] = useState("");
   const [error, setError] = useState("");
@@ -56,6 +59,7 @@ export default function SimulatorPage() {
       .then((data) => {
         setInputs(data.inputs);
         setEstimated(data.estimated_fields ?? []);
+        setBasedOn(data.prediction_date ?? "");
         setForm(formFrom(data.inputs));
       })
       .catch((err) => setLoadError(err.message));
@@ -93,8 +97,9 @@ export default function SimulatorPage() {
 
   return (
     <>
-      <h1>What-If Simulator</h1>
-      <p className="page-lead">See how lifestyle changes may affect your estimated risk. This is a simulation, not a guarantee.</p>
+      <PageHeader icon="gauge" title="What-If Simulator" lead="Change your lifestyle values and compare your risk before and after.">
+        {basedOn && <span className="chip">Based on your assessment of {formatDate(basedOn)}</span>}
+      </PageHeader>
 
       {loadError && (
         <>

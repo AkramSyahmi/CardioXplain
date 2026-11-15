@@ -25,6 +25,7 @@ def test_simulation_prefill_returns_latest_inputs(client, user_headers, assessed
     assert inputs["smoke"] == 1 and inputs["weight"] == 92 and inputs["ap_hi"] == 140
     assert inputs["bmi"] == 31.83
     assert response.get_json()["estimated_fields"] == []
+    assert response.get_json()["prediction_date"]  # header: "Based on your assessment of ..."
 
 
 def test_simulation_prefill_says_which_values_were_estimated(client, user_headers, fake_llm, valid_input):

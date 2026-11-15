@@ -2,6 +2,7 @@
 import { useState } from "react";
 import Markdown from "react-markdown";
 import { apiRequest } from "../api.js";
+import PageHeader from "../components/PageHeader.jsx";
 import "./NavigatorPage.css";
 
 const GREETING =
@@ -53,9 +54,9 @@ export default function NavigatorPage() {
 
   return (
     <>
-      <h1>Care Navigator</h1>
-      <p className="page-lead">Ask health-related questions and receive educational guidance.</p>
-      <p className="chip nav-note"><strong>Educational only - not medical advice.</strong></p>
+      <PageHeader icon="chat" title="Care Navigator" lead="Ask questions about your heart health and your results.">
+        <span className="chip"><strong>Educational only, not medical advice.</strong></span>
+      </PageHeader>
 
       <div className="chat-layout">
         <section className="card chat" aria-labelledby="chat-heading">

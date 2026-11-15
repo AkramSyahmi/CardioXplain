@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 
 const LOG_PREVIEW = 10; // the log can hold 50 rows; the rest are one click away
 import { apiRequest } from "../api.js";
+import PageHeader from "../components/PageHeader.jsx";
 import StatTile from "../components/StatTile.jsx";
 import { formatDateTime } from "../format.js";
 import "./AdminPages.css";
@@ -90,7 +91,9 @@ export default function AdminDashboardPage() {
 
   return (
     <>
-      <h1>Model performance</h1>
+      <PageHeader icon="chart" title="Model performance" lead="XGBoost results on the unseen test set, system usage and activity.">
+        {model && <span className="chip">AUC {model.metrics.auc}</span>}
+      </PageHeader>
 
       <section className="admin-section">
         <h2>Model evaluation</h2>

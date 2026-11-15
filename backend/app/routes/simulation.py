@@ -29,7 +29,8 @@ def prefill():
     prediction = latest_prediction(g.user.user_id)
     if prediction is None:
         return jsonify(error=NO_ASSESSMENT), 404
-    return jsonify(inputs=prediction.inputs.to_dict(), estimated_fields=prediction.estimated_fields or [])
+    return jsonify(inputs=prediction.inputs.to_dict(), estimated_fields=prediction.estimated_fields or [],
+                   prediction_date=prediction.prediction_date.isoformat())
 
 
 @simulation_bp.post("")

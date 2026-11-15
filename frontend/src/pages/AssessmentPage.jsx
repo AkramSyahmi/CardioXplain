@@ -1,8 +1,10 @@
 // UC-200 Perform Risk Assessment: the input form (Figure 3.28, Table 3.35).
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
 import { apiRequest } from "../api.js";
 import FieldError from "../components/FieldError.jsx";
+import PageHeader from "../components/PageHeader.jsx";
+import { formatDate } from "../format.js";
 
 const NUMBER_FIELDS = ["age", "height", "weight", "ap_hi", "ap_lo", "cholesterol", "gluc",
   "cigarettes_per_day", "drinks_per_week", "activity_minutes"];
@@ -57,6 +59,12 @@ function LevelField({ name, label, form, fields, onChange }) {
 export default function AssessmentPage() {
   const navigate = useNavigate();
   const [form, setForm] = useState(EMPTY);
+  const [lastDate, setLastDate] = useState(null);
+
+  useEffect(() => {
+    // Header status only, so a failed request just leaves it out.
+    apiRequest("/history").then((data) => setLastDate(data.predictions?.[0]?.prediction_date ?? "")).catch(() => {});
+  }, []);
   const [error, setError] = useState("");
   const [fields, setFields] = useState({});
   const [busy, setBusy] = useState(false);
@@ -93,8 +101,10 @@ export default function AssessmentPage() {
 
   return (
     <>
-      <h1>New assessment</h1>
-      <p className="page-lead">Enter your health and lifestyle information. Results are for educational purposes only.</p>
+      <PageHeader icon="plus" title="New assessment" lead="Three short sections: about you, health measurements and lifestyle.">
+        {lastDate && <span className="chip">Last assessment: {formatDate(lastDate)}</span>}
+        {lastDate === "" && <span className="chip">Your first assessment</span>}
+      </PageHeader>
       {error && <p role="alert">{error}</p>}
 
       <form className="assessment-form" onSubmit={submit} noValidate>

@@ -2,6 +2,7 @@
 import { useEffect, useState } from "react";
 import { apiRequest } from "../api.js";
 import FieldError from "../components/FieldError.jsx";
+import PageHeader from "../components/PageHeader.jsx";
 import "./AdminPages.css";
 import { formatDate } from "../format.js";
 import Skeleton from "../components/Skeleton.jsx";
@@ -113,7 +114,9 @@ export default function AdminUsersPage() {
 
   return (
     <>
-      <h1>User management</h1>
+      <PageHeader icon="user" title="User management" lead="Create accounts, deactivate users and reset passwords.">
+        {users && <span className="chip">{users.length} account{users.length === 1 ? "" : "s"}</span>}
+      </PageHeader>
       {loadError && <p role="alert">{loadError}</p>}
       {!users && !loadError && <Skeleton lines={6} />}
       {users && (

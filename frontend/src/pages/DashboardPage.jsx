@@ -4,6 +4,7 @@ import { Link } from "react-router";
 import { apiRequest } from "../api.js";
 import { useAuth } from "../auth.jsx";
 import HistoryTable from "../components/HistoryTable.jsx";
+import PageHeader from "../components/PageHeader.jsx";
 import Icon from "../components/Icon.jsx";
 import { categoryClass } from "../components/RiskGauge.jsx";
 import RiskDrivers from "../components/RiskDrivers.jsx";
@@ -35,17 +36,12 @@ export default function DashboardPage() {
 
   return (
     <>
-      <section className="hero">
-        <div>
-          <p className="hello">Welcome back, {user.full_name.split(" ")[0]}! Your cardiovascular health overview.</p>
-          <h1>Dashboard</h1>
-        </div>
-        <div className="hero-actions">
-          <Link className="btn btn-primary" to="/assessment">
-            New assessment<span className="go go-light"><Icon name="plus" /></span>
-          </Link>
-        </div>
-      </section>
+      <PageHeader icon="home" title="Dashboard"
+        lead={`Welcome back, ${user.full_name.split(" ")[0]}! Here's your heart health at a glance.`}>
+        <Link className="btn btn-primary" to="/assessment">
+          New assessment<span className="go go-light"><Icon name="plus" /></span>
+        </Link>
+      </PageHeader>
 
       {error && <p role="alert">{error}</p>}
       {!history && !error && <Skeleton tiles={4} lines={0} cards={0} />}
