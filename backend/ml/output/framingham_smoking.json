@@ -1,0 +1,56 @@
+{
+  "source": "Framingham Heart Study teaching dataset (framingham.csv, Kaggle copy)",
+  "outcome": "TenYearCHD (coronary heart disease within 10 years)",
+  "method": "logistic regression, adjusted for age, male, sysBP, diaBP, totChol, BMI, glucose",
+  "rows_total": 4240,
+  "rows_used": 3803,
+  "rows_dropped_missing": 437,
+  "chd_rate_percent": 15.4,
+  "per_cigarette_per_day": {
+    "log_odds": 0.02032,
+    "odds_ratio": 1.0205,
+    "ci95": [
+      1.0124,
+      1.0287
+    ]
+  },
+  "smoker_vs_non_smoker": {
+    "log_odds": 0.40115,
+    "odds_ratio": 1.4935,
+    "ci95": [
+      1.2209,
+      1.827
+    ]
+  },
+  "bands_vs_non_smoker": {
+    "1-10": {
+      "log_odds": 0.08485,
+      "odds_ratio": 1.0886,
+      "ci95": [
+        0.8029,
+        1.4759
+      ]
+    },
+    "11-20": {
+      "log_odds": 0.45504,
+      "odds_ratio": 1.5762,
+      "ci95": [
+        1.2297,
+        2.0205
+      ]
+    },
+    "21+": {
+      "log_odds": 0.73196,
+      "odds_ratio": 2.0791,
+      "ci95": [
+        1.532,
+        2.8217
+      ]
+    }
+  },
+  "smokers_in_band": {
+    "1-10": 548,
+    "11-20": 891,
+    "21+": 415
+  }
+}
