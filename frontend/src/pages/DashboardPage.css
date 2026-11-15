@@ -1,6 +1,5 @@
 .dash-columns { display: grid; grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); gap: 16px; align-items: start; }
 .dash-col { display: grid; gap: 16px; min-width: 0; }
-.dash-grid { display: grid; grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); gap: 16px; align-items: stretch; }
 .dash-actions h2 { margin-top: 4px; }
 .dash-actions .actions li { display: grid; }
 
@@ -46,7 +45,7 @@
   .dash-columns:has(.drivers) .today { grid-area: today; }
 }
 @media (max-width: 1100px) {
-  .dash-grid, .dash-columns { grid-template-columns: minmax(0, 1fr); }
+  .dash-columns { grid-template-columns: minmax(0, 1fr); }
 }
 @media (max-width: 720px) {
 

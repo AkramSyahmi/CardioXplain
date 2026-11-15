@@ -34,8 +34,7 @@
 
 /* 4. Wide screens: 20 px between cards instead of 16 px. */
 @media (min-width: 1440px) {
-  .result, .result-col, .dash-columns, .dash-col, .stats, .actions, .sim-form, .sim-explain, .admin-tables,
-  .grid-12 { gap: 20px; }
+  .result, .result-col, .dash-columns, .dash-col, .stats, .actions, .sim-form, .sim-explain, .admin-tables { gap: 20px; }
   .assessment-form { column-gap: 20px; }
   .form-section, .plan-week, .admin-section { margin-bottom: 20px; }
 

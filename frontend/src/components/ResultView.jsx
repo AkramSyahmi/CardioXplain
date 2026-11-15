@@ -7,8 +7,6 @@ import RiskGauge from "./RiskGauge.jsx";
 import ShapLedger from "./ShapLedger.jsx";
 import "./ResultView.css";
 
-export { displayValue };
-
 function effect(shap) {
   const points = (shap * 100).toFixed(1);
   return shap > 0 ? `+${points}%` : `${points}%`;

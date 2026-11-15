@@ -17,9 +17,7 @@
   --night-2: #1b2027;
   --raise: #f0643c;
   --lower: #2fae6b;
-  --low: #2fae6b;
   --mod: #e6a31e;
-  --high: #e5484d;
   --low-ink: #17703f;
   --mod-ink: #8a5a00;
   --high-ink: #b4232a;
@@ -176,7 +174,6 @@ ul, ol { padding-left: 20px; }
 .big-num { font-size: 2.2rem; font-weight: 800; letter-spacing: -0.04em; line-height: 1; font-variant-numeric: tabular-nums; }
 .unit { font-size: 0.38em; font-weight: 600; color: var(--ink-3); letter-spacing: 0; margin-left: 4px; }
 
-.grid-12 { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 16px; }
 
 .visually-hidden {
   position: absolute !important;

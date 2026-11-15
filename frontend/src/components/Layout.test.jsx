@@ -15,8 +15,7 @@ test("current page link is marked and every link stays available", async () => {
 });
 
 test("clicking the logo goes to the user's home page", async () => {
-  mockApi({ "GET /auth/me": [200, { user: USER }], "GET /history": [200, { predictions: [], message: "No assessments yet." }],
-    "GET /navigator": [200, { messages: [] }] });
+  mockApi({ "GET /auth/me": [200, { user: USER }], "GET /history": [200, { predictions: [], message: "No assessments yet." }] });
   renderApp("/navigator");
   await userEvent.click(await screen.findByRole("link", { name: "CardioXplain home" }));
   expect(await screen.findByRole("heading", { name: "Dashboard" })).toBeInTheDocument();

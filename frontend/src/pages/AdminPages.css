@@ -23,8 +23,7 @@
 .users-card th:nth-child(4) { width: 8%; }
 .users-card th:nth-child(5) { width: 10%; }
 .users-card th:nth-child(6) { width: 21%; }
-.users-card td { padding-top: 12px; padding-bottom: 12px; }
-.users-card td { vertical-align: middle; }
+.users-card td { padding-top: 12px; padding-bottom: 12px; vertical-align: middle; }
 .users-card td select, .users-card td input { min-height: 40px; }
 .users-card td button { min-height: 40px; padding: 0 14px; margin: 2px 0; background: var(--panel); color: var(--ink); border: 1px solid var(--line); }
 .users-card td button:hover:not(:disabled) { background: var(--blue-soft); }
