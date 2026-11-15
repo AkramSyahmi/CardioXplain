@@ -4,6 +4,7 @@ import { useLocation, useParams } from "react-router";
 import { apiRequest } from "../api.js";
 import ResultView from "../components/ResultView.jsx";
 import { formatDateTime } from "../format.js";
+import Skeleton from "../components/Skeleton.jsx";
 
 export default function ResultPage() {
   const { id } = useParams();
@@ -21,7 +22,7 @@ export default function ResultPage() {
       <h1>Assessment result</h1>
       {result?.prediction_date && <p>Assessment #{result.prediction_id} - {formatDateTime(result.prediction_date)}</p>}
       {error && <p role="alert">{error}</p>}
-      {!result && !error && <p>Loading...</p>}
+      {!result && !error && <Skeleton cards={2} lines={5} />}
       {result && <ResultView result={result} />}
     </>
   );

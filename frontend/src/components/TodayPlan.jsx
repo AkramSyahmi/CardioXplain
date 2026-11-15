@@ -6,6 +6,7 @@ import { formatDay } from "../format.js";
 import Icon from "./Icon.jsx";
 import { BLOCKS, TYPE_NAMES, loadTicks, saveTicks, ticksKey } from "./PlanCalendar.jsx";
 import "./TodayPlan.css";
+import Skeleton from "./Skeleton.jsx";
 
 function todayIso() {
   const now = new Date();
@@ -49,7 +50,7 @@ export default function TodayPlan() {
         {today && <span className="chip">{done} of {tasks.length} done</span>}
       </div>
 
-      {plan === undefined && <p className="help">Loading...</p>}
+      {plan === undefined && <Skeleton cards={0} />}
       {plan === null && (
         <div className="today-empty">
           <p>Get a day-by-day plan with meals, exercise and sleep tasks based on your result.</p>

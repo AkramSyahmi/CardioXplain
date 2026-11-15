@@ -12,6 +12,7 @@ import StatTile from "../components/StatTile.jsx";
 import TodayPlan from "../components/TodayPlan.jsx";
 import { formatDate } from "../format.js";
 import "./DashboardPage.css";
+import Skeleton from "../components/Skeleton.jsx";
 
 const QUICK_ACTIONS = [
   ["/assessment", "Start risk assessment", "plus", "sky"],
@@ -47,7 +48,7 @@ export default function DashboardPage() {
       </section>
 
       {error && <p role="alert">{error}</p>}
-      {!history && !error && <p>Loading...</p>}
+      {!history && !error && <Skeleton tiles={4} lines={0} cards={0} />}
 
       {history && (
         <ul className="stats" aria-label="Summary">
@@ -73,6 +74,7 @@ export default function DashboardPage() {
               <h2 id="recent-heading">Recent assessments</h2>
               {predictions.length > 0 && <Link to="/history">View all</Link>}
             </div>
+            {!history && !error && <Skeleton cards={0} lines={4} />}
             {history && predictions.length === 0 && <p>{history.message}</p>}
             {predictions.length > 0 && <HistoryTable predictions={predictions.slice(0, 5)} />}
           </section>

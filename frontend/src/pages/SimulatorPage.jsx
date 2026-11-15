@@ -10,6 +10,7 @@ import RiskGauge from "../components/RiskGauge.jsx";
 import ShapLedger from "../components/ShapLedger.jsx";
 import YesNoField from "../components/YesNoField.jsx";
 import "./SimulatorPage.css";
+import Skeleton from "../components/Skeleton.jsx";
 
 const CHANGEABLE = ["smoke", "alco", "active", "weight", "cigarettes_per_day", "drinks_per_week", "activity_minutes"];
 
@@ -101,7 +102,7 @@ export default function SimulatorPage() {
           <p><Link className="btn btn-primary" to="/assessment">Start risk assessment</Link></p>
         </>
       )}
-      {!form && !loadError && <p>Loading...</p>}
+      {!form && !loadError && <Skeleton cards={2} lines={4} />}
 
       {form && (
         <form className="sim-form" onSubmit={simulate} noValidate>

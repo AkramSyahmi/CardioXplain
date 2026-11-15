@@ -4,6 +4,7 @@ import { apiRequest } from "../api.js";
 import FieldError from "../components/FieldError.jsx";
 import "./AdminPages.css";
 import { formatDate } from "../format.js";
+import Skeleton from "../components/Skeleton.jsx";
 
 const ROLE_NAMES = { admin: "Administrator", general_user: "General User" };
 const EMPTY = { full_name: "", email: "", role: "general_user", password: "" };
@@ -114,7 +115,7 @@ export default function AdminUsersPage() {
     <>
       <h1>User management</h1>
       {loadError && <p role="alert">{loadError}</p>}
-      {!users && !loadError && <p>Loading...</p>}
+      {!users && !loadError && <Skeleton lines={6} />}
       {users && (
         <div className="card table-scroll users-card">
         <table aria-label="Users">

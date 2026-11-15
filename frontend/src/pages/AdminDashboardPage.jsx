@@ -6,6 +6,7 @@ import { apiRequest } from "../api.js";
 import StatTile from "../components/StatTile.jsx";
 import { formatDateTime } from "../format.js";
 import "./AdminPages.css";
+import Skeleton from "../components/Skeleton.jsx";
 
 const percent = (value) => `${(value * 100).toFixed(1)}%`;
 
@@ -94,7 +95,7 @@ export default function AdminDashboardPage() {
       <section className="admin-section">
         <h2>Model evaluation</h2>
         {modelError && <p role="alert">{modelError}</p>}
-        {!model && !modelError && <p>Loading...</p>}
+        {!model && !modelError && <Skeleton lines={5} />}
         {model && <Metrics metrics={model.metrics} training={model.training} />}
       </section>
 

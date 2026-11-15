@@ -5,6 +5,7 @@ import { apiRequest } from "../api.js";
 import { displayValue } from "../format.js";
 import Icon from "./Icon.jsx";
 import "./RiskDrivers.css";
+import Skeleton from "./Skeleton.jsx";
 
 export default function RiskDrivers({ predictionId }) {
   const [shap, setShap] = useState(null);
@@ -23,7 +24,7 @@ export default function RiskDrivers({ predictionId }) {
         <h2 id="drivers-heading">What's driving your risk</h2>
         <span className="chip">SHAP</span>
       </div>
-      {!shap && !failed && <p className="help">Loading...</p>}
+      {!shap && !failed && <Skeleton cards={0} />}
       {(failed || (shap && shap.length === 0)) && <p className="help">No explanation was saved for this result.</p>}
       {shap && shap.length > 0 && drivers.length === 0 && (
         <p className="help">None of your answers raised your risk above the average.</p>

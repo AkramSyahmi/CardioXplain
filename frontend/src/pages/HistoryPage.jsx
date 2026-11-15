@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router";
 import { apiRequest } from "../api.js";
 import HistoryTable from "../components/HistoryTable.jsx";
+import Skeleton from "../components/Skeleton.jsx";
 
 export default function HistoryPage() {
   const [history, setHistory] = useState(null);
@@ -17,7 +18,7 @@ export default function HistoryPage() {
       <h1>My history</h1>
       <p className="page-lead">All your previous cardiovascular risk assessments, newest first.</p>
       {error && <p role="alert">{error}</p>}
-      {!history && !error && <p>Loading...</p>}
+      {!history && !error && <Skeleton lines={6} />}
       {history && history.predictions.length === 0 && (
         <>
           <p>{history.message}</p>

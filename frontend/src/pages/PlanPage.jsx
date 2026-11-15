@@ -6,6 +6,7 @@ import { apiRequest } from "../api.js";
 import PlanCalendar from "../components/PlanCalendar.jsx";
 import { formatDateTime } from "../format.js";
 import "./PlanPage.css";
+import Skeleton from "../components/Skeleton.jsx";
 
 const NO_PLAN_YET = "No health action plan yet.";
 const WAIT = "(this can take up to 45 seconds)";
@@ -72,7 +73,7 @@ export default function PlanPage() {
       <h1>Health Action Plan</h1>
       <p className="page-lead">A day-by-day plan based on your risk result and lifestyle. For educational support only.</p>
 
-      {!loaded && <p>Loading...</p>}
+      {!loaded && <Skeleton lines={6} />}
       {noAssessment && (
         <>
           <p role="alert">{noAssessment}</p>
