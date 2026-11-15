@@ -28,7 +28,11 @@
 .users-card td select, .users-card td input { min-height: 40px; }
 .users-card td button { min-height: 40px; padding: 0 14px; margin: 2px 0; background: var(--panel); color: var(--ink); border: 1px solid var(--line); }
 .users-card td button:hover:not(:disabled) { background: var(--blue-soft); }
-.users-card td button.danger { color: var(--high-ink); }
+/* Deactivate = destructive: red tint, solid red on hover, darker when pressed (contrast 5.4 / 6.5 / 9.0 to 1). */
+.users-card td button.danger { background: #fde4e4; border-color: #f3b4b6; color: var(--high-ink); }
+.users-card td button.danger:hover:not(:disabled) { background: var(--high-ink); border-color: var(--high-ink); color: #fff; }
+.users-card td button.danger:active:not(:disabled) { background: #8f1b21; border-color: #8f1b21; color: #fff; }
+.users-card td button.danger:focus-visible { outline-color: var(--high-ink); }
 .row-actions { white-space: nowrap; }
 .users-card td:nth-child(3), .users-card td:nth-child(5) { white-space: nowrap; } /* role menu + Save role, and the date, on one line */
 .pw-reset { display: inline-block; position: relative; margin-left: 8px; vertical-align: middle; }
