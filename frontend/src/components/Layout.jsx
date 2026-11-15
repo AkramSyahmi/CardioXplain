@@ -77,7 +77,7 @@ export default function Layout({ children }) {
         {!narrow && (
           <button type="button" className="sidebar-toggle" onClick={toggleSidebar} title={hidden ? "Show menu" : "Hide menu"}>
             <Icon name={hidden ? "right" : "left"} />
-            <span className="sidebar-toggle-label">{hidden ? "Show menu" : "Hide menu"}</span>
+            <span className="visually-hidden">{hidden ? "Show menu" : "Hide menu"}</span>
           </button>
         )}
         <div className="me">

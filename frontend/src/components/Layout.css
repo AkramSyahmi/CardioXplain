@@ -98,12 +98,14 @@
   .logo img { height: 36px; }
   .mainnav { flex-direction: column; background: none; box-shadow: none; padding: 0; border-radius: 0; }
   .mainnav a { min-height: 48px; }
+  /* Icon only; the name is read by screen readers and shown as a tooltip. */
   .sidebar-toggle {
     align-items: center;
-    gap: 8px;
+    justify-content: center;
     margin-top: auto;
+    width: 44px;
     min-height: 44px;
-    padding: 0 16px;
+    padding: 0;
     background: none;
     color: var(--ink-2);
     font-weight: 600;
@@ -121,7 +123,7 @@
   .shell-rail .logo { padding: 0; width: 46px; overflow: hidden; } /* shows only the heart mark of the logo */
   .shell-rail .logo img { height: 34px; }
   .shell-rail .mainnav a, .shell-rail .sidebar-toggle { justify-content: center; padding: 0; width: 52px; }
-  .shell-rail .nav-label, .shell-rail .signout-label, .shell-rail .sidebar-toggle-label {
+  .shell-rail .nav-label, .shell-rail .signout-label {
     position: absolute;
     width: 1px;
     height: 1px;
