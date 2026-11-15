@@ -7,11 +7,12 @@
 .today-progress span { display: block; height: 100%; border-radius: var(--pill); background: var(--lower); transition: width 0.3s; }
 .today-tasks { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
 .today-tasks label { display: grid; grid-template-columns: 22px 36px minmax(0, 1fr); gap: 12px; align-items: center;
-  padding: 10px 14px; border-radius: var(--r-md); background: var(--panel); cursor: pointer; }
+  padding: 10px 14px; border-radius: var(--r-md); background: var(--panel); cursor: pointer;
+  box-shadow: inset 3px 0 0 var(--time-line); } /* same time-of-day colours as the Plan page */
 .today-tasks input { width: 20px; height: 20px; margin: 0; }
-.today-icon { width: 36px; height: 36px; border-radius: 50%; display: grid; place-items: center; background: var(--tile); }
+.today-icon { width: 36px; height: 36px; border-radius: 50%; display: grid; place-items: center; background: var(--time-soft); color: var(--time); }
 .today-text { font-weight: 700; min-width: 0; }
 .today-task { display: block; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; } /* one line here; full text on hover and on the Plan page */
-.today-text small { display: block; font-weight: 600; font-size: 0.8rem; }
+.today-text small { display: block; font-weight: 600; font-size: 0.8rem; color: var(--time); }
 .today-tasks li.done .today-text { color: var(--ink-2); text-decoration: line-through; text-decoration-color: #9aa3ad; }
 .today-link { justify-self: start; }

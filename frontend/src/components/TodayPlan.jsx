@@ -31,7 +31,7 @@ export default function TodayPlan() {
   const today = days.find((day) => day.date === todayIso());
   const tasks = today
     ? BLOCKS.flatMap(([block, blockName, icon]) => today.blocks[block].map((task, i) => ({
-      id: `${today.day}-${block}-${i}`, blockName, icon, ...task })))
+      id: `${today.day}-${block}-${i}`, block, blockName, icon, ...task })))
     : [];
   const done = tasks.filter((task) => ticks.has(task.id)).length;
 
@@ -76,7 +76,7 @@ export default function TodayPlan() {
             {tasks.map((task) => {
               const type = TYPE_NAMES[task.type] ?? task.type;
               return (
-                <li key={task.id} className={ticks.has(task.id) ? "done" : ""}>
+                <li key={task.id} className={`time-${task.block}${ticks.has(task.id) ? " done" : ""}`}>
                   <label>
                     <input type="checkbox" checked={ticks.has(task.id)} onChange={() => toggle(task.id)}
                       aria-label={`${type}: ${task.task}`} />

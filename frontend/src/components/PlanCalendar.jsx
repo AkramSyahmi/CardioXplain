@@ -81,8 +81,8 @@ export default function PlanCalendar({ plan }) {
                   <span className="chip">{done} of {ids.length} done</span>
                 </summary>
                 {BLOCKS.map(([block, blockName, icon]) => (
-                  <div key={block} className="slot">
-                    <span className={`slot-icon slot-${block}`}><Icon name={icon} /></span>
+                  <div key={block} className={`slot time-${block}`}>
+                    <span className="slot-icon"><Icon name={icon} /></span>
                     <h4>{blockName}</h4>
                     <ul className="tasks">
                       {day.blocks[block].map((task, i) => {

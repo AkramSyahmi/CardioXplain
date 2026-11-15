@@ -128,6 +128,10 @@ ul, ol { padding-left: 20px; }
 /* Cards sit flat on the grey page; the shadow is kept for things you can click (menu, buttons, quick actions). */
 .card { background: var(--tile); border-radius: var(--r-xl); padding: 24px; min-width: 0; }
 .card-dark { background: var(--night); color: #fff; }
+/* Time of day in the health plan: sunrise amber, daytime teal, dusk purple. Ink colours pass 4.5:1 on white and on their tint. */
+.time-morning { --time: #8a5a00; --time-soft: #fff3cf; --time-line: #f0c95a; }
+.time-afternoon { --time: #0e6a76; --time-soft: #dcf1f3; --time-line: #6cbfcb; }
+.time-evening { --time: #5b45a8; --time-soft: #ece7fb; --time-line: #a996e6; }
 
 .chip {
   display: inline-flex;
