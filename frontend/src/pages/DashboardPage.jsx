@@ -86,7 +86,6 @@ export default function DashboardPage() {
                   <Link className="action" to={to}>
                     <span className="action-icon"><Icon name={icon} /></span>
                     {label}
-                    <span className="go"><Icon name="arrow" /></span>
                   </Link>
                 </li>
               ))}

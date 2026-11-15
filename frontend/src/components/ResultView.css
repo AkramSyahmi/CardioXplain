@@ -53,7 +53,8 @@
 
 /* Explore links */
 .explore { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-.explore .btn { width: 100%; justify-content: space-between; padding-right: 8px; min-height: 56px; }
+.explore .btn { width: 100%; justify-content: space-between; min-height: 56px; }
+.explore .btn:has(.go) { padding-right: 8px; }
 
 @media (max-width: 1100px) {
   .result { grid-template-columns: minmax(0, 1fr); }

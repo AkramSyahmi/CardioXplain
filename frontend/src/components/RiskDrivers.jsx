@@ -3,7 +3,6 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router";
 import { apiRequest } from "../api.js";
 import { displayValue } from "../format.js";
-import Icon from "./Icon.jsx";
 import "./RiskDrivers.css";
 import Skeleton from "./Skeleton.jsx";
 
@@ -43,7 +42,7 @@ export default function RiskDrivers({ predictionId }) {
         </ol>
       )}
       <Link className="btn btn-light drivers-link" to={`/result/${predictionId}`}>
-        See the full explanation<span className="go"><Icon name="arrow" /></span>
+        See the full explanation
       </Link>
     </section>
   );

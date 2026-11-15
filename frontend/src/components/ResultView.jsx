@@ -151,8 +151,9 @@ export default function ResultView({ result }) {
         <section aria-labelledby="explore-heading">
           <h2 id="explore-heading" className="visually-hidden">Explore your results</h2>
           <ul className="explore">
-            {EXPLORE.map(([to, label]) => (
-              <li key={to}><Link className="btn btn-light" to={to}>{label}<span className="go"><Icon name="arrow" /></span></Link></li>
+            {/* Only the main next step (the simulator) gets the blue arrow. */}
+            {EXPLORE.map(([to, label], i) => (
+              <li key={to}><Link className="btn btn-light" to={to}>{label}{i === 0 && <span className="go"><Icon name="arrow" /></span>}</Link></li>
             ))}
           </ul>
         </section>
