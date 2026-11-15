@@ -22,8 +22,8 @@ export default function ResultPage() {
   return (
     <>
       <PageHeader icon="heart" title="Assessment result"
-        crumb={<><Link to="/history">My history</Link> › Assessment #{id}</>}
-        lead={result?.prediction_date ? formatDateTime(result.prediction_date) : "Loading your result..."}>
+        lead={<><Link to="/history">My history</Link> › Assessment #{id}
+          {result?.prediction_date && <> · {formatDateTime(result.prediction_date)}</>}</>}>
         {result && (
           <span className={`chip ${categoryClass(result.risk_category)}`}>{result.risk_category} risk · {result.risk_percent}%</span>
         )}
