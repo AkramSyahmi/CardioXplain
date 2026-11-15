@@ -42,13 +42,4 @@
 
   /* History tables: the category chip is taller than the text, so centre every cell on the row. */
   .history-table td { vertical-align: middle; }
-
-  /* No big empty areas inside cards (audit #9). */
-  /* Assessment: "About you" keeps its own height instead of stretching to Health measurements. */
-  .assessment-form { align-items: start; }
-  /* What-If: the short "fixed values" card keeps its own height instead of stretching to the form's. */
-  .sim-form { align-items: start; }
-  /* Care Navigator: the chat is as tall as the suggestions list, not a fixed 640 px with blank space. */
-  .chat-layout { align-items: stretch; }
-  .chat { min-height: 0; }
 }
