@@ -27,7 +27,7 @@
 /* Input tiles */
 .result-inputs { display: grid; gap: 12px; } /* tiles sit straight on the page: no box inside a box */
 .tiles { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-.tile { background: var(--tile); border-radius: var(--r-lg); box-shadow: var(--shadow); padding: 16px; display: flex; flex-direction: column; justify-content: space-between; gap: 10px; min-height: 150px; min-width: 0; }
+.tile { background: var(--tile); border-radius: var(--r-lg); padding: 16px; display: flex; flex-direction: column; justify-content: space-between; gap: 10px; min-height: 150px; min-width: 0; }
 .tile p { margin: 0; }
 .tile-estimated { background: #fbf3d6; } /* amber tint = this value was estimated, not measured */
 .tile-estimated .unit, .tile-estimated .tile-sub { color: var(--mod-ink); }

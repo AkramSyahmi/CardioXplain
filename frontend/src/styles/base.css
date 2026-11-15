@@ -105,14 +105,13 @@ table {
   background: var(--tile);
   border-radius: var(--r-lg);
   overflow: hidden;
-  box-shadow: var(--shadow);
   margin-bottom: 16px;
 }
 th, td { text-align: left; padding: 14px 16px; border-bottom: 1px solid var(--line); vertical-align: top; }
 th { background: var(--panel); font-size: 0.9rem; color: var(--ink-2); font-weight: 700; }
 tr:last-child td { border-bottom: 0; }
 .table-scroll { overflow-x: auto; max-width: 100%; }
-.card table { box-shadow: none; border: 0; border-radius: 0; margin: 0; }
+.card table { border: 0; border-radius: 0; margin: 0; }
 .card th { background: none; border-bottom: 2px solid var(--line); }
 .table-scroll table { min-width: 520px; }
 
@@ -126,7 +125,8 @@ tr:last-child td { border-bottom: 0; }
 ul, ol { padding-left: 20px; }
 
 /* Utility classes shared by components and pages. */
-.card { background: var(--tile); border-radius: var(--r-xl); padding: 24px; box-shadow: var(--shadow); min-width: 0; }
+/* Cards sit flat on the grey page; the shadow is kept for things you can click (menu, buttons, quick actions). */
+.card { background: var(--tile); border-radius: var(--r-xl); padding: 24px; min-width: 0; }
 .card-dark { background: var(--night); color: #fff; }
 
 .chip {
