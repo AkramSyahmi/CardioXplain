@@ -9,6 +9,13 @@ import Skeleton from "../components/Skeleton.jsx";
 
 const ROLE_NAMES = { admin: "Administrator", general_user: "General User" };
 const EMPTY = { full_name: "", email: "", role: "general_user", password: "" };
+const GROUP_NAMES = { admin: "Administrators", general_user: "General users" };
+
+/** One group per role: the known roles always (empty ones say so), plus any other role found in the data. */
+function groupByRole(users) {
+  const roles = [...new Set([...Object.keys(GROUP_NAMES), ...users.map((u) => u.role)])];
+  return roles.map((role) => ({ role, name: GROUP_NAMES[role] ?? role, users: users.filter((u) => u.role === role) }));
+}
 
 function UserRow({ user, onUpdated }) {
   const [role, setRole] = useState(user.role);
@@ -80,12 +87,18 @@ export default function AdminUsersPage() {
   const [fields, setFields] = useState({});
   const [created, setCreated] = useState("");
   const [busy, setBusy] = useState(false);
+  const [notice, setNotice] = useState("");
 
   useEffect(() => {
     apiRequest("/admin/users").then((data) => setUsers(data.users)).catch((err) => setLoadError(err.message));
   }, []);
 
   function replaceUser(updated) {
+    // A new role moves the row to another group, so say where it went.
+    const old = users.find((u) => u.user_id === updated.user_id);
+    if (old && old.role !== updated.role) {
+      setNotice(`${updated.full_name} is now in ${GROUP_NAMES[updated.role] ?? updated.role}.`);
+    }
     setUsers((list) => list.map((u) => (u.user_id === updated.user_id ? updated : u)));
   }
 
@@ -119,18 +132,26 @@ export default function AdminUsersPage() {
       </PageHeader>
       {loadError && <p role="alert">{loadError}</p>}
       {!users && !loadError && <Skeleton lines={6} />}
-      {users && (
-        <div className="card table-scroll users-card">
-        <table aria-label="Users">
-          <thead>
-            <tr><th>Name</th><th>Email</th><th>Role</th><th>Status</th><th>Created</th><th>Actions</th></tr>
-          </thead>
-          <tbody>
-            {users.map((u) => <UserRow key={u.user_id} user={u} onUpdated={replaceUser} />)}
-          </tbody>
-        </table>
-        </div>
-      )}
+      {notice && <p role="status" className="users-notice">{notice}</p>}
+      {users && groupByRole(users).map((group) => (
+        <section key={group.role} className="card users-group" aria-labelledby={`group-${group.role}`}>
+          <h2 id={`group-${group.role}`} className="users-group-head">
+            {group.name} <span className="chip">{group.users.length}</span>
+          </h2>
+          {group.users.length === 0 ? <p className="help">No {group.name.toLowerCase()} yet.</p> : (
+            <div className="table-scroll users-card">
+              <table aria-label={group.name}>
+                <thead>
+                  <tr><th>Name</th><th>Email</th><th>Role</th><th>Status</th><th>Created</th><th>Actions</th></tr>
+                </thead>
+                <tbody>
+                  {group.users.map((u) => <UserRow key={u.user_id} user={u} onUpdated={replaceUser} />)}
+                </tbody>
+              </table>
+            </div>
+          )}
+        </section>
+      ))}
 
       <section className="card admin-create" aria-labelledby="create-heading">
       <h2 id="create-heading">Create a user</h2>

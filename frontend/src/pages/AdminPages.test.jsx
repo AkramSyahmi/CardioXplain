@@ -76,15 +76,22 @@ test("admin sees error when deactivating self", async () => {
 });
 
 test("admin can change a role and deactivate a user", async () => {
+  let ali = USERS.users[1]; // the server keeps earlier changes, like the real backend
   const api = adminApi({
     "GET /admin/users": [200, USERS],
-    "PATCH /admin/users/3": (body) => [200, { user: { ...USERS.users[1], ...body } }],
+    "PATCH /admin/users/3": (body) => {
+      ali = { ...ali, ...body };
+      return [200, { user: ali }];
+    },
   });
   renderApp("/admin/users");
-  const row = (await screen.findByText("ali@mail.com")).closest("tr");
+  let row = (await screen.findByText("ali@mail.com")).closest("tr");
   await userEvent.selectOptions(within(row).getByLabelText("Role for Ali Ahmad"), "admin");
   await userEvent.click(within(row).getByRole("button", { name: "Save role" }));
-  expect(await within(row).findByText("Saved.")).toBeInTheDocument();
+  // The user moves to the Administrators group, and the page says so.
+  expect(await screen.findByText("Ali Ahmad is now in Administrators.")).toBeInTheDocument();
+  const admins = screen.getByRole("table", { name: "Administrators" });
+  row = within(admins).getByText("ali@mail.com").closest("tr");
   await userEvent.click(within(row).getByRole("button", { name: "Deactivate" }));
   expect(await within(row).findByText("inactive")).toBeInTheDocument();
   expect(within(row).getByRole("button", { name: "Activate" })).toBeInTheDocument();
@@ -122,4 +129,30 @@ test("password reset sits behind a Set new password toggle in each row", async (
   await userEvent.click(toggle);
   expect(toggle.closest("details")).toHaveAttribute("open");
   expect(within(row).getByLabelText("New password for Ali Ahmad")).toBeInTheDocument();
+});
+
+test("users are grouped by role with a count for each group", async () => {
+  adminApi({ "GET /admin/users": [200, USERS] });
+  renderApp("/admin/users");
+  const admins = await screen.findByRole("table", { name: "Administrators" });
+  const general = screen.getByRole("table", { name: "General users" });
+  expect(within(admins).getByText("admin@cardioxplain.com")).toBeInTheDocument();
+  expect(within(general).getByText("ali@mail.com")).toBeInTheDocument();
+  expect(within(general).queryByText("admin@cardioxplain.com")).not.toBeInTheDocument();
+  expect(screen.getByRole("heading", { name: /Administrators/ })).toHaveTextContent("1");
+});
+
+test("a role with no users shows a short empty message", async () => {
+  adminApi({ "GET /admin/users": [200, { users: [USERS.users[1]] }] });
+  renderApp("/admin/users");
+  expect(await screen.findByText("No administrators yet.")).toBeInTheDocument();
+  expect(screen.queryByRole("table", { name: "Administrators" })).not.toBeInTheDocument();
+});
+
+test("a role the page does not know still gets its own group", async () => {
+  const other = { ...USERS.users[1], user_id: 7, email: "c@mail.com", role: "clinician" };
+  adminApi({ "GET /admin/users": [200, { users: [...USERS.users, other] }] });
+  renderApp("/admin/users");
+  const group = await screen.findByRole("table", { name: "clinician" });
+  expect(within(group).getByText("c@mail.com")).toBeInTheDocument();
 });
