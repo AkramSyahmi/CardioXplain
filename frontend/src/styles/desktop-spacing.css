@@ -42,3 +42,14 @@
   /* History tables: the category chip is taller than the text, so centre every cell on the row. */
   .history-table td { vertical-align: middle; }
 }
+
+/* 5. Ideas kept from the Kaggle-style preview (2026-11-15): thin card edges, lighter supporting text,
+   outlined secondary buttons. */
+@media (min-width: 1101px) {
+  .card, .stat, .tile { border: 1px solid var(--line); }
+  .card-dark { border-color: var(--night); } /* no light edge on the dark risk card */
+  .page-lead { font-weight: 400; }
+  .tile-sub, .plan-generated { font-weight: 500; }
+  .btn-light, .signout, .suggestions button { box-shadow: none; border: 1px solid var(--line); }
+  .btn-light:hover, .suggestions button:hover:not(:disabled) { border-color: #c9ced6; }
+}
