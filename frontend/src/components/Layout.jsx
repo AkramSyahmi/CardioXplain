@@ -34,14 +34,17 @@ export default function Layout({ children }) {
   return (
     <>
       <a className="skip-link" href="#main">Skip to content</a>
-      <header className={links.length > 3 ? "topbar" : "topbar topbar-few"}>
+      {/* Desktop: sidebar on the left, page on the right. Phones: top bar plus bottom tab bar. */}
+      <div className="shell">
+      <header className="topbar">
         <Link className="logo" to={homeFor(user)} aria-label="CardioXplain home">
           <img src={logo} alt="" width="211" height="40" />
         </Link>
         <nav className="mainnav" aria-label="Main">
           {links.map(([to, label, icon]) => (
             // end: "/admin" is not also active on "/admin/users".
-            <NavLink key={to} to={to} end>
+            // title: a tooltip when the narrow sidebar shows icons only.
+            <NavLink key={to} to={to} end title={label}>
               <Icon name={icon} />
               <span className="nav-label">{label}</span>
             </NavLink>
@@ -53,12 +56,13 @@ export default function Layout({ children }) {
             <span className="me-name">{user.full_name}</span>
             <small>{user.role === "admin" ? "Administrator" : "General User"}</small>
           </span>
-          <button type="button" className="signout" onClick={signOut}>
+          <button type="button" className="signout" onClick={signOut} title="Sign out">
             <Icon name="logout" />
-            Sign out
+            <span className="signout-label">Sign out</span>
           </button>
         </div>
       </header>
+      <div className="page">
       <main id="main" tabIndex="-1">{children}</main>
       <footer className="app-footer">
         <p>
@@ -68,6 +72,8 @@ export default function Layout({ children }) {
           For education only. Results are not a medical diagnosis; always consult a qualified healthcare professional.
         </p>
       </footer>
+      </div>
+      </div>
     </>
   );
 }
