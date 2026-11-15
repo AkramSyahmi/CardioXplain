@@ -61,9 +61,17 @@ export default function Layout({ children }) {
       {/* Desktop: sidebar on the left, page on the right. Phones: top bar plus bottom tab bar. */}
       <div className={rail ? "shell shell-rail" : "shell"}>
       <header className="topbar">
-        <Link className="logo" to={homeFor(user)} aria-label="CardioXplain home">
-          <img src={logo} alt="" width="211" height="40" />
-        </Link>
+        <div className="sidebar-head">
+          <Link className="logo" to={homeFor(user)} aria-label="CardioXplain home">
+            <img src={logo} alt="" width="211" height="40" />
+          </Link>
+          {!narrow && (
+            <button type="button" className="sidebar-toggle" onClick={toggleSidebar} title={hidden ? "Show menu" : "Hide menu"}>
+              <Icon name={hidden ? "right" : "left"} />
+              <span className="visually-hidden">{hidden ? "Show menu" : "Hide menu"}</span>
+            </button>
+          )}
+        </div>
         <nav className="mainnav" aria-label="Main">
           {links.map(([to, label, icon]) => (
             // end: "/admin" is not also active on "/admin/users".
@@ -74,12 +82,6 @@ export default function Layout({ children }) {
             </NavLink>
           ))}
         </nav>
-        {!narrow && (
-          <button type="button" className="sidebar-toggle" onClick={toggleSidebar} title={hidden ? "Show menu" : "Hide menu"}>
-            <Icon name={hidden ? "right" : "left"} />
-            <span className="visually-hidden">{hidden ? "Show menu" : "Hide menu"}</span>
-          </button>
-        )}
         <div className="me">
           <span className="avatar" aria-hidden="true">{initials(user.full_name)}</span>
           <span className="me-text">

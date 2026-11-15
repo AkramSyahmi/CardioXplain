@@ -94,24 +94,25 @@
     gap: 28px;
     background: var(--tile);
   }
-  .logo { padding: 0 8px; }
-  .logo img { height: 36px; }
+  /* Logo and the hide/show arrow share the top row. */
+  .sidebar-head { display: flex; align-items: center; justify-content: space-between; gap: 8px; padding-left: 4px; }
+  .logo img { height: 30px; }
   .mainnav { flex-direction: column; background: none; box-shadow: none; padding: 0; border-radius: 0; }
   .mainnav a { min-height: 48px; }
   /* Icon only; the name is read by screen readers and shown as a tooltip. */
   .sidebar-toggle {
     align-items: center;
     justify-content: center;
-    margin-top: auto;
-    width: 44px;
-    min-height: 44px;
+    flex: none;
+    width: 40px;
+    min-height: 40px;
     padding: 0;
     background: none;
     color: var(--ink-2);
     font-weight: 600;
   }
   .sidebar-toggle:hover:not(:disabled) { background: var(--panel); color: var(--ink); }
-  .me { justify-content: space-between; }
+  .me { margin-top: auto; justify-content: space-between; }
   .signout { box-shadow: none; background: var(--panel); }
 }
 
@@ -120,9 +121,10 @@
 @media (min-width: 1101px) {
   .shell-rail { grid-template-columns: 80px minmax(0, 1fr); }
   .shell-rail .topbar { padding: 24px 12px; align-items: center; }
-  .shell-rail .logo { padding: 0; width: 46px; overflow: hidden; } /* shows only the heart mark of the logo */
+  .shell-rail .sidebar-head { flex-direction: column; gap: 16px; padding-left: 0; }
+  .shell-rail .logo { width: 46px; overflow: hidden; } /* shows only the heart mark of the logo */
   .shell-rail .logo img { height: 34px; }
-  .shell-rail .mainnav a, .shell-rail .sidebar-toggle { justify-content: center; padding: 0; width: 52px; }
+  .shell-rail .mainnav a { justify-content: center; padding: 0; width: 52px; }
   .shell-rail .nav-label, .shell-rail .signout-label {
     position: absolute;
     width: 1px;
