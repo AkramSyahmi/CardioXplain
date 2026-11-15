@@ -4,7 +4,7 @@ import re
 
 from flask import request
 
-from ml.features import GENDER_CODES, VALID_RANGES
+from ml.features import FORM_RANGES, GENDER_CODES
 
 
 def password_problem(password):
@@ -68,7 +68,7 @@ def assessment_problems(data):
     """
     values, fields = {}, {}
 
-    for name, (low, high) in VALID_RANGES.items():
+    for name, (low, high) in FORM_RANGES.items():
         raw = data.get(name)
         number = _number(raw)
         if raw is None or raw == "":

@@ -101,7 +101,7 @@ export default function AssessmentPage() {
         <section className="card form-section" aria-labelledby="about-heading">
           <h2 id="about-heading"><span className="step-num" aria-hidden="true">1</span>About you</h2>
           <div className="field-grid">
-            <NumberField name="age" label="Age (years)" help="This tool supports ages 30 to 65." {...shared} />
+            <NumberField name="age" label="Age (years)" help="For adults aged 18 to 100." {...shared} />
             <div className="field">
               <label htmlFor="gender">Gender</label>
               <select id="gender" name="gender" value={form.gender} onChange={change}>

@@ -18,10 +18,17 @@ def test_assessment_problems_accepts_numeric_strings_and_booleans(valid_input):
 
 
 def test_assessment_problems_range_messages(valid_input):
-    _, fields = assessment_problems({**valid_input, "age": 25, "ap_hi": 350, "cholesterol": 4})
-    assert fields["age"] == "Age must be between 30 and 65 years."
+    _, fields = assessment_problems({**valid_input, "age": 17, "ap_hi": 350, "cholesterol": 4})
+    assert fields["age"] == "Age must be between 18 and 100 years."
     assert fields["ap_hi"] == "Systolic blood pressure must be between 60 and 300 mmHg."
     assert fields["cholesterol"] == "Please choose a cholesterol level (Normal, Above normal, or Well above normal)."
+
+
+def test_ages_outside_the_training_data_are_accepted(valid_input):
+    """CHANGES.md #30: adults 18-100 can use the tool, not only the dataset's 30-65."""
+    for age in (18, 25, 70, 100):
+        assert "age" not in assessment_problems({**valid_input, "age": age})[1]
+    assert "age" in assessment_problems({**valid_input, "age": 101})[1]
 
 
 def test_assessment_problems_ap_lo_above_ap_hi(valid_input):

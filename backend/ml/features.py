@@ -21,6 +21,9 @@ VALID_RANGES = {
     "ap_hi": (60, 300),
     "ap_lo": (40, 200),
 }
+# The form accepts all adults (CHANGES.md #30). Outside 30-65 the model repeats its nearest learned age,
+# so results there are less reliable; training cleaning keeps the dataset's 30-65 above.
+FORM_RANGES = {**VALID_RANGES, "age": (18, 100)}
 
 # Plain names shown to users and given to the LLM.
 FEATURE_LABELS = {
