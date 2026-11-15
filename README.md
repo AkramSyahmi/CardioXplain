@@ -60,6 +60,8 @@ the result in `backend/ml/output/framingham_smoking.json`.
 
 ## Credits
 
+- Health-factor icons (heart pulse, droplet, test tube, person, ruler, weight, cigarette, wine): Lucide, ISC License, https://lucide.dev (SVG paths copied into `frontend/src/components/Icon.jsx`).
+
 - Smoking effect: estimated from the Framingham Heart Study teaching dataset (National Heart, Lung, and Blood Institute; Kaggle copy, licence not stated). The data is not redistributed; only two coefficients are used.
 
 - 3D heart image: Microsoft Fluent Emoji (MIT License), https://github.com/microsoft/fluentui-emoji

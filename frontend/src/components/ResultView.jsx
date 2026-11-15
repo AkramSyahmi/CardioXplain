@@ -92,7 +92,7 @@ function InputTiles({ inputs, estimated }) {
   return (
     <div className="tiles">
       <div className={bpEstimated ? "tile tile-estimated" : "tile"}>
-        <p className="tile-top"><span>Blood pressure</span><span className="tile-icon"><Icon name="drop" /></span></p>
+        <p className="tile-top"><span>Blood pressure</span><span className="tile-icon"><Icon name="pulse" /></span></p>
         <p className="big-num">{inputs.ap_hi}<span className="unit">/{inputs.ap_lo} mmHg</span></p>
         <p className="tile-sub">{bpEstimated ? "Estimated, not measured" : "Measured by you"}</p>
       </div>
@@ -110,7 +110,7 @@ function InputTiles({ inputs, estimated }) {
         )}
       </div>
       <div className="tile">
-        <p className="tile-top"><span>BMI</span><span className="tile-icon"><Icon name="scale" /></span></p>
+        <p className="tile-top"><span>BMI</span><span className="tile-icon"><Icon name="body" /></span></p>
         <p className="big-num">{Number(inputs.bmi).toFixed(1)}</p>
         <p className="tile-sub">{inputs.weight} kg, {inputs.height} cm</p>
       </div>

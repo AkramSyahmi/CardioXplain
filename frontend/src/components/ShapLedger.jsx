@@ -5,8 +5,8 @@ import Icon from "./Icon.jsx";
 import "./ShapLedger.css";
 
 const ICONS = {
-  ap_hi: "drop", ap_lo: "drop", cholesterol: "drop", age: "clock", active: "run", bmi: "scale",
-  weight: "scale", height: "scale", gluc: "sugar", smoke: "smoke", alco: "dots", gender: "user",
+  ap_hi: "pulse", ap_lo: "pulse", cholesterol: "drop", age: "clock", active: "run", bmi: "body",
+  weight: "weight", height: "ruler", gluc: "tube", smoke: "smoke", alco: "wine", gender: "user",
 };
 
 const round2 = (x) => Math.round(x * 100) / 100;
