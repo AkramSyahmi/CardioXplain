@@ -51,9 +51,16 @@ Download `cardio_train.csv` from
 https://www.kaggle.com/datasets/sulianova/cardiovascular-disease-dataset
 and place it in `backend/ml/data/`.
 
+Optional, only to re-measure the smoking effect (CHANGES.md #29): place the Framingham Heart Study
+teaching data as `backend/ml/data/framingham.csv` (Kaggle copy, licence not stated, so it is not
+included) and run `venv\Scripts\python ml\framingham_smoking.py` from `backend`. The app only reads
+the result in `backend/ml/output/framingham_smoking.json`.
+
 > For educational purposes only. Not a medical diagnosis tool.
 
 ## Credits
+
+- Smoking effect: estimated from the Framingham Heart Study teaching dataset (National Heart, Lung, and Blood Institute; Kaggle copy, licence not stated). The data is not redistributed; only two coefficients are used.
 
 - 3D heart image: Microsoft Fluent Emoji (MIT License), https://github.com/microsoft/fluentui-emoji
 - Animated heart on the login page (phones): Microsoft Fluent Emoji Animated (MIT License), https://github.com/microsoft/fluentui-emoji-animated (re-timed to about 65 beats a minute)

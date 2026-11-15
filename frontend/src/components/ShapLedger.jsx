@@ -47,6 +47,7 @@ export default function ShapLedger({ shap, riskScore, riskPercent = percent(risk
   const pos = (x) => ((x - scale.lo) / (scale.hi - scale.lo)) * 100;
   const axis = axisTicks(scale);
   const average = <span className="ledger-avg" style={{ left: `${pos(baseline)}%` }} />;
+  const smokingAdjusted = shap.some((item) => item.adjusted);
 
   return (
     <div className="ledger">
@@ -102,6 +103,12 @@ export default function ShapLedger({ shap, riskScore, riskPercent = percent(risk
         <span><i className="down" />Lowers your risk</span>
         <span><i className="avg" />Average person</span>
       </p>
+      {smokingAdjusted && (
+        <p className="ledger-note">
+          Smoking includes an extra effect measured in the Framingham Heart Study, because the main training data
+          could not measure smoking well. Research shows smoking raises heart disease risk, more with each cigarette.
+        </p>
+      )}
     </div>
   );
 }

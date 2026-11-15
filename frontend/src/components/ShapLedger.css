@@ -51,6 +51,7 @@
 .ledger-legend i.up { background: var(--raise); }
 .ledger-legend i.down { background: var(--lower); }
 .ledger-legend i.avg { height: 0; border-radius: 0; border-top: 2px dashed #b3bac3; }
+.ledger-note { margin: 10px 0 0; max-width: 72ch; font-size: 0.85rem; color: var(--ink-2); }
 
 /* Phones: each bar drops under its name so names are never squeezed. */
 @media (max-width: 720px) {

@@ -53,7 +53,10 @@ def simulate():
         return jsonify(error="Please correct the highlighted fields.", fields=fields), 400
 
     simulated_score = round(predict_probability(values), 4)
-    original = _score(prediction.risk_score)
+    # "Before" is recalculated the same way as "after", so an assessment saved before the smoking
+    # adjustment (CHANGES.md #29) is not compared with a differently calculated score.
+    original_score = round(predict_probability(original_inputs), 4)
+    original = _score(original_score)
     simulated = {**_score(simulated_score), "inputs": values}
     try:
         simulated["shap"] = explain(values)
@@ -68,5 +71,5 @@ def simulate():
     log_event("SIMULATE", f"prediction_id={prediction.prediction_id}", user_id=g.user.user_id)
     db.session.commit()
     return jsonify(original=original, simulated=simulated,
-                   change_percent_points=round((simulated_score - prediction.risk_score) * 100, 1),
+                   change_percent_points=round((simulated_score - original_score) * 100, 1),
                    narrative={"text": narrative, "source": source}, disclaimer=DISCLAIMER)

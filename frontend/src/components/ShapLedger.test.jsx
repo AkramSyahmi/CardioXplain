@@ -29,3 +29,14 @@ test("total uses the backend's percent so it matches the gauge", () => {
   expect(screen.getByText("39%")).toBeInTheDocument();
   expect(screen.getByText(/add up to your 39%/)).toBeInTheDocument();
 });
+
+test("smoking row adjusted with Framingham data gets a note (CHANGES.md #29)", () => {
+  const smoker = [...SHAP, { feature: "smoke", label: "Smoking", value: 1, shap: 0.08, adjusted: true }];
+  render(<ShapLedger shap={smoker} riskScore={0.643} />);
+  expect(screen.getByText(/Framingham Heart Study/)).toBeInTheDocument();
+});
+
+test("no note when smoking is not adjusted", () => {
+  render(<ShapLedger shap={SHAP} riskScore={0.563} />);
+  expect(screen.queryByText(/Framingham/)).not.toBeInTheDocument();
+});

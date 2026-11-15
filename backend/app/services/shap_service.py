@@ -4,7 +4,7 @@ from functools import cache
 import pandas as pd
 import shap
 
-from app.services.ml_service import MODEL_DIR, load_model, to_frame
+from app.services.ml_service import MODEL_DIR, load_model, model_probability, predict_probability, to_frame
 from ml.features import FEATURE_LABELS, FEATURES
 
 
@@ -23,7 +23,12 @@ def baseline():
 def explain(values):
     """All 12 features with their SHAP value (change in probability), biggest effect first."""
     shap_values = _explainer().shap_values(to_frame(values))[0]
+    # The Framingham smoking adjustment (CHANGES.md #29) belongs to the Smoking row, so the rows
+    # still add up to the final risk.
+    extra = predict_probability(values) - model_probability(values)
     items = [{"feature": name, "label": FEATURE_LABELS[name], "value": values[name],
-              "shap": round(float(value), 4)}
+              "shap": round(float(value) + (extra if name == "smoke" else 0), 4)}
              for name, value in zip(FEATURES, shap_values)]
+    if extra:
+        next(item for item in items if item["feature"] == "smoke")["adjusted"] = True
     return sorted(items, key=lambda item: abs(item["shap"]), reverse=True)
