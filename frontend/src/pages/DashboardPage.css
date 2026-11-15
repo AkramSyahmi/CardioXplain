@@ -22,7 +22,6 @@
   min-height: 150px;
   padding: 18px;
   border-radius: var(--r-lg);
-  background: var(--tile); /* all white: green, amber and red are kept for risk only */
   color: var(--ink);
   text-decoration: none;
   font-weight: 700;
@@ -31,7 +30,12 @@
   transition: transform 0.2s cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 .action:hover { color: var(--ink); transform: translateY(-2px); }
-.action-icon { width: 44px; height: 44px; border-radius: 50%; display: grid; place-items: center; background: var(--panel); }
+.action-sky { background: var(--sky); }
+.action-sage { background: var(--sage); }
+.action-butter { background: var(--butter); }
+.action-white { background: var(--tile); }
+.action-icon { width: 44px; height: 44px; border-radius: 50%; display: grid; place-items: center; background: rgba(255, 255, 255, 0.75); }
+.action-white .action-icon { background: var(--panel); }
 
 
 /* Desktop: one shared grid, so "Your risk over time" and "What's driving your risk" sit in the same row

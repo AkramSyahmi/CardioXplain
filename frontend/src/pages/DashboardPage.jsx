@@ -15,10 +15,10 @@ import "./DashboardPage.css";
 import Skeleton from "../components/Skeleton.jsx";
 
 const QUICK_ACTIONS = [
-  ["/assessment", "Start risk assessment", "plus"],
-  ["/simulator", "What-If Simulator", "gauge"],
-  ["/plan", "Health Action Plan", "calendar"],
-  ["/navigator", "Care Navigator", "chat"],
+  ["/assessment", "Start risk assessment", "plus", "sky"],
+  ["/simulator", "What-If Simulator", "gauge", "sage"],
+  ["/plan", "Health Action Plan", "calendar", "butter"],
+  ["/navigator", "Care Navigator", "chat", "white"],
 ];
 
 export default function DashboardPage() {
@@ -81,9 +81,9 @@ export default function DashboardPage() {
           <section className="dash-actions" aria-labelledby="actions-heading">
             <h2 id="actions-heading">Quick actions</h2>
             <ul className="actions">
-              {QUICK_ACTIONS.map(([to, label, icon]) => (
+              {QUICK_ACTIONS.map(([to, label, icon, tone]) => (
                 <li key={to}>
-                  <Link className="action" to={to}>
+                  <Link className={`action action-${tone}`} to={to}>
                     <span className="action-icon"><Icon name={icon} /></span>
                     {label}
                   </Link>
