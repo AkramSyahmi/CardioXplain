@@ -55,13 +55,17 @@ test("admin can create a user", async () => {
   const api = adminApi({ "GET /admin/users": [200, USERS], "POST /admin/users": [201, { user: created }] });
   renderApp("/admin/users");
   await screen.findByText("ali@mail.com");
-  await userEvent.type(screen.getByLabelText("Full name"), "New Admin");
-  await userEvent.type(screen.getByLabelText("Email"), "new@mail.com");
-  await userEvent.selectOptions(screen.getByLabelText("Role"), "admin");
-  await userEvent.type(screen.getByLabelText("Temporary password"), "TempPass1");
   await userEvent.click(screen.getByRole("button", { name: "Create user" }));
-  expect(await screen.findByText("new@mail.com")).toBeInTheDocument();
-  expect(screen.getByText("User created.")).toBeInTheDocument();
+  const dialog = screen.getByRole("dialog", { name: "Create a user" });
+  await userEvent.type(within(dialog).getByLabelText("Full name"), "New Admin");
+  await userEvent.type(within(dialog).getByLabelText("Email"), "new@mail.com");
+  await userEvent.selectOptions(within(dialog).getByLabelText("Role"), "admin");
+  await userEvent.type(within(dialog).getByLabelText("Temporary password"), "TempPass1");
+  await userEvent.click(within(dialog).getByRole("button", { name: "Save user" }));
+  // Dialog closes, the page confirms, and the new user is in the right role group.
+  expect(await screen.findByText("New Admin was created and added to Administrators.")).toBeInTheDocument();
+  expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
+  expect(within(screen.getByRole("table", { name: "Administrators" })).getByText("new@mail.com")).toBeInTheDocument();
   const body = JSON.parse(api.mock.calls.find(([, o]) => o.method === "POST")[1].body);
   expect(body).toEqual({ full_name: "New Admin", email: "new@mail.com", role: "admin", password: "TempPass1" });
 });
@@ -155,4 +159,22 @@ test("a role the page does not know still gets its own group", async () => {
   renderApp("/admin/users");
   const group = await screen.findByRole("table", { name: "clinician" });
   expect(within(group).getByText("c@mail.com")).toBeInTheDocument();
+});
+
+test("create user dialog shows field errors and can be cancelled", async () => {
+  adminApi({ "GET /admin/users": [200, USERS],
+    "POST /admin/users": [400, { error: "Please correct the highlighted fields.", fields: { email: "Please enter a valid email address." } }] });
+  renderApp("/admin/users");
+  const open = await screen.findByRole("button", { name: "Create user" });
+  await userEvent.click(open);
+  const dialog = screen.getByRole("dialog", { name: "Create a user" });
+  expect(within(dialog).getByLabelText("Full name")).toHaveFocus();
+  await userEvent.click(within(dialog).getByRole("button", { name: "Save user" }));
+  expect(await within(dialog).findByText("Please enter a valid email address.")).toBeInTheDocument();
+  await userEvent.click(within(dialog).getByRole("button", { name: "Cancel" }));
+  expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
+  expect(open).toHaveFocus();
+  await userEvent.click(open);
+  await userEvent.keyboard("{Escape}");
+  expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
 });

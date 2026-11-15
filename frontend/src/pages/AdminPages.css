@@ -38,7 +38,10 @@
 .pw-reset[open] summary { background: var(--blue-soft); border-color: var(--blue); }
 .pw-pop { display: flex; gap: 8px; margin-top: 8px; }
 .row-message { margin: 6px 0 0; font-size: 0.85rem; font-weight: 600; color: var(--ink-2); white-space: normal; }
-.admin-create { max-width: 920px; }
+/* Create user dialog over a dark backdrop. */
+.modal-backdrop { position: fixed; inset: 0; z-index: 30; display: grid; place-items: center; padding: 16px; overflow-y: auto; background: rgba(16, 19, 23, 0.45); }
+.modal { width: min(720px, 100%); margin: auto; box-shadow: 0 30px 60px -20px rgba(16, 19, 23, 0.45); }
+.modal-actions { display: flex; justify-content: flex-end; gap: 10px; }
 
 .not-found { min-height: 100vh; display: grid; place-items: center; }
 .not-found .card { text-align: center; padding: 40px 48px; }

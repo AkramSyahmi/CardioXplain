@@ -1,7 +1,8 @@
 // UC-800 Manage User Accounts (Figure 3.35).
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { apiRequest } from "../api.js";
 import FieldError from "../components/FieldError.jsx";
+import Icon from "../components/Icon.jsx";
 import PageHeader from "../components/PageHeader.jsx";
 import "./AdminPages.css";
 import { formatDate } from "../format.js";
@@ -85,9 +86,11 @@ export default function AdminUsersPage() {
   const [form, setForm] = useState(EMPTY);
   const [error, setError] = useState("");
   const [fields, setFields] = useState({});
-  const [created, setCreated] = useState("");
   const [busy, setBusy] = useState(false);
   const [notice, setNotice] = useState("");
+  const [creating, setCreating] = useState(false);
+  const openButton = useRef(null);
+  const dialog = useRef(null);
 
   useEffect(() => {
     apiRequest("/admin/users").then((data) => setUsers(data.users)).catch((err) => setLoadError(err.message));
@@ -102,6 +105,35 @@ export default function AdminUsersPage() {
     setUsers((list) => list.map((u) => (u.user_id === updated.user_id ? updated : u)));
   }
 
+  function openCreate() {
+    setForm(EMPTY);
+    setError("");
+    setFields({});
+    setCreating(true);
+  }
+
+  function closeCreate() {
+    setCreating(false);
+    openButton.current?.focus(); // back to the button that opened the dialog
+  }
+
+  useEffect(() => {
+    if (!creating) return undefined;
+    dialog.current.querySelector("input")?.focus();
+    function onKey(event) {
+      if (event.key === "Escape") closeCreate();
+      if (event.key !== "Tab") return;
+      // Keep keyboard focus inside the dialog while it is open.
+      const items = [...dialog.current.querySelectorAll("input, select, button")].filter((el) => !el.disabled);
+      const first = items[0];
+      const last = items[items.length - 1];
+      if (event.shiftKey && document.activeElement === first) { event.preventDefault(); last.focus(); }
+      else if (!event.shiftKey && document.activeElement === last) { event.preventDefault(); first.focus(); }
+    }
+    document.addEventListener("keydown", onKey);
+    return () => document.removeEventListener("keydown", onKey);
+  }, [creating]);
+
   function change(event) {
     setForm({ ...form, [event.target.name]: event.target.value });
   }
@@ -111,12 +143,11 @@ export default function AdminUsersPage() {
     setBusy(true);
     setError("");
     setFields({});
-    setCreated("");
     try {
       const data = await apiRequest("/admin/users", { method: "POST", body: form });
       setUsers((list) => [...list, data.user]);
-      setForm(EMPTY);
-      setCreated("User created.");
+      closeCreate();
+      setNotice(`${data.user.full_name} was created and added to ${GROUP_NAMES[data.user.role] ?? data.user.role}.`);
     } catch (err) {
       setError(err.message);
       setFields(err.fields || {});
@@ -129,6 +160,9 @@ export default function AdminUsersPage() {
     <>
       <PageHeader icon="user" title="User management" lead="Create accounts, deactivate users and reset passwords.">
         {users && <span className="chip">{users.length} account{users.length === 1 ? "" : "s"}</span>}
+        <button type="button" className="btn btn-primary" ref={openButton} onClick={openCreate}>
+          Create user<span className="go go-light"><Icon name="plus" /></span>
+        </button>
       </PageHeader>
       {loadError && <p role="alert">{loadError}</p>}
       {!users && !loadError && <Skeleton lines={6} />}
@@ -153,10 +187,12 @@ export default function AdminUsersPage() {
         </section>
       ))}
 
-      <section className="card admin-create" aria-labelledby="create-heading">
+      {creating && (
+      // Dark backdrop: clicking it (outside the card) closes the dialog, like Cancel.
+      <div className="modal-backdrop" onMouseDown={(event) => { if (event.target === event.currentTarget) closeCreate(); }}>
+      <section className="card modal" role="dialog" aria-modal="true" aria-labelledby="create-heading" ref={dialog}>
       <h2 id="create-heading">Create a user</h2>
       <p className="help">The new user signs in with the temporary password. Share it with them privately.</p>
-      {created && <p role="status">{created}</p>}
       {error && <p role="alert">{error}</p>}
       <form onSubmit={createUser} noValidate>
         <div className="field-grid">
@@ -184,9 +220,14 @@ export default function AdminUsersPage() {
           <FieldError fields={fields} name="password" />
         </div>
         </div>
-        <button type="submit" disabled={busy}>{busy ? "Creating..." : "Create user"}</button>
+        <div className="modal-actions">
+          <button type="button" className="btn btn-light" onClick={closeCreate}>Cancel</button>
+          <button type="submit" disabled={busy}>{busy ? "Saving..." : "Save user"}</button>
+        </div>
       </form>
       </section>
+      </div>
+      )}
     </>
   );
 }
