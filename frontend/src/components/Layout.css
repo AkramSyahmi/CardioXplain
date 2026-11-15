@@ -77,12 +77,21 @@
 }
 
 /* Desktop: the menu is a sidebar on the left that stays in view while the page scrolls.
-   A vertical list is quicker to scan than six labels in a row, and the page gets the full height. */
+   A vertical list is quicker to scan than six labels in a row, and the page gets the full height.
+   Hiding it only narrows the sidebar: nothing changes position, so the icons stay still while
+   the labels fade and get clipped, and the page widens in step with the sidebar. */
 @media (min-width: 1101px) {
-  .shell { display: grid; grid-template-columns: 248px minmax(0, 1fr); }
+  .shell {
+    --ease: cubic-bezier(0.2, 0.8, 0.2, 1);
+    --slide: 240ms;
+    display: grid;
+    grid-template-columns: 248px minmax(0, 1fr);
+    transition: grid-template-columns var(--slide) var(--ease);
+  }
   .topbar {
     position: sticky;
     top: 0;
+    z-index: 5;
     align-self: start;
     height: 100vh;
     max-width: none;
@@ -94,48 +103,55 @@
     gap: 28px;
     background: var(--tile);
   }
-  /* Logo and the hide/show arrow share the top row. */
-  .sidebar-head { display: flex; align-items: center; justify-content: space-between; gap: 8px; padding-left: 4px; }
-  .logo img { height: 30px; }
+  .sidebar-head { display: flex; align-items: center; padding-left: 4px; }
+  .logo { width: 160px; overflow: hidden; transition: width var(--slide) var(--ease); }
+  .logo img { height: 30px; max-width: none; }
   .mainnav { flex-direction: column; background: none; box-shadow: none; padding: 0; border-radius: 0; }
-  .mainnav a { min-height: 48px; }
-  /* Icon only; the name is read by screen readers and shown as a tooltip. */
+  .mainnav a { min-height: 48px; overflow: hidden; }
+  .mainnav a .icon, .signout .icon { flex: none; } /* icons never squeeze when the sidebar narrows */
+  .nav-label, .signout-label { transition: opacity 160ms ease; }
+  /* Hide/show arrow: a small round handle on the sidebar edge, level with the logo, so it moves with the edge. */
   .sidebar-toggle {
+    position: absolute;
+    top: 23px;
+    right: -18px;
+    width: 32px;
+    height: 32px;
+    min-height: 32px;
+    padding: 0;
     align-items: center;
     justify-content: center;
-    flex: none;
-    width: 40px;
-    min-height: 40px;
-    padding: 0;
-    background: none;
+    border-radius: 50%;
+    border: 1px solid var(--line);
+    background: var(--tile);
     color: var(--ink-2);
-    font-weight: 600;
   }
   .sidebar-toggle:hover:not(:disabled) { background: var(--panel); color: var(--ink); }
-  .me { margin-top: auto; justify-content: space-between; }
-  .signout { box-shadow: none; background: var(--panel); }
+  .me { margin-top: auto; justify-content: space-between; gap: 10px; transition: gap var(--slide) var(--ease); }
+  .avatar { transition: opacity 160ms ease, width var(--slide) var(--ease); }
+  .signout {
+    box-shadow: none;
+    background: var(--panel);
+    width: 132px;
+    padding: 0 0 0 13px; /* keeps the icon in the same spot when the button narrows */
+    justify-content: flex-start;
+    overflow: hidden;
+    transition: width var(--slide) var(--ease);
+  }
 }
 
 /* Icon-only sidebar: chosen with "Hide menu", and always on small laptops (1101-1279 px) so the page keeps its width.
-   Names stay for screen readers and show as a tooltip on hover. */
+   Labels stay in the page for screen readers; links also show their name as a tooltip on hover. */
 @media (min-width: 1101px) {
   .shell-rail { grid-template-columns: 80px minmax(0, 1fr); }
-  .shell-rail .topbar { padding: 24px 12px; align-items: center; }
-  .shell-rail .sidebar-head { flex-direction: column; gap: 16px; padding-left: 0; }
-  .shell-rail .logo { width: 46px; overflow: hidden; } /* shows only the heart mark of the logo */
-  .shell-rail .logo img { height: 34px; }
-  .shell-rail .mainnav a { justify-content: center; padding: 0; width: 52px; }
-  .shell-rail .nav-label, .shell-rail .signout-label {
-    position: absolute;
-    width: 1px;
-    height: 1px;
-    margin: -1px;
-    overflow: hidden;
-    clip: rect(0 0 0 0);
-    white-space: nowrap;
-  }
-  .shell-rail .me { flex-direction: column; }
-  .shell-rail .signout { width: 44px; padding: 0; justify-content: center; }
+  .shell-rail .logo { width: 40px; } /* only the heart mark of the logo shows */
+  .shell-rail .nav-label, .shell-rail .signout-label { opacity: 0; }
+  .shell-rail .avatar { width: 0; opacity: 0; }
+  .shell-rail .me { gap: 0; }
+  .shell-rail .signout { width: 44px; }
+}
+@media (min-width: 1101px) and (prefers-reduced-motion: reduce) {
+  .shell, .logo, .nav-label, .signout-label, .avatar, .me, .signout { transition: none; }
 }
 .sidebar-toggle { display: none; } /* phones have the bottom tab bar instead */
 @media (min-width: 1101px) {
