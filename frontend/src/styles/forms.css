@@ -78,7 +78,7 @@
   font-size: 0.95rem;
   flex: none;
 }
-.bmi-note { display: inline-flex; gap: 6px; align-items: baseline; padding: 8px 14px; border-radius: var(--pill); background: var(--sky); font-weight: 700; margin: 0; }
+.bmi-note { display: inline-flex; gap: 6px; align-items: baseline; padding: 8px 14px; border-radius: var(--pill); background: var(--blue-soft); font-weight: 700; margin: 0; }
 
 .submit-row { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
 .submit-row button { min-height: 52px; padding: 0 28px; }

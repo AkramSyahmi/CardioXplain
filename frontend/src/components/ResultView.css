@@ -29,20 +29,13 @@
 .tiles { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
 .tile { background: var(--tile); border-radius: var(--r-lg); box-shadow: var(--shadow); padding: 16px; display: flex; flex-direction: column; justify-content: space-between; gap: 10px; min-height: 150px; min-width: 0; }
 .tile p { margin: 0; }
-.tile-sky { background: var(--sky); }
 .tile-estimated { background: #fbf3d6; } /* amber tint = this value was estimated, not measured */
 .tile-estimated .unit, .tile-estimated .tile-sub { color: var(--mod-ink); }
 .tile-estimated .tile-icon { background: rgba(255, 255, 255, 0.7); }
-.tile-sage { background: var(--sage); }
 .tile-top { display: flex; justify-content: space-between; align-items: center; gap: 8px; font-weight: 700; font-size: 0.95rem; }
 .tile-icon { width: 40px; height: 40px; border-radius: 50%; display: grid; place-items: center; background: var(--panel); flex: none; }
-.tile-sky .tile-icon, .tile-sage .tile-icon { background: rgba(255, 255, 255, 0.7); }
 .tile .big-num { font-size: 2rem; overflow-wrap: anywhere; }
-.tile-sky .unit { color: #3f5664; }
-.tile-sage .unit { color: #4a6340; }
 .tile-sub { font-size: 0.8rem; font-weight: 600; color: var(--ink-2); }
-.tile-sky .tile-sub { color: #3f5664; }
-.tile-sage .tile-sub { color: #4a6340; }
 .meter { display: flex; gap: 3px; height: 24px; }
 .meter span { flex: 1; border-radius: 3px; background: rgba(16, 19, 23, 0.12); }
 .meter span.on { background: var(--ink); }

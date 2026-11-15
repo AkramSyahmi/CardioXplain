@@ -128,8 +128,6 @@ ul, ol { padding-left: 20px; }
 /* Utility classes shared by components and pages. */
 .card { background: var(--tile); border-radius: var(--r-xl); padding: 24px; box-shadow: var(--shadow); min-width: 0; }
 .card-dark { background: var(--night); color: #fff; }
-.card-sky { background: var(--sky); }
-.card-sage { background: var(--sage); }
 
 .chip {
   display: inline-flex;

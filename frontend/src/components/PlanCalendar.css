@@ -32,10 +32,7 @@
 
 .slot { display: grid; grid-template-columns: 44px 112px minmax(0, 1fr); gap: 14px; padding: 12px 0; }
 .slot h4 { margin: 10px 0 0; font-size: 1rem; }
-.slot-icon { width: 44px; height: 44px; border-radius: 50%; display: grid; place-items: center; }
-.slot-morning { background: #fff3cf; }
-.slot-afternoon { background: var(--sky); }
-.slot-evening { background: #e9e3ff; }
+.slot-icon { width: 44px; height: 44px; border-radius: 50%; display: grid; place-items: center; background: var(--panel); } /* the sun, cloud and moon icons already say the time of day */
 
 .tasks { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
 .task { background: var(--panel); border-radius: var(--r-md); padding: 12px 14px; }

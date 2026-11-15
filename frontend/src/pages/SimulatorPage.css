@@ -1,8 +1,6 @@
 .sim-form { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: 16px; align-items: stretch; margin-bottom: 24px; }
 .fixed-values { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 8px; }
 .fixed-values li { padding: 8px 14px; border-radius: var(--pill); background: var(--panel); font-weight: 600; font-size: 0.92rem; }
-.card-sky .help { color: #3f5664; }
-.card-sky .segmented label { border-color: rgba(16, 19, 23, 0.12); }
 
 .sim-result { display: grid; gap: 16px; }
 .sim-result > h2 { margin: 0; }
