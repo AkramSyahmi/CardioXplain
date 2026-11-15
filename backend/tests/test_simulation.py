@@ -24,6 +24,14 @@ def test_simulation_prefill_returns_latest_inputs(client, user_headers, assessed
     inputs = response.get_json()["inputs"]
     assert inputs["smoke"] == 1 and inputs["weight"] == 92 and inputs["ap_hi"] == 140
     assert inputs["bmi"] == 31.83
+    assert response.get_json()["estimated_fields"] == []
+
+
+def test_simulation_prefill_says_which_values_were_estimated(client, user_headers, fake_llm, valid_input):
+    body = {**valid_input, "ap_hi": "unknown", "ap_lo": "unknown"}
+    assert client.post("/api/predict", json=body, headers=user_headers).status_code == 201
+    response = client.get("/api/simulation", headers=user_headers)
+    assert response.get_json()["estimated_fields"] == ["ap_hi", "ap_lo"]
 
 
 def test_simulation_without_assessment_is_404(client, user_headers):

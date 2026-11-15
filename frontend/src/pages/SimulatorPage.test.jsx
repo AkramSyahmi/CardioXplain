@@ -30,6 +30,18 @@ test("simulator prefills from latest assessment", async () => {
   expect(screen.getByText("These stay fixed in the simulator.")).toBeInTheDocument();
 });
 
+test("simulator marks values the user did not know as estimated", async () => {
+  api({ "GET /simulation": [200, { inputs: INPUTS, estimated_fields: ["ap_hi", "ap_lo"] }],
+    "POST /simulation": [200, SIMULATION] });
+  renderApp("/simulator");
+  expect(await screen.findByText("Blood pressure: 140/90 mmHg (estimated)")).toBeInTheDocument();
+  await userEvent.clear(screen.getByLabelText("Weight (kg)"));
+  await userEvent.type(screen.getByLabelText("Weight (kg)"), "85");
+  await userEvent.click(screen.getByRole("button", { name: "Simulate" }));
+  const table = await screen.findByRole("table", { name: "Factor contributions" });
+  expect(table).toHaveTextContent("(estimated)");
+});
+
 test("simulator without assessment shows message", async () => {
   mockApi({ "GET /auth/me": [200, { user: USER }],
     "GET /simulation": [404, { error: "Please complete a Risk Assessment first." }] });

@@ -41,6 +41,7 @@ function changeSentence(points) {
 export default function SimulatorPage() {
   const navigate = useNavigate();
   const [inputs, setInputs] = useState(null);
+  const [estimated, setEstimated] = useState([]);
   const [form, setForm] = useState(null);
   const [loadError, setLoadError] = useState("");
   const [error, setError] = useState("");
@@ -53,6 +54,7 @@ export default function SimulatorPage() {
     apiRequest("/simulation")
       .then((data) => {
         setInputs(data.inputs);
+        setEstimated(data.estimated_fields ?? []);
         setForm(formFrom(data.inputs));
       })
       .catch((err) => setLoadError(err.message));
@@ -85,6 +87,8 @@ export default function SimulatorPage() {
   }
 
   const points = simulation?.change_percent_points;
+  // "I don't know" values from the assessment (CHANGES.md #23) stay marked as estimated here too.
+  const mark = (...names) => (names.some((name) => estimated.includes(name)) ? " (estimated)" : "");
 
   return (
     <>
@@ -107,9 +111,9 @@ export default function SimulatorPage() {
             <ul className="fixed-values">
               <li>Age: {inputs.age}</li>
               <li>Height: {inputs.height} cm</li>
-              <li>Blood pressure: {inputs.ap_hi}/{inputs.ap_lo} mmHg</li>
-              <li>Cholesterol: {displayValue("cholesterol", inputs.cholesterol)}</li>
-              <li>Glucose: {displayValue("gluc", inputs.gluc)}</li>
+              <li>Blood pressure: {inputs.ap_hi}/{inputs.ap_lo} mmHg{mark("ap_hi", "ap_lo")}</li>
+              <li>Cholesterol: {displayValue("cholesterol", inputs.cholesterol)}{mark("cholesterol")}</li>
+              <li>Glucose: {displayValue("gluc", inputs.gluc)}{mark("gluc")}</li>
             </ul>
           </section>
 
@@ -163,10 +167,10 @@ export default function SimulatorPage() {
               {simulation.simulated.shap ? (
                 <>
                   <ShapLedger shap={simulation.simulated.shap} riskScore={simulation.simulated.risk_score}
-                    riskPercent={simulation.simulated.risk_percent} />
+                    riskPercent={simulation.simulated.risk_percent} estimated={estimated} />
                   <details className="exact">
                     <summary>Show exact numbers</summary>
-                    <ShapTable shap={simulation.simulated.shap} />
+                    <ShapTable shap={simulation.simulated.shap} estimated={estimated} />
                   </details>
                 </>
               ) : <p role="alert">{simulation.simulated.shap_error}</p>}
