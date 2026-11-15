@@ -1,0 +1,9 @@
+/* Wide screens: table on the left, the trend chart stays in view on the right. */
+@media (min-width: 1101px) {
+  .history-layout { display: grid; grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); gap: 20px; align-items: start; }
+  .history-side { position: sticky; top: 16px; }
+}
+/* Phones and tablets keep the table only, as before. */
+@media (max-width: 1100px) {
+  .history-side { display: none; }
+}

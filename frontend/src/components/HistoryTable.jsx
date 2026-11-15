@@ -7,10 +7,9 @@ export default function HistoryTable({ predictions }) {
   return (
     // Wide tables scroll inside their box on phones, never the whole page.
     <div className="table-scroll">
-    <table>
+    <table className="history-table">
       <thead>
         <tr>
-          <th>#</th>
           <th>Date</th>
           <th>Risk score</th>
           <th>Category</th>
@@ -20,7 +19,6 @@ export default function HistoryTable({ predictions }) {
       <tbody>
         {predictions.map((p) => (
           <tr key={p.prediction_id}>
-            <td>{p.prediction_id}</td>
             <td>{formatDateTime(p.prediction_date)}</td>
             <td>{p.risk_percent}%</td>
             <td><span className={`chip ${categoryClass(p.risk_category)}`}>{p.risk_category}</span></td>

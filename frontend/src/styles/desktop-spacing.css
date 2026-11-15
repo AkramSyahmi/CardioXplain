@@ -39,4 +39,7 @@
   .grid-12 { gap: 20px; }
   .assessment-form { column-gap: 20px; }
   .form-section, .plan-week, .admin-section { margin-bottom: 20px; }
+
+  /* History tables: the category chip is taller than the text, so centre every cell on the row. */
+  .history-table td { vertical-align: middle; }
 }

@@ -3,7 +3,9 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router";
 import { apiRequest } from "../api.js";
 import HistoryTable from "../components/HistoryTable.jsx";
+import RiskTrend from "../components/RiskTrend.jsx";
 import Skeleton from "../components/Skeleton.jsx";
+import "./HistoryPage.css";
 
 export default function HistoryPage() {
   const [history, setHistory] = useState(null);
@@ -25,7 +27,12 @@ export default function HistoryPage() {
           <p><Link className="btn btn-primary" to="/assessment">Start risk assessment</Link></p>
         </>
       )}
-      {history && history.predictions.length > 0 && <div className="card"><HistoryTable predictions={history.predictions} /></div>}
+      {history && history.predictions.length > 0 && (
+        <div className="history-layout">
+          <div className="card"><HistoryTable predictions={history.predictions} /></div>
+          <div className="history-side"><RiskTrend predictions={history.predictions} /></div>
+        </div>
+      )}
     </>
   );
 }

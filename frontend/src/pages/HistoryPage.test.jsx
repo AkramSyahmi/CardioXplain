@@ -18,6 +18,8 @@ test("history lists all past results newest first", async () => {
   expect(within(rows[1]).getByRole("link", { name: "View" })).toHaveAttribute("href", "/result/20");
   expect(within(rows[7]).getByRole("link", { name: "View" })).toHaveAttribute("href", "/result/14");
   expect(screen.queryByRole("button", { name: /delete|edit/i })).not.toBeInTheDocument();
+  expect(screen.queryByRole("columnheader", { name: "#" })).not.toBeInTheDocument(); // database id means nothing to users
+  expect(screen.getByRole("heading", { name: "Your risk over time" })).toBeInTheDocument();
 });
 
 test("history shows empty message", async () => {
